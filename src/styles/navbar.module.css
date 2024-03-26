@@ -9,6 +9,8 @@
     align-items: center;
 
     font-family: var(--inter);
+
+    position: relative;
 }
 
 .logo {
@@ -46,4 +48,149 @@
 
 a.marcado {
     font-weight: 700 !important; 
+}
+
+.background {
+    display: none;
+}
+
+.hamburguer {
+    display: none;
+}
+
+.menu {
+    display: none;
+}
+
+@media (max-width: 800px) {
+
+    .navbar {
+        padding: 20px 20px;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .open, .closed {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+    }
+
+    .hamburguer {
+        z-index: 9;
+    }
+
+    .open .hamburguer {
+        position: relative;
+        display: block;
+        background-color: black;
+        height: 3px;
+        width: 24px;
+        top: 50%;
+        transition: 0.5s;
+    }
+
+    .open .hamburguer::before, .open .hamburguer::after {
+        content: '';
+        position: absolute;
+        background-color: black;
+        height: 3px;
+        width: 24px;
+        transition: 0.5s;
+    }
+
+    .open .hamburguer::before {
+        top: -8px;
+    }
+
+    .open .hamburguer::after {
+        top: 8px;
+    }
+
+    .closed .hamburguer {
+        position: relative;
+        display: block;
+        background-color: black;
+        height: 3px;
+        width: 24px;
+        top: 50%;
+        rotate: 45deg;
+        transition: 0.5s;
+    }
+
+    .closed .hamburguer::before, .closed .hamburguer::after {
+        content: '';
+        position: absolute;
+        background-color: black;
+        height: 3px;
+        width: 24px;
+        transition: 0.5s;
+    }
+
+    .closed .hamburguer::before {
+        top: 0px;
+        rotate: 90deg;
+    }
+
+    .closed .hamburguer::after {
+        top: 0px;
+    }
+
+    .open .menu {
+        display: none;
+    }
+
+    .background {
+        background-color: transparent;
+        transition: all 0.5s;
+    }
+
+    .closed .background {
+        display: block;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        cursor: auto;
+    }
+
+    .menu {
+        width: 0px;
+    }
+
+    .closed .menu {
+        display: block;
+        background-color: var(--corPrimaria);
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 40%;
+        transition: all 0.5s;
+        cursor: auto;
+    }
+
+    .menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 30px 20px;
+        margin-top: 80px;
+        border-top: 2px solid #c1c1c1;
+        list-style: none;
+    }
+
+    .menu ul li {
+        display: block;
+    }
+
+    .menu ul li a {
+        text-decoration: none;
+        color: black;
+        font-size: 1em;
+        font-weight: 500;
+    }
 }
