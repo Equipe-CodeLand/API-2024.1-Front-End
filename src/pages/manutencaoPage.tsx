@@ -1,12 +1,12 @@
-import Footer from "../components/footerComponent";
-import Manutencao from "../components/manutencaoPageComponent";
-import Navbar from "../components/navbarComponent";
+import Footer from "../components/footer.component";
+import ManutencaoPage from "../components/manutencaoPage.component";
+import Navbar from "../components/navbar.component";
 
-export default function ManutencaoPage() {
+export default function RouteManutecao() {
   return (
     <div>
       <Navbar />
-      <Manutencao />
+      <ManutencaoPage />
       <Footer />
     </div>
   );

@@ -1,0 +1,5 @@
+.navbar {
+    background-color: var(--corPrimaria);
+    height: 80px;
+    padding: 20px;
+}

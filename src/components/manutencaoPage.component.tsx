@@ -1,4 +1,4 @@
-export default function Manutencao() {
+export default function ManutencaoPage() {
     return (
         <div>
             <h1>Manutenção</h1>

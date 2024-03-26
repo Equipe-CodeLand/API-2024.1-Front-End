@@ -1,12 +1,12 @@
-import Footer from "../components/footerComponent";
-import Home from "../components/homePageComponent";
-import Navbar from "../components/navbarComponent";
+import Footer from "../components/footer.component";
+import HomePage from "../components/homePage.component";
+import Navbar from "../components/navbar.component";
 
-export default function HomePage() {
+export default function RouteHome() {
   return (
     <div>
       <Navbar />
-      <Home />
+      <HomePage />
       <Footer />
     </div>
   );
