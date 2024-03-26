@@ -1,5 +1,49 @@
 .navbar {
     background-color: var(--corPrimaria);
+
     height: 80px;
-    padding: 20px;
+    padding: 20px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-family: var(--inter);
+}
+
+.logo {
+    width: 100%;
+}
+
+.logo a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.nav {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.nav ul{
+    display: flex;
+    gap: 20px;
+}
+
+.nav ul li {
+    display: inline-block;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+a.marcado {
+    font-weight: 700 !important; 
 }
