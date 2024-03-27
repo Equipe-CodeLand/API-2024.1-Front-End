@@ -1,7 +1,7 @@
 .navbar {
     background-color: var(--corPrimaria);
 
-    height: 80px;
+    height: 65px;
     padding: 20px 30px;
 
     display: flex;
@@ -19,7 +19,7 @@
 
 .logo a {
     text-decoration: none;
-    color: black;
+    color: white;
     font-size: 1.1em;
     font-weight: 700;
 }
@@ -41,17 +41,13 @@
 
 .nav ul li a {
     text-decoration: none;
-    color: black;
+    color: white;
     font-size: 1em;
     font-weight: 400;
 }
 
 .mark {
     font-weight: 700 !important; 
-}
-
-.background {
-    display: none;
 }
 
 .hamburguer {
@@ -94,7 +90,7 @@
 
     .open .hamburguer {
         position: relative;
-        background-color: black;
+        background-color: white;
         height: 3px;
         width: 24px;
         top: 50%;
@@ -104,7 +100,7 @@
     .open .hamburguer::before, .open .hamburguer::after {
         content: '';
         position: absolute;
-        background-color: black;
+        background-color: white;
         height: 3px;
         width: 24px;
         transition: 0.5s;
@@ -120,7 +116,7 @@
 
     .closed .hamburguer {
         position: relative;
-        background-color: black;
+        background-color: white;
         height: 3px;
         width: 24px;
         top: 50%;
@@ -131,7 +127,7 @@
     .closed .hamburguer::before, .closed .hamburguer::after {
         content: '';
         position: absolute;
-        background-color: black;
+        background-color: white;
         height: 3px;
         width: 24px;
         transition: 0.5s;
@@ -177,6 +173,7 @@
         top: 0;
         right: 0;
         width: 40%;
+        height: 100vh;
         transition: all 0.5s;
         cursor: auto;
     }
@@ -186,8 +183,8 @@
         flex-direction: column;
         gap: 20px;
         padding: 30px 20px;
-        margin-top: 80px;
-        border-top: 2px solid #c1c1c1;
+        margin-top: 65px;
+        border-top: 2px solid var(--corSecundaria);
         list-style: none;
     }
 
@@ -197,7 +194,7 @@
 
     .menu ul li a {
         text-decoration: none;
-        color: black;
+        color: white;
         font-size: 1em;
         font-weight: 500;
     }

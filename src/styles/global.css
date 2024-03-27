@@ -2,8 +2,8 @@
 
 :root {
     --inter: 'Inter', sans-serif;
-    --corPrimaria: #D9D9D9;
-    --corSecundaria: rgba(217, 217, 217, 0.5);
+    --corPrimaria: #00A0B9;
+    --corSecundaria: hsla(198, 93%, 89%, 0.5);
 }
 
 * {
