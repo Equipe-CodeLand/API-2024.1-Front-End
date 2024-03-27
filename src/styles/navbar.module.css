@@ -79,12 +79,12 @@ a.marcado {
     }
 
     .hamburguer {
+        display: block;
         z-index: 9;
     }
 
     .open .hamburguer {
         position: relative;
-        display: block;
         background-color: black;
         height: 3px;
         width: 24px;
@@ -111,7 +111,6 @@ a.marcado {
 
     .closed .hamburguer {
         position: relative;
-        display: block;
         background-color: black;
         height: 3px;
         width: 24px;
