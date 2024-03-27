@@ -5,8 +5,8 @@ import Navbar from "../components/navbar.component";
 export default function RouteHome() {
   return (
     <div>
-      <Navbar />
-      <HomePage />
+      <Navbar local="home"/>
+      <HomePage/>
       <Footer />
     </div>
   );

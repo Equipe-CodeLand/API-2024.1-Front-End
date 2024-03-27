@@ -5,7 +5,7 @@ import Navbar from "../components/navbar.component";
 export default function RouteAtivos() {
   return (
     <div>
-      <Navbar />
+      <Navbar local="ativos" />
       <AtivosPage />
       <Footer />
     </div>

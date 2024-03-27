@@ -5,7 +5,7 @@ import Navbar from "../components/navbar.component";
 export default function RouteManutecao() {
   return (
     <div>
-      <Navbar />
+      <Navbar local="manutencao" />
       <ManutencaoPage />
       <Footer />
     </div>

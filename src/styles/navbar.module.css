@@ -2,7 +2,7 @@
     background-color: var(--corPrimaria);
 
     height: 80px;
-    padding: 20px 40px;
+    padding: 20px 30px;
 
     display: flex;
     justify-content: space-between;
@@ -43,10 +43,10 @@
     text-decoration: none;
     color: black;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 400;
 }
 
-a.marcado {
+.mark {
     font-weight: 700 !important; 
 }
 
@@ -56,13 +56,14 @@ a.marcado {
 
 .hamburguer {
     display: none;
+    cursor: pointer;
 }
 
 .menu {
     display: none;
 }
 
-@media (max-width: 800px) {
+@media screen and (max-width: 600px) {
 
     .navbar {
         padding: 20px 20px;
@@ -73,7 +74,7 @@ a.marcado {
     }
 
     .open, .closed {
-        cursor: pointer;
+        cursor: auto;
         width: 24px;
         height: 24px;
     }
@@ -81,6 +82,14 @@ a.marcado {
     .hamburguer {
         display: block;
         z-index: 9;
+    }
+
+    .hamburguer div {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: -12px;
+        z-index: 4;
     }
 
     .open .hamburguer {
