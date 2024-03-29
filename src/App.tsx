@@ -4,6 +4,7 @@ import RouteHome from './pages/homePage';
 import RouteManutecao from './pages/manutencaoPage';
 
 import "./styles/global.css";
+import RouteManutecaoCadastro from './pages/manutencaoCadastroPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path='/' element={<RouteHome />} />
         <Route path='/ativos' element={<RouteAtivos />} />
         <Route path="/manutencao" element={<RouteManutecao />} />
+        <Route path="/manutencaoCadastro" element={<RouteManutecaoCadastro />} />
       </Routes>
     </Router>
   );

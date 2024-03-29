@@ -1,0 +1,66 @@
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os elementos filhos horizontalmente */
+}
+
+label {
+    margin-bottom: 10px;
+    width: 80%; /* Ajusta a largura do label e, consequentemente, dos campos de entrada */
+}
+
+input[type="text"], input[type="email"], textarea, input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Aumenta o raio da borda para torná-la mais redonda */
+    resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
+}
+
+.date-inputs {
+    display: flex;
+    justify-content: space-between;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 20px; /* Aumenta o raio da borda para torná-la mais redonda */
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+input[list="ativos"] {
+    border-radius: 20px;
+    padding: 10px;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* Responsividade para telas menores que 600px */
+@media (max-width: 600px) {
+    .form-container {
+        width: 90%;
+    }
+
+    input[type="text"], input[type="email"], textarea {
+        font-size: 14px; 
+    }
+}
