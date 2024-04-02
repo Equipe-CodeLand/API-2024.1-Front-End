@@ -7,6 +7,7 @@ type props = {
 }
 
 export default function Ativo(props: props) {
+
     var disponibilidade: string
     var status: string
     switch (props.disponibilidade) {
@@ -27,15 +28,18 @@ export default function Ativo(props: props) {
             disponibilidade = "Erro"
     }
 
+    function mockFunction() {
+        console.log("Clicou")
+    }
+
     return (
-        <a className={styles.ativo} href='#'>
+        <div className={styles.ativo} onClick={mockFunction}>
             <div className={styles.id}>ID: {props.id} </div>
             <div className={styles.nome}> {props.nome} </div>
             <div className={styles.disponibilidade}>
-                <span className={status}>
-                    {disponibilidade}
-                </span>
+                <span className={status} />
+                {disponibilidade}
             </div>
-        </a>
+        </div>
     )
 }

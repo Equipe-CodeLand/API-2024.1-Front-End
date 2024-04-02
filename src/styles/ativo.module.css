@@ -13,6 +13,8 @@
     font-family: var(--inter);
 
     text-decoration: none;
+
+    cursor: pointer;
 }
 
 .id {
@@ -42,11 +44,12 @@
 }
 
 .disponibilidade {
+    
     height: 100%;
-    width: 300px;
+    width: 250px;
 
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 
     color: black;
@@ -54,14 +57,26 @@
     font-weight: 500;
 }
 
+.disponibilidade span {
+    margin-right: 10px;
+
+    height: 20px;
+    width: 20px;
+
+    border-radius: 100%;
+}
+
 .verde {
-    color: lime;
+    background-color: lime;
+    border: 1.5px solid rgb(0, 225, 0);
 }
 
 .amarelo {
-    color: orange;
+    background-color: orange;
+    border: 1.5px solid rgb(225, 135, 0);
 }
 
 .vermelho {
-    color: red;
+    background-color: red;
+    border: 1.5px solid rgb(225, 0, 0);
 }
