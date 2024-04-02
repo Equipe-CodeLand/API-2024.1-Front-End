@@ -1,8 +1,21 @@
+import ManutencaoComponent from "./manutencao/manutencaoComponent"
+
 export default function ManutencaoPage() {
-    return (
+
+    let manutencoes = [{id: 112151515, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024'},
+        {id: 2, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024'},
+        {id: 3, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024'}]
+    
+    return(
         <div>
-            <h1>Manutenção</h1>
-            <p>Esta é a página de manutenção</p>
+            {manutencoes.map(manutencao => {
+                return <ManutencaoComponent
+                    id={manutencao.id}
+                    nome={manutencao.nome}
+                    dataInicio={manutencao.dataInicio}
+                    dataFinal={manutencao.dataFinal}
+                ></ManutencaoComponent>
+            })}
         </div>
-    );
+    )
 }

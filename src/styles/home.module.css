@@ -1,0 +1,70 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    height: 80vh;
+}
+
+.content{
+    display: flex;
+    flex-direction: row;
+    gap: 5rem;
+    margin: 5rem;
+    margin-top: 0px;
+}
+
+.tituloHome{
+    color: #00A0B9;
+    font-family: Zilla Slab;
+    margin-bottom: 1%;
+    margin-top: 0;
+}
+
+.sobreHome{
+    color: #7A7A7A;
+    font-family: Bitter;
+    font-size: 19px;
+}
+
+.ativos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 164px;
+    height: 164px;
+    background-color: var(--corPrimaria);
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.manutencoes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 164px;
+    height: 164px;
+    background-color: var(--corPrimaria);
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .ativos, .manutencoes {
+        margin: 15px 0;
+    }
+}

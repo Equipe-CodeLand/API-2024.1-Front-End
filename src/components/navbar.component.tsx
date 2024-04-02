@@ -1,5 +1,6 @@
 import styles from "../styles/navbar.module.css";
 import { useState } from "react";
+import logo from "../images/logo-youtan-branco.png"
 
 type props = {
     local: string;
@@ -17,7 +18,9 @@ export default function Navbar(props: props) {
     return (
         <nav className={styles.navbar}>
             <div className={styles.logo}>
-                <a href="/">Nome do Sistema</a>
+                <a href="/">
+                    <img src={logo} alt="logo Youtan" />    
+                </a>
             </div>
             <div className={styles.nav}>
                 <ul>

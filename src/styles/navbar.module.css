@@ -24,6 +24,10 @@
     font-weight: 700;
 }
 
+.logo a img {
+    width: 100px;
+}
+
 .nav {
     width: 100%;
     display: flex;
@@ -77,7 +81,7 @@
 
     .hamburguer {
         display: block;
-        z-index: 9;
+        z-index: 10;
     }
 
     .hamburguer div {
@@ -85,7 +89,7 @@
         width: 24px;
         height: 24px;
         top: -12px;
-        z-index: 4;
+        z-index: 10;
     }
 
     .open .hamburguer {
@@ -149,6 +153,7 @@
     .background {
         background-color: transparent;
         transition: all 0.5s;
+        z-index: 8;
     }
 
     .closed .background {
@@ -164,6 +169,7 @@
 
     .menu {
         width: 0px;
+        z-index: 9;
     }
 
     .closed .menu {
