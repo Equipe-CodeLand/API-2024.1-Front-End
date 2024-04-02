@@ -1,6 +1,6 @@
 .ativo {
     width: 100%;
-    height: 60px;
+    height: 50px;
 
     border: 2px solid #b0a6a6;
     border-bottom: 3px solid #b0a6a6;
@@ -9,22 +9,59 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+
+    font-family: var(--inter);
+
+    text-decoration: none;
 }
 
 .id {
-    background-color: red;
     height: 100%;
     width: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #666262
 }
 
 .nome {
-    background-color: blue;
     height: 100%;
     width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000000;
+    font-size: 0.9em;
+    font-weight: 800;
 }
 
 .disponibilidade {
-    background-color: green;
     height: 100%;
     width: 300px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: black;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.verde {
+    color: lime;
+}
+
+.amarelo {
+    color: orange;
+}
+
+.vermelho {
+    color: red;
 }
