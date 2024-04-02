@@ -21,7 +21,7 @@
 .conteudo main {
     border: 1px solid lime;
 
-    max-width: 1000px;
+    max-width: 900px;
     height: 100%;
     
     margin: 0 auto;
@@ -44,6 +44,13 @@
     width: 100%;
     min-height: 450px;
     max-height: none;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    padding: 20px;
+
 }
 
 @media screen and (max-width: 600px) {

@@ -1,4 +1,5 @@
 import styles from "../styles/ativosPage.module.css"
+import Ativo from "./ativo.component";
 
 export default function AtivosPage() {
     return (
@@ -8,7 +9,10 @@ export default function AtivosPage() {
                 <main>
                     <div className={styles.adicionarAtivo}></div>
                     <div className={styles.listarAtivo}>
-                        
+                        <Ativo />
+                        <Ativo />
+                        <Ativo />
+                        <Ativo />
                     </div>
                 </main>
             </div>
