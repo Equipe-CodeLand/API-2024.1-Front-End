@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function HomePage() {
     return (
-        <div>
+        <div className={styles.div}>
             <div className={styles.container}>
                 <h1 className={styles.tituloHome}>Bem-vindo à nossa Plataforma de Gestão de Ativos!</h1>
                 <p className={styles.sobreHome}>
@@ -14,7 +14,9 @@ export default function HomePage() {
                 <p className={styles.sobreHome}>
                     Para começar escolha uma das opções abaixo:
                 </p>
-                <div className={styles.content}>
+            </div>
+            <div className={styles.content}>
+                <div className={styles.button}>
                     <Link to="/ativos" className={styles.ativos} style={{flexDirection: 'column'}}>
                         <TbZoomMoney size="38" strokeWidth="1.5" />
                         <span>Ativos</span>

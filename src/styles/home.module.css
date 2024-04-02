@@ -5,10 +5,19 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    height: 80vh;
+    height: 45vh;
 }
 
 .content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.button{
     display: flex;
     flex-direction: row;
     gap: 5rem;
@@ -29,13 +38,12 @@
     font-size: 19px;
 }
 
-.ativos{
+.ativos, .manutencoes {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-top: 2rem;
     width: 164px;
     height: 164px;
     background-color: var(--corPrimaria);
@@ -44,27 +52,60 @@
     text-decoration: none;
 }
 
-.manutencoes{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
-    width: 164px;
-    height: 164px;
-    background-color: var(--corPrimaria);
-    color: white;
-    border-radius: 20px;
-    text-decoration: none;
-}
+@media screen and (max-width: 600px) {
+    .div{
+        display: block;
+        width: 90%;
+    }
 
-@media (max-width: 768px) {
+    .tituloHome{
+        text-align: center;
+        justify-content: center;
+        margin-left: 10%;
+    }
+
+    .sobreHome{
+        display: flex;
+        text-align: justify;
+        justify-content: center;
+        margin-left: 10%;
+    }
+
+    .container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
     .content {
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 5rem;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .button{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        gap: 2rem;
+        margin: 2rem;
+        margin-top: 0px;
     }
 
     .ativos, .manutencoes {
-        margin: 15px 0;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-items: center;
     }
 }

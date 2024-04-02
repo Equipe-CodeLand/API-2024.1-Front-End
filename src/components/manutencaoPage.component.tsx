@@ -1,4 +1,4 @@
-import ManutencaoComponent from "./manutencao/manutencaoComponent"
+import ManutencaoComponent from "./manutencaoComponent"
 
 export default function ManutencaoPage() {
 
