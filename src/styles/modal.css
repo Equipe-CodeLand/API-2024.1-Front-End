@@ -1,0 +1,19 @@
+.body-modal {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+}
+
+.btn-excluir-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+}
+
+.modal-body .body-modal > * {
+    align-items: center;
+    margin-bottom: 10px;
+}
+.titulo {
+    text-align: right;
+}
