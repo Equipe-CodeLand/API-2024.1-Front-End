@@ -80,3 +80,33 @@
     background-color: red;
     border: 1.5px solid rgb(225, 0, 0);
 }
+
+@media (max-width: 700px) {
+    .ativo {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        padding-bottom: 31px;
+    }
+
+    .id {
+        justify-content: left;
+        margin-bottom: 5px;
+    }
+
+    .nome {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .disponibilidade {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .disponibilidade span {
+        height: 15px;
+        width: 15px;
+        margin-right: 10px;
+    }
+}

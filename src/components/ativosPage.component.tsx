@@ -1,15 +1,33 @@
 import styles from "../styles/ativosPage.module.css"
 import Ativo from "./ativo.component";
 
-const ativos = [
-    {id: 1, nome: "Maquina de Impressão 3D Industrial", disponibilidade: "1"},
-    {id: 2, nome: "Maquina de Impressão 3D Industrial", disponibilidade: "2"},
-    {id: 3, nome: "Maquina de Impressão 3D Industrial", disponibilidade: "3"}
-]
+type tipoAtivo = {
+    id: number;
+    nome: string;
+    disponibilidade: string;
+}
 
 export default function AtivosPage() {
-    function adicionarAtivo() {
-        console.log("Adicionar Ativo")
+    const listaAtivos:Array<tipoAtivo> = [
+
+    ]
+
+    var render
+    if (listaAtivos.length > 0) {
+        render = 
+        <div className={styles.listarAtivo}>
+            { listaAtivos.map((ativo, index) => {
+                return <Ativo id={ativo.id} nome={ativo.nome} disponibilidade={ativo.disponibilidade}/>
+            })}
+        </div>
+    } else {
+        render =
+        <div className={styles.listarAtivo}>
+            <span className={styles.semAtivos}>
+                Nenhum ativo encontrado! <br/>
+                :/ 
+            </span>
+        </div>
     }
 
     return (
@@ -18,21 +36,11 @@ export default function AtivosPage() {
             <div className={styles.conteudo}>
                 <main>
                     <div className={styles.adicionarAtivo}>
-                        <button className={styles.botao} onClick={adicionarAtivo}>
+                        <button className={styles.botao}>
                             Adicionar Ativo
                         </button>
                     </div>
-                    <div className={styles.listarAtivo}>
-                        {
-                            ativos.map(ativo => {
-                                return <Ativo
-                                    id={ativo.id}
-                                    nome={ativo.nome}
-                                    disponibilidade={ativo.disponibilidade}
-                                />
-                            })
-                        }
-                    </div>
+                    { render }
                 </main>
             </div>
         </div>

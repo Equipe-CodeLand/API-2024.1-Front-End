@@ -19,7 +19,7 @@
     /* border: 1px solid lime; */
 
     max-width: 900px;
-    min-height: 100vh;
+    min-height: 90vh;
     max-height: none;
     
     margin: 0 auto;
@@ -58,6 +58,7 @@
 .listarAtivo {
     /* border: 1px solid orange; */
 
+    min-height: 300px;
     width: 100%;
 
     display: flex;
@@ -67,6 +68,19 @@
 
     padding: 20px;
 
+}
+
+.semAtivos {
+
+    align-self: center;
+    margin-top: 20%;
+
+    font-family: var(--inter);
+    font-weight: 400;
+    text-align: center;
+    text-justify: center;
+    line-height: 1.5em;
+    color: black;
 }
 
 @media screen and (max-width: 600px) {
