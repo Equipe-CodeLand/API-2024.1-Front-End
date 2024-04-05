@@ -1,54 +1,73 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 
-// Define o tipo para o ativo
+// Define o tipo para os ativos
 type AtivoType = { value: string, label: string } | null;
 
 export default function ManutencaoCadastroPage() {
-    const [ativo, setAtivo] = useState<AtivoType>(null);
-    const [nomeFuncionario, setNomeFuncionario] = useState('');
+    const [ativos, setAtivos] = useState<AtivoType[]>([]);
+    const [ativoSelecionado, setAtivoSelecionado] = useState<AtivoType | null>(null);
+    const [responsavel, setResponsavel] = useState('');
     const [dataInicio, setDataInicio] = useState('');
-    const [dataTermino, setDataTermino] = useState('');
+    const [dataFinal, setDataFinal] = useState('');
+    const [localizacao, setLocalizacao] = useState('');
 
-    // Simulando a busca de ativos
-    const ativos = [
-        { value: 'Ativo 1', label: 'Ativo 1' },
-        { value: 'Ativo 2', label: 'Ativo 2' },
-        { value: 'Ativo 3', label: 'Ativo 3' },
-        // Adicione mais ativos de exemplo aqui
-    ];
+    useEffect(() => {
+        // Buscar ativos do servidor quando o componente é montado
+        fetch('http://localhost:8080/listar/ativos')
+        .then(response => response.json())
+        .then(data => {
+                console.log('Resposta do servidor:', data); // Log da resposta do servidor
+                // Transformar os dados recebidos para o formato { value, label }
+                const ativosTransformados = data.map((ativo: any) => ({
+                    value: ativo.id,
+                    label: ativo.nome,
+                }));
+                setAtivos(ativosTransformados);
+                console.log('Ativos transformados:', ativosTransformados); // Log dos ativos após a transformação
+            })
+        .catch(error => console.error('Erro ao buscar ativos:', error));
+    }, []);
 
-    const handleSearch = (selectedOption: AtivoType) => {
-        setAtivo(selectedOption);
+    
+    const handleSearch = (selectedOption: AtivoType, _: any) => {
+        if (selectedOption) {
+            setAtivoSelecionado(selectedOption);
+        } else {
+            setAtivoSelecionado(null);
+        }
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-
-        const response = await fetch('http://localhost:8080/manutencaoCadastro', {
+    
+        const response = await fetch('http://localhost:8080/manutencao', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                nomeAtivo: ativo?.value,
-                nomeFuncionario,
+                ativos: { id: ativoSelecionado?.value },
+                responsavel,
                 dataInicio,
-                dataTermino,
+                dataFinal,
+                localizacao,
             }),
         });
-
+    
         const data = await response.json();
-        console.log(data);
+        console.log(data); // Adicione esta linha
+    
 
         // Se a solicitação foi bem-sucedida, exiba uma caixa de diálogo e resete o formulário
         if (response.ok) {
             alert('Manutenção cadastrada com sucesso!');
-            setAtivo(null);
-            setNomeFuncionario('');
+            setAtivos([]);
+            setResponsavel('');
             setDataInicio('');
-            setDataTermino('');
+            setDataFinal('');
+            setLocalizacao('');
         }
     };
 
@@ -59,26 +78,30 @@ export default function ManutencaoCadastroPage() {
             <br />
             <form onSubmit={handleSubmit}>
                 <label>
-                    <Select options={ativos} onChange={handleSearch} placeholder="Pesquisar ativo" styles={{control: (provided) => ({...provided,borderRadius: '20px'})}}/>
+                <Select options={ativos} onChange={handleSearch} placeholder="Pesquisar ativo" styles={{control: (provided) => ({...provided,borderRadius: '20px'})}}/>
                 </label>
                 <br/>
-                {ativo && (
+                {ativos && (
                     <>
                         <label>
                             Nome do Ativo:
-                            <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={ativo.value} readOnly />
+                            <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={ativoSelecionado ? ativoSelecionado.value : ''} readOnly />
                         </label>
                         <label>
-                            Funcionário Responsável:
-                            <input type="text" name="Nome do Funcionário" placeholder="Funcionário Responsável" value={nomeFuncionario} onChange={e => setNomeFuncionario(e.target.value)} />
+                            Responsável:
+                            <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
                         </label>
                         <label>
                             Data de Início:
                             <input type="date" name="Data de Início" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
                         </label>
                         <label>
-                            Data de Término:
-                            <input type="date" name="Data de Término" value={dataTermino} onChange={e => setDataTermino(e.target.value)} />
+                            Data Final:
+                            <input type="date" name="Data Final" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
+                        </label>
+                        <label>
+                            Localização:
+                            <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
                         </label>
                         <input type="submit" value="Cadastrar Manutenção" />
                         <br/>
