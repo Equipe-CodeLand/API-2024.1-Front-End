@@ -3,6 +3,7 @@ import Footer from "../components/footer.component";
 import ManutencaoComponent from "../components/manutencao.component";
 import Navbar from "../components/navbar.component";
 import { Manutencao } from "../types/manutencao.type";
+import styles from "../styles/manutencao.module.css";
 import axios from "axios";
 
 export default function ManutencaoPage() {
@@ -35,20 +36,23 @@ export default function ManutencaoPage() {
   return (
     <div>
       <Navbar local="manutencao" />
-      <div>
-        {manutencoes.map(manutencao => {
-            return <ManutencaoComponent
-                id={manutencao.id}
-                nome={manutencao.nome}
-                dataInicio={manutencao.dataInicio}
-                dataFinal={manutencao.dataFinal}
-                localizacao={manutencao.localizacao}
-                responsavel={manutencao.responsavel}
-                key={manutencao.id}
-                idAtivo={manutencao.idAtivo}
-            ></ManutencaoComponent>
-        })}
-      </div>      
+      <div className={styles.container}>
+        <button>Adicionar Manutenção</button>
+        <div>
+          {manutencoes.map(manutencao => {
+              return <ManutencaoComponent
+                  id={manutencao.id}
+                  nome={manutencao.nome}
+                  dataInicio={manutencao.dataInicio}
+                  dataFinal={manutencao.dataFinal}
+                  localizacao={manutencao.localizacao}
+                  responsavel={manutencao.responsavel}
+                  key={manutencao.id}
+                  idAtivo={manutencao.idAtivo}
+              ></ManutencaoComponent>
+          })}
+        </div>     
+      </div>
       <Footer />
     </div>
   );
