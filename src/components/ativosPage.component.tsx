@@ -28,8 +28,22 @@ export default function AtivosPage() {
     }, [])
 
     var render
-    if (data.length > 0) {
-        console.log(data)
+    if (loading) {
+        render = 
+        <div className={styles.listarAtivo}>
+            <span className={styles.semAtivos}>
+                Carregando ativos...
+            </span>
+        </div>
+    } else if (error) {
+        render = 
+        <div className={styles.listarAtivo}>
+            <span className={styles.semAtivos}>
+                Erro ao carregar ativos! <br/>
+                :(
+            </span>
+        </div>
+    } else if (data.length > 0) {
         render = 
         <div className={styles.listarAtivo}>
             { data.map((ativo, index) => {
