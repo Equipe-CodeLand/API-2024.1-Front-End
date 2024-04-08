@@ -1,23 +1,41 @@
 import styles from "../styles/ativosPage.module.css"
 import Ativo from "./ativo.component";
-
-type tipoAtivo = {
-    id: number;
-    nome: string;
-    disponibilidade: string;
-}
+import { AtivoType } from "../types/ativo.type";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function AtivosPage() {
-    const listaAtivos:Array<tipoAtivo> = [
+    const [data, setData] = useState<Array<AtivoType>>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<Error | unknown>(null)   
 
-    ]
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/listar/ativos")
+                if (!response.ok) {
+                    throw new Error("Erro ao buscar ativos")
+                }
+                const jsonData = await response.json()
+                setData(jsonData)
+            } catch (error) {
+                setError(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [])
 
     var render
-    if (listaAtivos.length > 0) {
+    if (data.length > 0) {
+        console.log(data)
         render = 
         <div className={styles.listarAtivo}>
-            { listaAtivos.map((ativo, index) => {
-                return <Ativo id={ativo.id} nome={ativo.nome} disponibilidade={ativo.disponibilidade}/>
+            { data.map((ativo, index) => {
+                return <Ativo 
+                    ativo={ativo}
+                />
             })}
         </div>
     } else {
@@ -36,11 +54,13 @@ export default function AtivosPage() {
             <div className={styles.conteudo}>
                 <main>
                     <div className={styles.adicionarAtivo}>
-                        <button className={styles.botao}>
+                        <a className={styles.botao} href="/cadastrar/ativos">
                             Adicionar Ativo
-                        </button>
+                        </a>
                     </div>
-                    { render }
+                    <div className={styles.listarAtivo}>
+                        {render}
+                    </div>
                 </main>
             </div>
         </div>

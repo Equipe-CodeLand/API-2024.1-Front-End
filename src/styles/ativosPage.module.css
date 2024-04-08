@@ -41,7 +41,6 @@
     background-color: hsla(0, 0%, 85%, 0.5);
 
     width: 200px;
-    height: 40px;
 
     border: 1px solid black;
     border-radius: 10px;
@@ -50,6 +49,9 @@
     font-family: var(--inter);
     font-size: 1em;
     font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    line-height: 40px;
     color: black;
 
     cursor: pointer;
