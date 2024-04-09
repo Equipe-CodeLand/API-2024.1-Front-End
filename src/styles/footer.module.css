@@ -1,8 +1,6 @@
-footer {
+.footer {
     padding: 20px;
     text-align: center;
-    position:static;
-    bottom: 0;
     width: 100%;
     justify-items: center;
     justify-content: center;
