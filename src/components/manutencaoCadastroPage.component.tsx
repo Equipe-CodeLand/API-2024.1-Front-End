@@ -84,15 +84,15 @@ export default function ManutencaoCadastroPage() {
                 text: `A Manutenção foi cadastrada com sucesso!`,
                 icon: 'success',
                 confirmButtonText: 'OK!'
+            }).then(() => {
+                window.location.reload();
             })
-
+    
             setAtivos([]);
             setResponsavel('');
             setDataInicio('');
             setDataFinal('');
             setLocalizacao('');
-
-            window.location.reload();
         } else {
             Swal.fire({
                 title: 'Erro ao cadastrar a manutenção!',
@@ -101,8 +101,8 @@ export default function ManutencaoCadastroPage() {
                 confirmButtonText: 'OK!'
             })
         }
-    };
-
+    } 
+    
     return (
         <div className={styles['form-container']}>
             <br />
