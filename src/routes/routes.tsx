@@ -2,7 +2,7 @@ import { Route, BrowserRouter, Routes as Switch } from "react-router-dom";
 import HomePage from "../pages/homePage";
 import AtivosPage from "../pages/ativosPage";
 import ManutencaoPage from "../pages/manutencaoPage";
-import CadastroAtivos from "../pages/cadastroAtivosPage";
+import CadastroAtivos from "../pages/ativosCadastroPage";
 import RouteManutecaoCadastro from "../pages/manutencaoCadastroPage";
 
 export default function Routes() {
