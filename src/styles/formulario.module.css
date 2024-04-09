@@ -82,3 +82,7 @@ p, label, input, textarea, input[type="submit"] {
         font-size: 15px;
     }
 }
+
+body {
+    font-family: 'Inter', sans-serif;
+}

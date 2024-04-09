@@ -1,6 +1,8 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
+import Swal from 'sweetalert2';
+
 
 // Define o tipo para os ativos
 type AtivoType = { value: number, id: number, label: string } | null;
@@ -42,9 +44,19 @@ export default function ManutencaoCadastroPage() {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-    
+
+        if (!ativoSelecionado || !responsavel || !dataInicio || !dataFinal || !localizacao) {
+            Swal.fire({
+                title: 'Erro ao cadastrar a manutenção!',
+                text: `Por favor, preencha todos os campos do formulário!`,
+                icon: 'warning',
+                confirmButtonText: 'OK!'
+            })
+            return;
+        }
+
         const response = await fetch(`http://localhost:8080/manutencao/cadastrar/${ativoSelecionado?.id}`,{
-        method: 'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -58,17 +70,28 @@ export default function ManutencaoCadastroPage() {
         });
     
         const data = await response.json();
-        console.log(data); // Adicione esta linha
+        console.log(data); 
     
-
-        // Se a solicitação foi bem-sucedida, exiba uma caixa de diálogo e resete o formulário
         if (response.ok) {
-            alert('Manutenção cadastrada com sucesso!');
+            Swal.fire({
+                title: 'Manutenção cadastrada!',
+                text: `A Manutenção foi cadastrada com sucesso!`,
+                icon: 'success',
+                confirmButtonText: 'OK!'
+            })
+
             setAtivos([]);
             setResponsavel('');
             setDataInicio('');
             setDataFinal('');
             setLocalizacao('');
+        } else {
+            Swal.fire({
+                title: 'Erro ao cadastrar a manutenção!',
+                text: `Ocorreu um erro ao cadastrar a manutenção!`,
+                icon: 'error',
+                confirmButtonText: 'OK!'
+            })
         }
     };
 

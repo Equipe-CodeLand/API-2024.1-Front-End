@@ -1,12 +1,14 @@
-import AtivosPage from "../components/ativosPage.component";
-import Footer from "../components/footer.component";
-import Navbar from "../components/navbar.component";
+import Footer from "../components/footer";
+import Navbar from "../components/navbar";
 
-export default function RouteAtivos() {
+export default function AtivosPage() {
   return (
     <div>
       <Navbar local="ativos" />
-      <AtivosPage />
+      <div>
+        <h1>Ativos</h1>
+        <p>Esta é a página de ativos</p>
+      </div>
       <Footer />
     </div>
   );
