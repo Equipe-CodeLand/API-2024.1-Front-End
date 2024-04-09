@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/footer.component";
-import ManutencaoComponent from "../components/manutencao.component";
-import Navbar from "../components/navbar.component";
+import { Link } from 'react-router-dom';
+import Footer from "../components/footer";
+import ManutencaoComponent from "../components/manutencao";
+import Navbar from "../components/navbar";
 import { Manutencao } from "../types/manutencao.type";
 import styles from "../styles/manutencao.module.css";
 import axios from "axios";
@@ -37,7 +38,9 @@ export default function ManutencaoPage() {
     <div>
       <Navbar local="manutencao" />
       <div className={styles.container}>
+        <Link to="/manutencaoCadastro">
         <button>Adicionar Manutenção</button>
+        </Link>
         <div>
           {manutencoes.map(manutencao => {
               return <ManutencaoComponent
