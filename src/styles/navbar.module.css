@@ -1,0 +1,207 @@
+.navbar {
+    background-color: var(--corPrimaria);
+
+    height: 65px;
+    padding: 20px 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-family: var(--inter);
+
+    position: relative;
+}
+
+.logo {
+    width: 100%;
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.logo a img {
+    width: 100px;
+}
+
+.nav {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.nav ul{
+    display: flex;
+    gap: 20px;
+}
+
+.nav ul li {
+    display: inline-block;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 1em;
+    font-weight: 400;
+}
+
+.mark {
+    font-weight: 700 !important; 
+}
+
+.hamburguer {
+    display: none;
+    cursor: pointer;
+}
+
+.menu {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+
+    .navbar {
+        padding: 20px 20px;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .open, .closed {
+        cursor: auto;
+        width: 24px;
+        height: 24px;
+    }
+
+    .hamburguer {
+        display: block;
+        z-index: 10;
+    }
+
+    .hamburguer div {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: -12px;
+        z-index: 10;
+    }
+
+    .open .hamburguer {
+        position: relative;
+        background-color: white;
+        height: 3px;
+        width: 24px;
+        top: 50%;
+        transition: 0.5s;
+    }
+
+    .open .hamburguer::before, .open .hamburguer::after {
+        content: '';
+        position: absolute;
+        background-color: white;
+        height: 3px;
+        width: 24px;
+        transition: 0.5s;
+    }
+
+    .open .hamburguer::before {
+        top: -8px;
+    }
+
+    .open .hamburguer::after {
+        top: 8px;
+    }
+
+    .closed .hamburguer {
+        position: relative;
+        background-color: white;
+        height: 3px;
+        width: 24px;
+        top: 50%;
+        rotate: 45deg;
+        transition: 0.5s;
+    }
+
+    .closed .hamburguer::before, .closed .hamburguer::after {
+        content: '';
+        position: absolute;
+        background-color: white;
+        height: 3px;
+        width: 24px;
+        transition: 0.5s;
+    }
+
+    .closed .hamburguer::before {
+        top: 0px;
+        rotate: 90deg;
+    }
+
+    .closed .hamburguer::after {
+        top: 0px;
+    }
+
+    .open .menu {
+        display: none;
+    }
+
+    .background {
+        background-color: transparent;
+        transition: all 0.5s;
+        z-index: 8;
+    }
+
+    .closed .background {
+        display: block;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        cursor: auto;
+    }
+
+    .menu {
+        width: 0px;
+        z-index: 9;
+    }
+
+    .closed .menu {
+        display: block;
+        background-color: var(--corPrimaria);
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 40%;
+        height: 100vh;
+        transition: all 0.5s;
+        cursor: auto;
+    }
+
+    .menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 30px 20px;
+        margin-top: 65px;
+        border-top: 2px solid var(--corSecundaria);
+        list-style: none;
+    }
+
+    .menu ul li {
+        display: block;
+    }
+
+    .menu ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 1em;
+        font-weight: 500;
+    }
+}

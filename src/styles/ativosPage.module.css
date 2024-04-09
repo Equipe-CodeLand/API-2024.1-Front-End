@@ -1,0 +1,53 @@
+.body {
+    min-height: calc(100vh - 64px);
+    max-height: none;
+
+    display: flex;
+}
+
+/*
+.filtro {
+    background-color: purple;
+    width: 300px;
+    height: calc(100vh - 64px);
+}
+*/
+
+.conteudo {
+    width: 100%;
+    height: calc(100vh - 64px);
+}
+
+.conteudo main {
+    border: 1px solid lime;
+
+    max-width: 1000px;
+    height: 100%;
+    
+    margin: 0 auto;
+    padding: 64px;
+}
+
+.adicionarAtivo {
+    border: 1px solid purple;
+
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+.listarAtivo {
+    border: 1px solid orange;
+
+    width: 100%;
+    min-height: 450px;
+    max-height: none;
+}
+
+@media screen and (max-width: 600px) {
+    .conteudo main {
+        padding: 32px;
+    }
+}

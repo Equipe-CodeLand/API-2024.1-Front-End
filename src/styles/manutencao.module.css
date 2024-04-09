@@ -1,0 +1,63 @@
+.container {
+    padding: 0em 8%;
+    text-align: right;
+}
+.container button {
+    padding: 1em 2em;
+    border-radius: 20px;
+    border: 2px solid var(--corPrimaria);
+    background-color: var(--corPrimaria);
+    color: white;
+    margin: 2em 0 1em 0;
+    cursor: pointer;
+}
+.container button:hover {
+    background-color: white;
+    color: var(--corPrimaria);
+}
+
+
+.manutencao {
+    box-sizing: border-box;
+    display: flex;
+    margin: 1em auto;
+    border-radius: 40px;
+    padding: 1.5em 3%;
+    box-shadow: 1px 1px 2px 1px gray;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1em;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 699px) {
+    .manutencao {
+        flex-direction: column;
+    }
+    .id, .datas {        
+        text-align: center;
+    }
+}
+@media only screen and (min-width: 700px) {
+    .manutencao {
+        flex-direction: row;
+    }
+}
+.id {
+    flex-grow: 0;
+    flex-basis: 20%;
+    text-align: start;
+}
+.nome {
+    flex-grow: 1;
+    flex-shrink: 1;
+    word-break: break-all;
+    text-align: left;
+}
+.datas {
+    flex-grow: 0;
+    flex-basis: 25%;
+    text-align: end;
+    padding-right: 2em;
+}

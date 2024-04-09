@@ -1,9 +1,10 @@
-import './App.css';
+import Routes from "./routes/routes";
+import "./styles/global.css";
+import RouteManutecaoCadastro from './pages/manutencaoCadastroPage';
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <Routes />
   );
 }
 
