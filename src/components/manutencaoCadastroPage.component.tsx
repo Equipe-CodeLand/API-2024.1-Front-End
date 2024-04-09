@@ -45,6 +45,12 @@ export default function ManutencaoCadastroPage() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
+        const dataFinalAjustada = new Date(dataFinal)
+        dataFinalAjustada.setDate(dataFinalAjustada.getDate() + 1)
+
+        const dataInicioAjustada = new Date(dataInicio)
+        dataInicioAjustada.setDate(dataInicioAjustada.getDate() + 1)
+
         if (!ativoSelecionado || !responsavel || !dataInicio || !dataFinal || !localizacao) {
             Swal.fire({
                 title: 'Erro ao cadastrar a manutenção!',
@@ -63,9 +69,9 @@ export default function ManutencaoCadastroPage() {
             body: JSON.stringify({
                 ativos: ativoSelecionado?.value,
                 responsavel,
-                dataInicio,
-                dataFinal,
-                localizacao,
+                dataInicio: dataInicioAjustada.toISOString().slice(0,10),
+                dataFinal: dataFinalAjustada.toISOString().slice(0, 10),
+                localizacao
             }),
         });
     
@@ -85,6 +91,8 @@ export default function ManutencaoCadastroPage() {
             setDataInicio('');
             setDataFinal('');
             setLocalizacao('');
+
+            window.location.reload();
         } else {
             Swal.fire({
                 title: 'Erro ao cadastrar a manutenção!',

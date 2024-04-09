@@ -1,23 +1,60 @@
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import Footer from "../components/footer";
 import ManutencaoComponent from "../components/manutencao";
 import Navbar from "../components/navbar";
+import { Manutencao } from "../types/manutencao.type";
+import styles from "../styles/manutencao.module.css";
+import axios from "axios";
 
 export default function ManutencaoPage() {
-  let manutencoes = [{ id: 112151515, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024' },
-  { id: 2, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024' },
-  { id: 3, nome: 'Máquina de Impressão 3D Industrial', dataInicio: '28/03/2024', dataFinal: '05/04/2024' }]
+
+  let [manutencoes, setManutencoes] = useState<Manutencao[]>([])
+
+  useEffect(() => {
+    buscarManutencoes()
+  }, [])
+
+  function buscarManutencoes() {
+    axios.get(`http://localhost:8080/manutencao`)
+      .then(res => {
+        console.log(res.data)
+        let manutencoes = res.data.map((manutencao:any) => {
+          return {
+            id: manutencao.id,
+            nome: manutencao.ativos.nome,
+            dataInicio: manutencao.dataInicio,
+            dataFinal: manutencao.dataFinal,
+            idAtivo: manutencao.ativos.id, 
+            localizacao: manutencao.localizacao,
+            responsavel: manutencao.responsavel
+          }
+        })
+        setManutencoes(manutencoes)
+      })
+  }
+
   return (
     <div>
       <Navbar local="manutencao" />
-      <div>
-        {manutencoes.map(manutencao => {
-          return <ManutencaoComponent
-            id={manutencao.id}
-            nome={manutencao.nome}
-            dataInicio={manutencao.dataInicio}
-            dataFinal={manutencao.dataFinal}
-          ></ManutencaoComponent>
-        })}
+      <div className={styles.container}>
+        <Link to="/manutencaoCadastro">
+        <button>Adicionar Manutenção</button>
+        </Link>
+        <div>
+          {manutencoes.map(manutencao => {
+              return <ManutencaoComponent
+                  id={manutencao.id}
+                  nome={manutencao.nome}
+                  dataInicio={manutencao.dataInicio}
+                  dataFinal={manutencao.dataFinal}
+                  localizacao={manutencao.localizacao}
+                  responsavel={manutencao.responsavel}
+                  key={manutencao.id}
+                  idAtivo={manutencao.idAtivo}
+              ></ManutencaoComponent>
+          })}
+        </div>     
       </div>
       <Footer />
     </div>

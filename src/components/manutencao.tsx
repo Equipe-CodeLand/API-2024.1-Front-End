@@ -1,13 +1,7 @@
 import styles from "../styles/manutencao.module.css";
+import { Manutencao } from "../types/manutencao.type";
 
-type props = {
-    id: number,
-    nome: string,
-    dataInicio: string,
-    dataFinal: string
-}
-
-export default function ManutencaoComponent(props: props) {
+export default function ManutencaoComponent(props: Manutencao) {
     return(
         <div>
             <section className={styles.manutencao}>
