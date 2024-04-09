@@ -3,7 +3,7 @@ import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 
 // Define o tipo para os ativos
-type AtivoType = { value: string, label: string } | null;
+type AtivoType = { value: number, id: number, label: string } | null;
 
 export default function ManutencaoCadastroPage() {
     const [ativos, setAtivos] = useState<AtivoType[]>([]);
@@ -21,7 +21,8 @@ export default function ManutencaoCadastroPage() {
                 console.log('Resposta do servidor:', data); // Log da resposta do servidor
                 // Transformar os dados recebidos para o formato { value, label }
                 const ativosTransformados = data.map((ativo: any) => ({
-                    value: ativo.id,
+                    value: ativo,
+                    id: ativo.id,
                     label: ativo.nome,
                 }));
                 setAtivos(ativosTransformados);
@@ -42,13 +43,13 @@ export default function ManutencaoCadastroPage() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
     
-        const response = await fetch('http://localhost:8080/manutencao', {
-            method: 'POST',
+        const response = await fetch(`http://localhost:8080/manutencao/cadastrar/${ativoSelecionado?.id}`,{
+        method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                ativos: { id: ativoSelecionado?.value },
+                ativos: ativoSelecionado?.value,
                 responsavel,
                 dataInicio,
                 dataFinal,
@@ -84,8 +85,8 @@ export default function ManutencaoCadastroPage() {
                 {ativos && (
                     <>
                         <label>
-                            Nome do Ativo:
-                            <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={ativoSelecionado ? ativoSelecionado.value : ''} readOnly />
+                            ID do Ativo:
+                            <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id: ''} readOnly />
                         </label>
                         <label>
                             Responsável:
