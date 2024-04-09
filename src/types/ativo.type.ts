@@ -7,5 +7,5 @@ export type AtivoType = {
     preco_aquisicao: number,
     func_id: number,
     setor_id: number,
-    status_id: number
+    status: {id: number, descricao: string} 
 }
