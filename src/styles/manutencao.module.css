@@ -1,6 +1,24 @@
+.container {
+    padding: 0em 8%;
+    text-align: right;
+}
+.container button {
+    padding: 1em 2em;
+    border-radius: 20px;
+    border: 2px solid var(--corPrimaria);
+    background-color: var(--corPrimaria);
+    color: white;
+    margin: 2em 0 1em 0;
+    cursor: pointer;
+}
+.container button:hover {
+    background-color: white;
+    color: var(--corPrimaria);
+}
+
+
 .manutencao {
     box-sizing: border-box;
-    width: 90%;
     display: flex;
     margin: 1em auto;
     border-radius: 40px;
