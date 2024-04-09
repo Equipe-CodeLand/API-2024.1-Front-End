@@ -1,10 +1,9 @@
 import styles from "../styles/ativosPage.module.css"
 import Ativo from "./ativo.component";
 import { AtivoType } from "../types/ativo.type";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function AtivosPage() {
+export default function AtivosPageComponent() {
     const [data, setData] = useState<Array<AtivoType>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)   
