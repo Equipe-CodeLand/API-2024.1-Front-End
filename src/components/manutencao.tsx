@@ -37,7 +37,9 @@ export default function ManutencaoComponent(props: IManutencao) {
             <section className={styles.manutencao}>
                 <div className={styles.id}>ID: {props.id}</div>
                 <div className={styles.nome}>{props.nome}</div>
-                <div className={styles.datas}>{props.dataInicio} - {props.dataFinal}</div>            
+                <div className={styles.datas}>
+                  {new Date(props.dataInicio).toLocaleDateString()} - {new Date(props.dataFinal).toLocaleDateString()}
+                </div>            
             </section>   
             </a>
         </div>

@@ -23,9 +23,9 @@ export default function ManutencaoPage() {
           return {
             id: manutencao.id,
             nome: manutencao.ativos.nome,
-            dataInicio: manutencao.dataInicio,
-            dataFinal: manutencao.dataFinal,
-            idAtivo: manutencao.ativos.id, 
+            dataInicio: manutencao.data_inicio,
+            dataFinal: manutencao.data_final,
+            ativos_id: manutencao.ativos.id, 
             localizacao: manutencao.localizacao,
             responsavel: manutencao.responsavel
           }
@@ -33,7 +33,6 @@ export default function ManutencaoPage() {
         setManutencoes(manutencoes)
       })
   }
-
   return (
     <div>
       <Navbar local="manutencao" />
