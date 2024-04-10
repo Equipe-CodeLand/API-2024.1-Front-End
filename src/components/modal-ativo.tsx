@@ -4,6 +4,8 @@ import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
 import { FaRegEdit } from "react-icons/fa";
 import ButtonMain from "./botao";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [show, setShow] = useState(true)
@@ -16,6 +18,19 @@ export default function ModalAtivo(props: IModalAtivo) {
     const manutencoesFuturas = props.ativo.manutencoes.filter((manutencao) => {
         return new Date(manutencao.dataInicio) > new Date()
     })
+
+    const excluirAtivo = () => {
+        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(()=> {
+            Swal.fire({
+                title: 'Ativo Deletado!',
+                text: `O ativo  foi deletado com sucesso!`,
+                icon: 'success',
+                confirmButtonText: 'OK!'
+            })
+            setShow(false)
+            props.buscarAtivos()
+        }).catch()
+    }
 
     const handleDisponivel = () => {
         setDisponivel(!disponivel)
@@ -179,7 +194,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 </Modal.Body>
                 <Modal.Footer> 
                     <div className={styles.botoes}>
-                        <button className={styles.excluir}>EXCLUIR ATIVO</button>
+                        <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
                         <button className={styles.editar}>ATUALIZAR ATIVO</button>
                     </div>
                 </Modal.Footer>

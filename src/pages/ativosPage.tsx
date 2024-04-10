@@ -12,21 +12,21 @@ export default function AtivosPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
 
-    useEffect(() => {
-        const ativos = async () => {
-            try {
-                const response = await fetch("http://localhost:8080/listar/ativos")
-                if (!response.ok) {
-                    throw new Error("Erro ao buscar ativos")
-                }
-                const jsonData = await response.json()
-                setData(jsonData)
-            } catch (error) {
-                setError(error)
-            } finally {
-                setLoading(false)
+    const ativos = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/listar/ativos")
+            if (!response.ok) {
+                throw new Error("Erro ao buscar ativos")
             }
+            const jsonData = await response.json()
+            setData(jsonData)
+        } catch (error) {
+            setError(error)
+        } finally {
+            setLoading(false)
         }
+    }
+    useEffect(() => {
 
         const manutencoes = async () => {
             try {
@@ -78,6 +78,8 @@ export default function AtivosPage() {
                         dataAquisicao={ativo.dataAquisicao}
                         dataExpiracao={ativo.dataExpiracao}
                         manutencoes={manutencoes.filter(manut => manut.ativos.id === ativo.id)}
+                        buscarAtivos={ativos}
+                        key={ativo.id}
                     />
                 })}
             </div>

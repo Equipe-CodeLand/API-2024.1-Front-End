@@ -13,4 +13,5 @@ export interface IAtivo {
     dataAquisicao: Date,
     dataExpiracao: Date,
     manutencoes: Manutencao[]
+    buscarAtivos: Function
 }
