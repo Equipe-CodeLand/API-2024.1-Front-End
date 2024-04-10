@@ -1,3 +1,5 @@
+import { Manutencao } from "./manutencao.type"
+
 export type AtivoType = {
     id: number,
     descricao: string,
@@ -10,4 +12,5 @@ export type AtivoType = {
     status: {id: number, descricao: string},
     dataAquisicao: Date,
     dataExpiracao: Date,
+    manutencoes: Manutencao[]
 }

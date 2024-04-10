@@ -1,4 +1,4 @@
-import { AtivoType } from "../types/ativo.type";
+import { Manutencao } from "../types/manutencao.type";
 
 export interface IAtivo {
     id: number,
@@ -12,4 +12,5 @@ export interface IAtivo {
     status: {id: number, descricao: string},
     dataAquisicao: Date,
     dataExpiracao: Date,
+    manutencoes: Manutencao[]
 }

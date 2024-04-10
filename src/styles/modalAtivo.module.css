@@ -43,6 +43,17 @@
     background-color: black;
 }
 
+.manutencoes ul {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.semManutencoes {
+    font-weight: 300;
+}
+
 .excluir {
     background-color: #DB5050;
     padding: 5px 10px;

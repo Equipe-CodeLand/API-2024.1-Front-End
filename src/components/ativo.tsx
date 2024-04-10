@@ -50,7 +50,7 @@ export default function Ativo(props: IAtivo) {
 
         <>
             {state.show && state.ativoSelecionado && (
-                <ModalAtivo disponibilidade={props.status.id} ativo={state.ativoSelecionado} handleClose={handleClose} />
+                <ModalAtivo ativo={state.ativoSelecionado} handleClose={handleClose} />
             )}
             <div className={styles.ativo} onClick={() => handleShow(props)}>
                 <div className={styles.id}>ID: {props.id} </div>

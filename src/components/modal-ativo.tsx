@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
+import { Divide } from "lucide-react";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [show, setShow] = useState(true)
@@ -10,6 +11,10 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [emManutencao, setEmManutencao] = useState(false)
     const dataAquisicao = new Date(props.ativo.dataAquisicao)
     const dataExpiracao = new Date(props.ativo.dataExpiracao)
+
+    const manutencoesFuturas = props.ativo.manutencoes.filter((manutencao) => {
+        return new Date(manutencao.dataFinal) > new Date()
+    })
 
     const handleDisponivel = () => {
         setDisponivel(!disponivel)
@@ -48,6 +53,30 @@ export default function ModalAtivo(props: IModalAtivo) {
                 break
         }
     }, [])
+
+    function mostrar() {
+        console.log(props.ativo.manutencoes)
+    }
+
+    var render
+    if (manutencoesFuturas.length > 0) {
+        render = 
+            <ul>
+                {manutencoesFuturas.map((manutencao, index) => {
+                    return (
+                        <li>
+                            ID: {manutencao.id} <br />
+                            {new Date(manutencao.dataFinal).toLocaleDateString()}
+                        </li>
+                    )
+                })}
+            </ul>
+    } else {
+        render = 
+            <div className={styles.semManutencoes}>
+                - Não há manutenções futuras -
+            </div>
+    }
 
     return (
         <>
@@ -98,16 +127,12 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                     <hr />
                     <div className={styles.manutencoes}>
-                        <strong>Manutenções: </strong>
-                        <ul>
-                            <li>Manutenção 1</li>
-                            <li>Manutenção 2</li>
-                            <li>Manutenção 3</li>
-                        </ul>
+                        <strong>Manutenções futuras: </strong>
+                        {render}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className={styles.excluir}>EXCLUIR ATIVO</button>
+                    <button className={styles.excluir} onClick={mostrar}>EXCLUIR ATIVO</button>
                 </Modal.Footer>
             </Modal>
         </>
