@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
-import { Divide } from "lucide-react";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [show, setShow] = useState(true)
@@ -87,7 +86,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         {props.ativo.id}
                     </div>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={styles.modal}>
                     <div className={styles.titulo}>
                         {props.ativo.nome}
                     </div>
@@ -131,8 +130,11 @@ export default function ModalAtivo(props: IModalAtivo) {
                         {render}
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <button className={styles.excluir} onClick={mostrar}>EXCLUIR ATIVO</button>
+                <Modal.Footer> 
+                    <div className={styles.botoes}>
+                        <button className={styles.excluir} onClick={mostrar}>EXCLUIR ATIVO</button>
+                        <button className={styles.editar}>EDITAR ATIVO</button>
+                    </div>
                 </Modal.Footer>
             </Modal>
         </>
