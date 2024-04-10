@@ -1,27 +1,114 @@
-import { useState } from "react";
-import { IAtivo } from "../interfaces/ativo";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { IModalAtivo } from "../interfaces/modalAtivo";
+import styles from "../styles/modalAtivo.module.css";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [show, setShow] = useState(true)
+    const [disponivel, setDisponivel] = useState(true)
+    const [ocupado, setOcupado] = useState(false)
+    const [emManutencao, setEmManutencao] = useState(false)
+    const dataAquisicao = new Date(props.ativo.dataAquisicao)
+    const dataExpiracao = new Date(props.ativo.dataExpiracao)
+
+    const handleDisponivel = () => {
+        setDisponivel(!disponivel)
+        setOcupado(false)
+        setEmManutencao(false)
+    }
+
+    const handleOcupado = () => {
+        setOcupado(!ocupado)
+        setDisponivel(false)
+        setEmManutencao(false)
+    }
+
+    const handleEmManutencao = () => {
+        setEmManutencao(!emManutencao)
+        setDisponivel(false)
+        setOcupado(false)
+    }
+
+    useEffect(() => {
+        switch (props.ativo.status.id) {
+            case 1:
+                setDisponivel(true)
+                setOcupado(false)
+                setEmManutencao(false)
+                break
+            case 2:
+                setEmManutencao(true)
+                setDisponivel(false)
+                setOcupado(false)
+                break
+            case 3:
+                setOcupado(true)
+                setDisponivel(false)
+                setEmManutencao(false)
+                break
+        }
+    }, [])
 
     return (
         <>
             <Modal show={show} onHide={props.handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{props.ativo.ativo.nome}</Modal.Title>
+                    <div className={styles.id}>
+                        <strong>ID: </strong>
+                        {props.ativo.id}
+                    </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>ID: {props.ativo.ativo.id}</p>
-                    <p>Descrição: {props.ativo.ativo.descricao}</p>
-                    <p>Marca: {props.ativo.ativo.marca}</p>
-                    <p>Modelo: {props.ativo.ativo.modelo}</p>
-                    <p>Preço de aquisição: {props.ativo.ativo.preco_aquisicao}</p>
-                    <p>Funcionário: {props.ativo.ativo.func_id}</p>
-                    <p>Setor: {props.ativo.ativo.setor_id}</p>
-                    <p>Status: {props.ativo.ativo.status.descricao}</p>
+                    <div className={styles.titulo}>
+                        {props.ativo.nome}
+                    </div>
+                    <div className={styles.status}>
+                        <ul>
+                            <li>
+                                <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponivel
+                            </li>
+                            <li>
+                                <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
+                            </li>
+                            <li>
+                                <input type="checkbox" checked={emManutencao} onChange={handleEmManutencao} /> Em manutenção
+                            </li>
+                        </ul>
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Descrição: </strong> {props.ativo.descricao}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Modelo: </strong> {props.ativo.modelo}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Marca: </strong> {props.ativo.marca}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Preço: </strong> R$ {props.ativo.precoAquisicao}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Data de expiração: </strong> {dataExpiracao.toLocaleDateString()}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Responsável: </strong> {props.ativo.funcionario}
+                    </div>
+                    <hr />
+                    <div className={styles.manutencoes}>
+                        <strong>Manutenções: </strong>
+                        <ul>
+                            <li>Manutenção 1</li>
+                            <li>Manutenção 2</li>
+                            <li>Manutenção 3</li>
+                        </ul>
+                    </div>
                 </Modal.Body>
+                <Modal.Footer>
+                    <button className={styles.excluir}>EXCLUIR ATIVO</button>
+                </Modal.Footer>
             </Modal>
         </>
     )

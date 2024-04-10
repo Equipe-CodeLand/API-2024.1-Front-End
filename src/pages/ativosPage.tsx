@@ -6,7 +6,7 @@ import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
 
 export default function AtivosPage() {
-  const [data, setData] = useState<Array<AtivoType>>([])
+    const [data, setData] = useState<Array<AtivoType>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)   
 
@@ -45,11 +45,22 @@ export default function AtivosPage() {
             </span>
         </div>
     } else if (data.length > 0) {
+        console.log(data)
         render = 
         <div className={styles.listarAtivo}>
             { data.map((ativo, index) => {
                 return <Ativo 
-                    ativo={ativo}
+                    id={ativo.id}
+                    nome={ativo.nome}
+                    descricao={ativo.descricao}
+                    marca={ativo.marca}
+                    modelo={ativo.modelo}
+                    precoAquisicao={ativo.precoAquisicao}
+                    funcionario={ativo.funcionario}
+                    setor={ativo.setor}
+                    status={ativo.status}
+                    dataAquisicao={ativo.dataAquisicao}
+                    dataExpiracao={ativo.dataExpiracao}
                 />
             })}
         </div>

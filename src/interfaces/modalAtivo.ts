@@ -1,7 +1,7 @@
 import { IAtivo } from "./ativo";
 
 export interface IModalAtivo {
-    nomeBotao: string
+    disponibilidade: number;
     ativo: IAtivo;
     handleClose: () => void;
 }

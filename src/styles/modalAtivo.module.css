@@ -1,0 +1,52 @@
+.id {
+    font-size: 1em;
+}
+
+.titulo {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+.informacoes {
+    margin-bottom: 10px;
+}
+
+.status {
+    padding: 20px;
+}
+
+.status ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status ul li input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    border: 1px solid #9e9e9e;
+    border-radius: 2px;
+    width: 13px;
+    height: 13px;
+
+    margin-right: 5px;
+}
+
+.status ul input[type="checkbox"]:checked {
+    background-color: black;
+}
+
+.excluir {
+    background-color: #DB5050;
+    padding: 5px 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: 2px solid black;
+}

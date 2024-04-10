@@ -28,7 +28,7 @@ export default function Ativo(props: IAtivo) {
 
     var disponibilidade: string
     var status: string
-    switch (props.ativo.status.id) {
+    switch (props.status.id) {
         case 1:
             disponibilidade = "Disponível"
             status = styles.verde
@@ -50,11 +50,11 @@ export default function Ativo(props: IAtivo) {
 
         <>
             {state.show && state.ativoSelecionado && (
-                <ModalAtivo nomeBotao='Fechar' ativo={state.ativoSelecionado} handleClose={handleClose} />
+                <ModalAtivo disponibilidade={props.status.id} ativo={state.ativoSelecionado} handleClose={handleClose} />
             )}
             <div className={styles.ativo} onClick={() => handleShow(props)}>
-                <div className={styles.id}>ID: {props.ativo.id} </div>
-                <div className={styles.nome}> {props.ativo.nome} </div>
+                <div className={styles.id}>ID: {props.id} </div>
+                <div className={styles.nome}> {props.nome} </div>
                 <div className={styles.disponibilidade}>
                     <span className={status} />
                     {disponibilidade}
