@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
+import { FaRegEdit } from "react-icons/fa";
+import ButtonMain from "./botao";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [show, setShow] = useState(true)
@@ -104,25 +106,67 @@ export default function ModalAtivo(props: IModalAtivo) {
                         </ul>
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Descrição: </strong> {props.ativo.descricao}
+                        <div>
+                            <strong>Descrição: </strong> {props.ativo.descricao}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Modelo: </strong> {props.ativo.modelo}
+                        <div>
+                            <strong>Modelo: </strong> {props.ativo.modelo}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Marca: </strong> {props.ativo.marca}
+                        <div>
+                            <strong>Marca: </strong> {props.ativo.marca}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Preço: </strong> R$ {props.ativo.preco_aquisicao}
+                        <div>
+                            <strong>Preço: </strong> R$ {props.ativo.preco_aquisicao}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}
+                        <div>
+                            <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Data de expiração: </strong> {dataExpiracao.toLocaleDateString()}
+                        <div>
+                            <strong>Data de expiração: </strong> {dataExpiracao.toLocaleDateString()}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Responsável: </strong> {props.ativo.funcionario}
+                        <div>
+                            <strong>Responsável: </strong> {props.ativo.funcionario}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            /* onClick={} */
+                        />
                     </div>
                     <hr />
                     <div className={styles.manutencoes}>
