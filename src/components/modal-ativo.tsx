@@ -13,7 +13,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const dataExpiracao = new Date(props.ativo.dataExpiracao)
 
     const manutencoesFuturas = props.ativo.manutencoes.filter((manutencao) => {
-        return new Date(manutencao.dataFinal) > new Date()
+        return new Date(manutencao.dataInicio) > new Date()
     })
 
     const handleDisponivel = () => {
