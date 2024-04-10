@@ -55,10 +55,6 @@ export default function ModalAtivo(props: IModalAtivo) {
         }
     }, [])
 
-    function mostrar() {
-        console.log(props.ativo.manutencoes)
-    }
-
     var render
     if (manutencoesFuturas.length > 0) {
         render = 
@@ -67,7 +63,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                     return (
                         <li>
                             ID: {manutencao.id} <br />
-                            {new Date(manutencao.dataFinal).toLocaleDateString()}
+
+                            {new Date(manutencao.dataInicio).toLocaleDateString()} - {new Date(manutencao.dataFinal).toLocaleDateString()}
                         </li>
                     )
                 })}
@@ -182,8 +179,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                 </Modal.Body>
                 <Modal.Footer> 
                     <div className={styles.botoes}>
-                        <button className={styles.excluir} onClick={mostrar}>EXCLUIR ATIVO</button>
-                        <button className={styles.editar}>EDITAR ATIVO</button>
+                        <button className={styles.excluir}>EXCLUIR ATIVO</button>
+                        <button className={styles.editar}>ATUALIZAR ATIVO</button>
                     </div>
                 </Modal.Footer>
             </Modal>
