@@ -9,12 +9,13 @@
 .titulo {
     text-align: center;
     font-weight: 700;
-    font-size: 1.4em;
+    font-size: 1.5em;
+    margin-bottom: 5px;
 }
 
 .informacoes {
-    margin-bottom: 10px;
-    font-size: 1.05em;
+    margin-bottom: 15px;
+    font-size: 1.1em;
 }
 
 .status {
@@ -46,11 +47,16 @@
     background-color: black;
 }
 
+.manutencoes {
+    font-size: 1.1em;
+}
+
 .manutencoes ul {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    font-size: 1em;
 }
 
 .semManutencoes {
