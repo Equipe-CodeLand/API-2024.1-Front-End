@@ -7,10 +7,17 @@
 }
 
 .titulo {
-    text-align: center;
+    text-align: left;
     font-weight: 700;
     font-size: 1.5em;
-    margin-bottom: 5px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo button {
+    padding: 0;
+    padding-bottom: 10px;
 }
 
 .informacoes {

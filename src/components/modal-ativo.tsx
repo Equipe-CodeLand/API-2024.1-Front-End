@@ -84,13 +84,19 @@ export default function ModalAtivo(props: IModalAtivo) {
             <Modal show={show} onHide={props.handleClose}>
                 <Modal.Header closeButton>
                     <div className={styles.id}>
-                        <strong>ID: </strong>
-                        {props.ativo.id}
+                        <h4>ID: {props.ativo.id}</h4>
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
                     <div className={styles.titulo}>
-                        {props.ativo.nome}
+                        <h3>
+                            {props.ativo.nome}
+                        </h3>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            /* onClick={} */
+                        />  
+                        
                     </div>
                     <div className={styles.status}>
                         <ul>
@@ -110,7 +116,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Descrição: </strong> {props.ativo.descricao}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -119,7 +125,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Modelo: </strong> {props.ativo.modelo}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -128,7 +134,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Marca: </strong> {props.ativo.marca}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -137,7 +143,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Preço: </strong> R$ {props.ativo.preco_aquisicao}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -146,7 +152,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -155,7 +161,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Data de expiração: </strong> {dataExpiracao.toLocaleDateString()}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
@@ -164,7 +170,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <strong>Responsável: </strong> {props.ativo.funcionario}
                         </div>
                         <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 24 }} />}
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             /* onClick={} */
                         />
                     </div>
