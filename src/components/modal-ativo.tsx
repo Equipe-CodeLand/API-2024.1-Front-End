@@ -114,7 +114,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <strong>Marca: </strong> {props.ativo.marca}
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Preço: </strong> R$ {props.ativo.precoAquisicao}
+                        <strong>Preço: </strong> R$ {props.ativo.preco_aquisicao}
                     </div>
                     <div className={styles.informacoes}>
                         <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}

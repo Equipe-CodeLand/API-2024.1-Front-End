@@ -6,7 +6,7 @@ export type AtivoType = {
     marca: string,
     modelo: string,
     nome: string,
-    precoAquisicao: number,
+    preco_aquisicao: number,
     funcionario: string,
     setor: {id: number, nome: string},
     status: {id: number, descricao: string},

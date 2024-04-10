@@ -71,7 +71,7 @@ export default function AtivosPage() {
                         descricao={ativo.descricao}
                         marca={ativo.marca}
                         modelo={ativo.modelo}
-                        precoAquisicao={ativo.precoAquisicao}
+                        preco_aquisicao={ativo.preco_aquisicao}
                         funcionario={ativo.funcionario}
                         setor={ativo.setor}
                         status={ativo.status}
