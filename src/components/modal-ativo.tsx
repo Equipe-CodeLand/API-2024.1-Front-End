@@ -8,22 +8,88 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export default function ModalAtivo(props: IModalAtivo) {
-    const [show, setShow] = useState(true)
-    const [disponivel, setDisponivel] = useState(true)
-    const [ocupado, setOcupado] = useState(false)
-    const [emManutencao, setEmManutencao] = useState(false)
-    const dataAquisicao = new Date(props.ativo.dataAquisicao)
-    const dataExpiracao = new Date(props.ativo.dataExpiracao)
+    const [isEditing, setIsEditing] = useState(false);
+    const [show, setShow] = useState(true);
+    const [disponivel, setDisponivel] = useState(true);
+    const [ocupado, setOcupado] = useState(false);
+    const [emManutencao, setEmManutencao] = useState(false);
 
-    const manutencoesFuturas = props.ativo.manutencoes.filter((manutencao) => {
-        return new Date(manutencao.dataInicio) > new Date()
-    })
+    const [nome, setNome] = useState(props.ativo.nome);
+    const [descricao, setDescricao] = useState(props.ativo.descricao);
+    const [modelo, setModelo] = useState(props.ativo.modelo);
+    const [marca, setMarca] = useState(props.ativo.marca);
+    const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao);
+    const [funcionario, setFuncionario] = useState(props.ativo.funcionario);
+    const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
+    const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
 
+    const manutencoesFuturas = props.ativo.manutencoes.filter(
+        (manutencao) => new Date(manutencao.dataInicio) > new Date()
+    );
+
+    const toggleEditing = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = e.target.value;
+        setPreco_aquisicao(inputValue); // Corrigido: converter para float
+    };
+
+    const saveChanges = () => {
+        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
+        const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
+        const formattedDataExpiracao = formatDateForBackend(dataExpiracao);
+
+        const ativosDto = {
+            nome: nome,
+            descricao: descricao,
+            modelo: modelo,
+            marca: marca,
+            preco_aquisicao: parseFloat(preco_aquisicao),
+            funcionario: funcionario,
+            dataAquisicao: formattedDataAquisicao,
+            dataExpiracao: formattedDataExpiracao,
+            status: { id: statusId }
+        };
+
+        axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
+            .then(response => {
+                Swal.fire({
+                    title: 'Ativo Atualizado!',
+                    text: `O ativo foi atualizado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                });
+                setShow(false);
+                props.buscarAtivos();
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar o ativo:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao atualizar o ativo',
+                    text: 'Ocorreu um erro ao tentar atualizar o ativo. Por favor, tente novamente.'
+                });
+                setShow(false);
+                props.buscarAtivos();
+            });
+    };
+
+    const formatDateForBackend = (dateString: string) => {
+        const parts = dateString.split('/');
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+    };
     const excluirAtivo = () => {
         axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(()=> {
             Swal.fire({
                 title: 'Ativo Deletado!',
-                text: `O ativo  foi deletado com sucesso!`,
+                text: `O ativo foi deletado com sucesso!`,
                 icon: 'success',
                 confirmButtonText: 'OK!'
             })
@@ -53,22 +119,24 @@ export default function ModalAtivo(props: IModalAtivo) {
     useEffect(() => {
         switch (props.ativo.status.id) {
             case 1:
-                setDisponivel(true)
-                setOcupado(false)
-                setEmManutencao(false)
-                break
+                setDisponivel(true);
+                setOcupado(false);
+                setEmManutencao(false);
+                break;
             case 2:
-                setEmManutencao(true)
-                setDisponivel(false)
-                setOcupado(false)
-                break
+                setEmManutencao(true);
+                setDisponivel(false);
+                setOcupado(false);
+                break;
             case 3:
-                setOcupado(true)
-                setDisponivel(false)
-                setEmManutencao(false)
-                break
+                setOcupado(true);
+                setDisponivel(false);
+                setEmManutencao(false);
+                break;
+            default:
+                break;
         }
-    }, [])
+    }, [props.ativo.status.id]);
 
     var render
     if (manutencoesFuturas.length > 0) {
@@ -76,9 +144,8 @@ export default function ModalAtivo(props: IModalAtivo) {
             <ul>
                 {manutencoesFuturas.map((manutencao, index) => {
                     return (
-                        <li>
+                        <li key={index}> {/* Adicionado: key prop */}
                             ID: {manutencao.id} <br />
-
                             {new Date(manutencao.dataInicio).toLocaleDateString()} - {new Date(manutencao.dataFinal).toLocaleDateString()}
                         </li>
                     )
@@ -100,20 +167,24 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
-                    <div className={styles.titulo}>
+                <div className={styles.titulo}>
                         <h3>
-                            {props.ativo.nome}
+                            {isEditing ? (
+                                <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
+                            ) : (
+                                nome
+                            )}
                         </h3>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />  
                         
                     </div>
                     <div className={styles.status}>
                         <ul>
                             <li>
-                                <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponivel
+                                <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
                             </li>
                             <li>
                                 <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
@@ -125,65 +196,96 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Descrição: </strong> {props.ativo.descricao}
+                            <strong>Descrição: </strong>
+                            {isEditing ? (
+                                <input type="text" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
+                            ) : (
+                                props.ativo.descricao
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Modelo: </strong> {props.ativo.modelo}
+                            <strong>Modelo: </strong>
+                            {isEditing ? (
+                                <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} />
+                            ) : (
+                                props.ativo.modelo
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Marca: </strong> {props.ativo.marca}
+                            <strong>Marca: </strong>
+                            {isEditing ? (
+                                <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} />
+                            ) : (
+                                props.ativo.marca
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Preço: </strong> R$ {props.ativo.preco_aquisicao}
+                            <strong>Preço de aquisição:</strong>
+                            {isEditing ? (
+                            <input type="number" value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
+                            ): props.ativo.preco_aquisicao}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Data de aquisição: </strong> {dataAquisicao.toLocaleDateString()}
+                            <strong>Data de aquisição: </strong> {isEditing ? (
+                                <input type="text" value={dataAquisicao} onChange={e => setDataAquisicao(e.target.value)} />
+                            ) : (
+                                new Date(props.ativo.dataAquisicao).toLocaleDateString()
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing} 
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Data de expiração: </strong> {dataExpiracao.toLocaleDateString()}
+                            <strong>Data de expiração: </strong> {isEditing ? (
+                                <input type="text" value={dataExpiracao} onChange={e => setDataExpiracao(e.target.value)} />
+                            ) : (
+                                new Date(props.ativo.dataExpiracao).toLocaleDateString()
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing} 
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Responsável: </strong> {props.ativo.funcionario}
+                            <strong>Responsável: </strong>
+                            {isEditing ? (
+                                <input type="text" value={funcionario} onChange={(e) => setFuncionario(e.target.value)} />
+                            ) : (
+                                props.ativo.funcionario
+                            )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            /* onClick={} */
+                            onClick={toggleEditing}
                         />
                     </div>
                     <hr />
@@ -195,7 +297,11 @@ export default function ModalAtivo(props: IModalAtivo) {
                 <Modal.Footer> 
                     <div className={styles.botoes}>
                         <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
-                        <button className={styles.editar}>ATUALIZAR ATIVO</button>
+                        {isEditing ? (
+                            <button className={styles.editar} onClick={saveChanges}>SALVAR ALTERAÇÕES</button>
+                        ) : (
+                            <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
+                        )}
                     </div>
                 </Modal.Footer>
             </Modal>
