@@ -238,9 +238,9 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Preço de aquisição:</strong>
+                            <strong>Preço de aquisição: </strong>
                             {isEditing ? (
-                            <input type="number" value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
+                            <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
                             ): props.ativo.preco_aquisicao}
                         </div>
                         <ButtonMain
