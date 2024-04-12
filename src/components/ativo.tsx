@@ -1,10 +1,34 @@
+import { useState } from 'react'
+import { IAtivo } from '../interfaces/ativo'
 import styles from '../styles/ativo.module.css'
 import { AtivoType } from "../types/ativo.type"
+import ModalAtivo from './modal-ativo'
 
-export default function Ativo(props: any) {
+export default function Ativo(props: IAtivo) {
+    const [state, setState] = useState({
+        show: false,
+        ativoSelecionado: null as IAtivo | null
+    })
+
+    const handleClose = () => {
+        setState((prevState) => ({
+            ...prevState,
+            show: false,
+            ativoSelecionado: null
+        }));
+    }
+
+    const handleShow = (ativo: IAtivo) => {
+        setState((prevState) => ({
+            ...prevState,
+            show: true,
+            ativoSelecionado: ativo
+        }))
+    }
+
     var disponibilidade: string
     var status: string
-    switch (props.ativo.status.id) {
+    switch (props.status.id) {
         case 1:
             disponibilidade = "Disponível"
             status = styles.verde
@@ -22,18 +46,21 @@ export default function Ativo(props: any) {
             disponibilidade = "Erro"
     }
 
-    function mockFunction() {
-        console.log("Clicou")
-    }
-
     return (
-        <div className={styles.ativo} onClick={mockFunction}>
-            <div className={styles.id}>ID: {props.ativo.id} </div>
-            <div className={styles.nome}> {props.ativo.nome} </div>
-            <div className={styles.disponibilidade}>
-                <span className={status} />
-                {disponibilidade}
+
+        <>
+            {state.show && state.ativoSelecionado && (
+                <ModalAtivo ativo={state.ativoSelecionado} handleClose={handleClose} 
+                buscarAtivos={props.buscarAtivos} />
+            )}
+            <div className={styles.ativo} onClick={() => handleShow(props)}>
+                <div className={styles.id}>ID: {props.id} </div>
+                <div className={styles.nome}> {props.nome} </div>
+                <div className={styles.disponibilidade}>
+                    <span className={status} />
+                    {disponibilidade}
+                </div>
             </div>
-        </div>
+        </>
     )
 }

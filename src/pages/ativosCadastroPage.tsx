@@ -49,11 +49,12 @@ export default function CadastroAtivos() {
         }
 
         try {
+            console.log(parseFloat(precoAquisicao))
             const response = await axios.post('http://localhost:8080/cadastrar/ativos', {
                 nome,
                 descricao,
                 status: status.value,
-                precoAquisicao,
+                preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
                 funcionario,
