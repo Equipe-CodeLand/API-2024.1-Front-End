@@ -24,7 +24,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
-        (manutencao) => new Date(manutencao.dataInicio) > new Date()
+        (manutencao) => new Date(manutencao.data_inicio) > new Date()
     );
 
     const toggleEditing = () => {
@@ -40,7 +40,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracao);
-
+    
         const ativosDto = {
             nome: nome,
             descricao: descricao,
@@ -52,7 +52,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
-
+    
         axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 Swal.fire({
@@ -60,9 +60,13 @@ export default function ModalAtivo(props: IModalAtivo) {
                     text: `O ativo foi atualizado com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setShow(false);
+                        props.buscarAtivos();
+                        window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
+                    }
                 });
-                setShow(false);
-                props.buscarAtivos();
             })
             .catch(error => {
                 console.error('Erro ao atualizar o ativo:', error);
@@ -75,6 +79,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 props.buscarAtivos();
             });
     };
+    
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -146,7 +151,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     return (
                         <li key={index}> {/* Adicionado: key prop */}
                             ID: {manutencao.id} <br />
-                            {new Date(manutencao.dataInicio).toLocaleDateString()} - {new Date(manutencao.dataFinal).toLocaleDateString()}
+                            {new Date(manutencao.data_inicio).toLocaleDateString()} - {new Date(manutencao.data_final).toLocaleDateString()}
                         </li>
                     )
                 })}
@@ -238,9 +243,9 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Preço de aquisição:</strong>
+                            <strong>Preço de aquisição: </strong>
                             {isEditing ? (
-                            <input type="number" value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
+                            <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
                             ): props.ativo.preco_aquisicao}
                         </div>
                         <ButtonMain

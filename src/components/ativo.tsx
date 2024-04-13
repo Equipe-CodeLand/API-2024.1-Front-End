@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { IAtivo } from '../interfaces/ativo'
 import styles from '../styles/ativo.module.css'
-import { AtivoType } from "../types/ativo.type"
 import ModalAtivo from './modal-ativo'
 
 export default function Ativo(props: IAtivo) {

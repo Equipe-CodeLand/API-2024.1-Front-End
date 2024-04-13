@@ -1,65 +1,181 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
+import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import ButtonMain from './botao';
 import '../styles/modal.css'
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
+import axios from 'axios';
 
 export default function ModalManutencao(props: IModalManutencao) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [dataInicio, setDataInicio] = useState(new Date(props.manutencao.dataInicio).toLocaleDateString('pt-BR'));
+  const [dataFinal, setDataFinal] = useState(new Date(props.manutencao.dataFinal).toLocaleDateString('pt-BR'));
+  const [localizacao, setLocalizacao] = useState(props.manutencao.localizacao);
+  const [responsavel, setResponsavel] = useState(props.manutencao.responsavel);
+  const [ativosId, setAtivosId] = useState(props.manutencao.ativos_id);
+  
+  useEffect(() => {
+    setAtivosId(ativosId);
+  }, [ativosId]);
+  console.log(ativosId)
+
+  const handleUpdate = () => {
+    // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
+    const formattedDataInicio = formatDateForBackend(dataInicio);
+    const formattedDataFinal = formatDateForBackend(dataFinal);
+  
+    const dadosAtualizados = {
+      data_inicio: formattedDataInicio,
+      data_final: formattedDataFinal,
+      localizacao: localizacao,
+      responsavel: responsavel,
+      ativos_id: ativosId
+    };
+  
+    axios
+      .put(`http://localhost:8080/manutencao/${props.manutencao.id}`, dadosAtualizados)
+      .then(response => {
+        console.log('Dados atualizados com sucesso:', response.data);
+        console.log(dadosAtualizados);
+        props.handleClose();
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Erro ao atualizar os dados:', error);
+      });
+  };
+  
+  // formatando a data para enviar para o back-end
+  const formatDateForBackend = (dateString: any) => {
+    const parts = dateString.split('/');
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  };
+  
+  const handleDelete = () => {
+    axios.delete(`http://localhost:8080/manutencao/${props.manutencao.id}`)
+      .then(response => {
+        console.log('Manutenção excluída com sucesso:', response.data);
+        console.log(props.manutencao.id);
+        props.handleClose();
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Erro ao excluir a manutenção:', error);
+      });
+  }
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        {props.nomeBotao}
-      </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>ID : {props.id}</Modal.Title>
+          <Modal.Title>ID : {props.manutencao.id}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div className='body-modal'>
-            <h3 className='titulo'>{props.title}</h3>
-            <ButtonMain
-              icon={<FaRegEdit style={{ fontSize: 30 }} />}
-            />
-
-            <p>Responsável: {props.responsavel}</p>
-            <ButtonMain
-              icon={<FaRegEdit style={{ fontSize: 30 }} />}
-            />
-
-            <p>Localização: {props.localizacao}</p>
-            <ButtonMain
-              icon={<FaRegEdit style={{ fontSize: 30 }} />}
-            />
-
-            <p>Data de início: {props.dataInicio}</p>
-            <ButtonMain
-              icon={<FaRegEdit style={{ fontSize: 30 }} />}
-            />
-
-            <p>Data final: {props.dataFinal}</p>
-            <ButtonMain
-              icon={<FaRegEdit style={{ fontSize: 30 }} />}
-            />
+        <div className='body-modal'>
+          <div className='titulo-id'>
+            <h3 className='titulo'>
+              {props.manutencao.nome}
+            </h3>
+            <div className='p-icon'>
+              <p className='ativo_id'>
+                #
+                {isEditing ? (
+                  <input className='id' type="number" value={ativosId} onChange={e => setAtivosId(Number(e.target.value))} />
+                ) : (
+                  props.manutencao.ativos_id
+                )}
+              </p>
+              <ButtonMain
+                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                onClick={() => setIsEditing(!isEditing)}
+              />
+            </div>
           </div>
+
+          <div className="conteudo-modal">
+            <div className='p-icon'>
+              <p>Responsável: 
+              {isEditing ? (
+                <input type="text" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
+              ) : (
+                props.manutencao.responsavel 
+              )}
+              </p>
+              <ButtonMain
+                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                onClick={() => setIsEditing(!isEditing)}
+              />
+            </div>
+
+            <div className='p-icon'>
+              <p>Localização:
+                {isEditing ? (
+                  <input type="text" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
+                ) : (
+                  props.manutencao.localizacao
+                )}
+              </p>
+              <ButtonMain
+                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                onClick={() => setIsEditing(!isEditing)}
+              />
+            </div>
+
+            <div className='p-icon'>
+              <p>Data de início: 
+                {isEditing ? (
+                  <input type="text" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
+                ) : (
+                  dataInicio
+                )}
+              </p>
+              <ButtonMain
+                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                onClick={() => setIsEditing(!isEditing)}
+              />
+            </div>
+
+            <div className='p-icon'>
+              <p>Data final: 
+                {isEditing ? (
+                  <input type="text" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
+                ) : (
+                  dataFinal
+                )}
+              </p>
+              <ButtonMain
+                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                onClick={() => setIsEditing(!isEditing)}
+              />
+            </div>
+          </div>
+        </div>
 
         </Modal.Body>
         <Modal.Footer>
-          <div className="btn-excluir-container">
-            <ButtonMain
-              title={"Excluir manutenção"}
-              bg="#DB5050"
-              width='180px'
-              height='40px'
-            />
+          <div className='botoes-modal'>
+            <div>
+              <ButtonMain
+                title={'Excluir manutenção'}
+                bg='#DB5050'
+                width='180px'
+                height='40px'
+                onClick={handleDelete}
+              />
+            </div>
+            <div className='btn-atualizar-modal'>
+              <ButtonMain
+                title={'Atualizar manutenção'}
+                bg={'var(--corPrimaria)'}
+                width='200px'
+                height='40px'
+                onClick={handleUpdate}
+              />
+            </div>
           </div>
         </Modal.Footer>
       </Modal>

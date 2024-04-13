@@ -1,19 +1,66 @@
 .body-modal {
     display: grid;
-    grid-template-columns: 4fr 1fr;
+    grid-template-columns: auto 1fr; 
+    grid-template-areas: 
+    "titulo-id ."
+    "conteudo conteudo"; 
+    width: 100%;
+    justify-content: space-between;
 }
-
-.btn-excluir-container {
+  
+  .botoes-modal {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
-    width: 100%; 
-}
-
-.modal-body .body-modal > * {
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-}
-.titulo {
-    text-align: right;
-}
+    width: 100%;
+  }
+  
+  .titulo-id {
+    display: flex;
+    flex-direction: row;
+    margin: 0 10%; 
+    align-content: center;
+    grid-area: titulo-id;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .titulo {
+    display: flex;
+    margin-bottom: 5%; 
+    width: 100%;
+    justify-content: left;
+  }
+
+  .ativo_id{
+    display: flex;
+    width: 5px;
+  }
+
+  .id{
+    display: flex;
+    width: 130px;
+    justify-content: left;
+    align-items: left;
+  }
+
+  .titulo,.ativo_id{
+    display: flex;
+    width: 165px;
+    justify-content: space-between;
+    padding: 0px;
+  }
+  
+  .conteudo-modal {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10%; 
+    grid-area: conteudo;
+    justify-content: space-between;
+  }
+  
+  .p-icon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

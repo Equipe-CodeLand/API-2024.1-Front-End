@@ -1,19 +1,19 @@
-import { useState, useEffect, FormEvent } from "react";
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
+import React, { useState, FormEvent, useEffect } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import Swal from 'sweetalert2';
+import Navbar from '../components/navbar';
+
 
 // Define o tipo para os ativos
 type AtivoType = { value: number, id: number, label: string } | null;
 
-export default function RouteManutecaoCadastro() {
-  const [ativos, setAtivos] = useState<AtivoType[]>([]);
+export default function ManutencaoCadastroPage() {
+    const [ativos, setAtivos] = useState<AtivoType[]>([]);
     const [ativoSelecionado, setAtivoSelecionado] = useState<AtivoType | null>(null);
     const [responsavel, setResponsavel] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [dataFinal, setDataFinal] = useState('');
+    const [data_inicio, setData_inicio] = useState('');
+    const [data_final, setData_final] = useState('');
     const [localizacao, setLocalizacao] = useState('');
 
     useEffect(() => {
@@ -43,16 +43,20 @@ export default function RouteManutecaoCadastro() {
         }
     }
 
+    // formatando a data para enviar para o back-end
+    const formatDateForBackend = (dateString: string) => {
+        const parts = dateString.split('-');
+        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Formato "yyyy-MM-dd"
+    };
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
-        const dataFinalAjustada = new Date(dataFinal)
-        dataFinalAjustada.setDate(dataFinalAjustada.getDate() + 1)
+        // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
+        const formattedDataInicio = formatDateForBackend(data_inicio);
+        const formattedDataFinal = formatDateForBackend(data_final);
 
-        const dataInicioAjustada = new Date(dataInicio)
-        dataInicioAjustada.setDate(dataInicioAjustada.getDate() + 1)
-
-        if (!ativoSelecionado || !responsavel || !dataInicio || !dataFinal || !localizacao) {
+        if (!ativoSelecionado || !responsavel || !data_inicio || !data_final || !localizacao) {
             Swal.fire({
                 title: 'Erro ao cadastrar a manutenção!',
                 text: `Por favor, preencha todos os campos do formulário!`,
@@ -70,29 +74,30 @@ export default function RouteManutecaoCadastro() {
             body: JSON.stringify({
                 ativos: ativoSelecionado?.value,
                 responsavel,
-                dataInicio: dataInicioAjustada.toISOString().slice(0,10),
-                dataFinal: dataFinalAjustada.toISOString().slice(0, 10),
-                localizacao
+                data_inicio: formattedDataInicio,
+                data_final: formattedDataFinal,
+                localizacao,
             }),
         });
-    
+
+        console.log(formattedDataFinal);
+        console.log(formattedDataInicio);
+
         const data = await response.json();
         console.log(data); 
-    
+
         if (response.ok) {
             Swal.fire({
                 title: 'Manutenção cadastrada!',
                 text: `A Manutenção foi cadastrada com sucesso!`,
                 icon: 'success',
                 confirmButtonText: 'OK!'
-            }).then(() => {
-                window.location.reload();
             })
-    
+
             setAtivos([]);
             setResponsavel('');
-            setDataInicio('');
-            setDataFinal('');
+            setData_inicio('');
+            setData_final('');
             setLocalizacao('');
         } else {
             Swal.fire({
@@ -102,11 +107,12 @@ export default function RouteManutecaoCadastro() {
                 confirmButtonText: 'OK!'
             })
         }
-    } 
-  return (
-    <div>
-      <Navbar local="manutencaoCadastro" />
-      <div className={styles['form-container']}>
+    };
+
+    return (
+        <>
+        <Navbar local='manutencaoPage' />
+        <div className={styles['form-container']}>
             <br />
             <h1>Cadastro de Manutenções</h1>
             <br />
@@ -127,11 +133,11 @@ export default function RouteManutecaoCadastro() {
                         </label>
                         <label>
                             Data de Início:
-                            <input type="date" name="Data de Início" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
+                            <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
                         </label>
                         <label>
                             Data Final:
-                            <input type="date" name="Data Final" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
+                            <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
                         </label>
                         <label>
                             Localização:
@@ -143,7 +149,6 @@ export default function RouteManutecaoCadastro() {
                 )}
             </form>
         </div>
-      <Footer />
-    </div>
-  );
+        </>
+    );
 }

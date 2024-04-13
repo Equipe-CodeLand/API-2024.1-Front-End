@@ -26,23 +26,23 @@ export default function AtivosPage() {
             setLoading(false)
         }
     }
-    useEffect(() => {
 
-        const manutencoes = async () => {
-            try {
-                const response = await fetch("http://localhost:8080/manutencao")
-                if (!response.ok) {
-                    throw new Error("Erro ao buscar manutenções")
-                }
-                const manutencoes = await response.json()
-                setManutencoes(manutencoes)
-            } catch (error) {
-                console.log(error)
+    const chamarManutencoes = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/manutencao")
+            if (!response.ok) {
+                throw new Error("Erro ao buscar manutenções")
             }
+            const jsonData = await response.json()
+            setManutencoes(jsonData)
+        } catch (error) {
+            console.log(error)
         }
+    }
 
+    useEffect(() => {
         ativos()
-        manutencoes()
+        chamarManutencoes()
     }, [])
 
     var render

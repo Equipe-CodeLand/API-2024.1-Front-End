@@ -3,7 +3,9 @@ export type Manutencao = {
     nome: string,
     dataInicio: string,
     dataFinal: string,
-    idAtivo: number,
+    ativos_id: number,
     localizacao: string,
-    responsavel: string
+    responsavel: string,
+    data_inicio?: any,
+    data_final?: any
 }

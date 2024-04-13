@@ -80,6 +80,7 @@ export default function CadastroAtivos() {
             setFuncionario('');
             setDataAquisicao('');
             setDataExpiracao('');
+
         } catch (error) {
             console.error('Erro ao cadastrar o ativo:', error);
 
