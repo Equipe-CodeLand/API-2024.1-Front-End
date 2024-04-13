@@ -37,7 +37,7 @@ export default function ManutencaoPage() {
     <div>
       <Navbar local="manutencao" />
       <div className={styles.container}>
-        <Link to="/manutencaoCadastro">
+        <Link to="/cadastrar/manutencoes">
         <button>Adicionar Manutenção</button>
         </Link>
         <div>
