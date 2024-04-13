@@ -23,6 +23,7 @@ export default function ManutencaoPage() {
         throw new Error("Erro ao buscar manutenções")
       }
       const jsonData = await response.json()
+      console.log(jsonData)
       let manutencoes = jsonData.map((manutencao: any) => {
         return {
           id: manutencao.id,
@@ -58,7 +59,7 @@ export default function ManutencaoPage() {
           :(
         </span>
       </div>
-  } else if (manutencoes.length === 0) {
+  } else if (manutencoes.length > 0) {
     render =
       <div className={styles.listarManutencao}>
         {manutencoes.map(manutencao => {
@@ -91,7 +92,7 @@ export default function ManutencaoPage() {
         <div className={styles.conteudo}>
           <main>
             <div className={styles.adicionarManutencao}>
-              <a className={styles.botao} href="/cadastrar/manutecoes">Adicionar Manutenções</a>
+              <a className={styles.botao} href="/cadastrar/manutencoes">Adicionar Manutenções</a>
             </div>
             <div className={styles.listarManutencao}>
               {render}

@@ -74,6 +74,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setShow(false);
                 props.buscarAtivos();
             });
+        window.location.reload();
     };
 
     const formatDateForBackend = (dateString: string) => {
