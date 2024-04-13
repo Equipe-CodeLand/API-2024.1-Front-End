@@ -1,6 +1,6 @@
 .ativo {
     width: 100%;
-    height: 50px;
+    height: 60px;
 
     border: 2px solid #b0a6a6;
     border-bottom: 3px solid #b0a6a6;
@@ -17,15 +17,19 @@
     cursor: pointer;
 }
 
+.ativo:hover {
+    background-color: #f2f2f2;
+}
+
 .id {
     height: 100%;
-    width: 80px;
+    width: 100px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: 500;
     color: #666262
 }
@@ -39,7 +43,7 @@
     align-items: center;
 
     color: #000000;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: 800;
 }
 
@@ -53,7 +57,7 @@
     align-items: center;
 
     color: black;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: 500;
 }
 

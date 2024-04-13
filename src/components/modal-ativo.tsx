@@ -24,7 +24,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
-        (manutencao) => new Date(manutencao.dataInicio) > new Date()
+        (manutencao) => new Date(manutencao.data_inicio) > new Date()
     );
 
     const toggleEditing = () => {
@@ -74,6 +74,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setShow(false);
                 props.buscarAtivos();
             });
+        window.location.reload();
     };
 
     const formatDateForBackend = (dateString: string) => {
@@ -146,7 +147,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     return (
                         <li key={index}> {/* Adicionado: key prop */}
                             ID: {manutencao.id} <br />
-                            {new Date(manutencao.dataInicio).toLocaleDateString()} - {new Date(manutencao.dataFinal).toLocaleDateString()}
+                            {new Date(manutencao.data_inicio).toLocaleDateString()} - {new Date(manutencao.data_final).toLocaleDateString()}
                         </li>
                     )
                 })}

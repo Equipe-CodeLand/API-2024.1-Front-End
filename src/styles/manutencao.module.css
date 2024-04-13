@@ -1,63 +1,85 @@
-.container {
-    padding: 0em 8%;
-    text-align: right;
-}
-.container button {
-    padding: 0.5em 2.5em;
-    border-radius: 15px;
-    border: 2px solid var(--corPrimaria);
-    background-color: var(--corPrimaria);
-    color: white;
-    margin: 2em 0 1em 0;
-    cursor: pointer;
-}
-.container button:hover {
-    background-color: white;
-    color: var(--corPrimaria);
-}
-
-
 .manutencao {
-    box-sizing: border-box;
+    width: 100%;
+    height: 60px;
+
+    border: 2px solid #b0a6a6;
+    border-bottom: 3px solid #b0a6a6;
+    border-radius: 10px;
+
     display: flex;
-    margin: 1em auto;
-    border-radius: 40px;
-    padding: 1.5em 3%;
-    box-shadow: 1px 1px 2px 1px gray;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1em;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    font-family: var(--inter);
+
+    text-decoration: none;
+
     cursor: pointer;
 }
 
-@media only screen and (max-width: 699px) {
+.manutencao:hover {
+    background-color: #f2f2f2;
+}
+
+.id {
+    height: 100%;
+    width: 100px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1em;
+    font-weight: 500;
+    color: #666262
+}
+
+.nome {
+    height: 100%;
+    width: 90%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000000;
+    font-size: 1em;
+    font-weight: 800;
+}
+
+.datas {
+    height: 100%;
+    width: 330px;
+
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    color: black;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 600px) {
     .manutencao {
         flex-direction: column;
+        height: auto;
+        padding: 15px;
+        padding-bottom: 31px;
     }
-    .id, .datas {        
-        text-align: center;
+
+    .id {
+        justify-content: left;
+        margin-bottom: 5px;
     }
-}
-@media only screen and (min-width: 700px) {
-    .manutencao {
-        flex-direction: row;
+
+    .nome {
+        width: 100%;
+        margin-bottom: 10px;
     }
-}
-.id {
-    flex-grow: 0;
-    flex-basis: 20%;
-    text-align: start;
-}
-.nome {
-    flex-grow: 1;
-    flex-shrink: 1;
-    word-break: break-all;
-    text-align: left;
-}
-.datas {
-    flex-grow: 0;
-    flex-basis: 25%;
-    text-align: end;
-    padding-right: 2em;
+
+    .datas {
+        width: 100%;
+        justify-content: center;
+    }
 }

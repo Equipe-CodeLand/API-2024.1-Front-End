@@ -13,7 +13,7 @@ export default function Routes() {
                 <Route path="/ativos" element={<AtivosPage />} />
                 <Route path="/manutencao" element={<ManutencaoPage />} />
                 <Route path="/cadastrar/ativos" element={<CadastroAtivos />} />
-                <Route path="/manutencaoCadastro" element={<RouteManutecaoCadastro />} />
+                <Route path="/cadastrar/manutencoes" element={<RouteManutecaoCadastro />} />
             </Switch>
         </BrowserRouter>
     );
