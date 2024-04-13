@@ -40,7 +40,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracao);
-
+    
         const ativosDto = {
             nome: nome,
             descricao: descricao,
@@ -52,7 +52,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
-
+    
         axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 Swal.fire({
@@ -60,9 +60,13 @@ export default function ModalAtivo(props: IModalAtivo) {
                     text: `O ativo foi atualizado com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setShow(false);
+                        props.buscarAtivos();
+                        window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
+                    }
                 });
-                setShow(false);
-                props.buscarAtivos();
             })
             .catch(error => {
                 console.error('Erro ao atualizar o ativo:', error);
@@ -74,8 +78,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setShow(false);
                 props.buscarAtivos();
             });
-        window.location.reload();
     };
+    
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
