@@ -6,4 +6,5 @@ export interface IManutencao {
     dataInicio: string;
     dataFinal: string;
     ativos_id: number;
+    buscarManutencao: Function;
 }

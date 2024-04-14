@@ -5,6 +5,7 @@ import '../styles/modal.css'
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function ModalManutencao(props: IModalManutencao) {
   const [show, setShow] = useState(true);
@@ -37,10 +38,16 @@ export default function ModalManutencao(props: IModalManutencao) {
     axios
       .put(`http://localhost:8080/manutencao/${props.manutencao.id}`, dadosAtualizados)
       .then(response => {
+        Swal.fire({
+          title: 'Manutenção Atualizada!',
+          text: `A manutenção foi atualizada com sucesso!`,
+          icon: 'success',
+          confirmButtonText: 'OK!'
+        })
         console.log('Dados atualizados com sucesso:', response.data);
         console.log(dadosAtualizados);
         props.handleClose();
-        window.location.reload();
+        props.buscarManutencao();
       })
       .catch(error => {
         console.error('Erro ao atualizar os dados:', error);
@@ -56,10 +63,16 @@ export default function ModalManutencao(props: IModalManutencao) {
   const handleDelete = () => {
     axios.delete(`http://localhost:8080/manutencao/${props.manutencao.id}`)
       .then(response => {
+        Swal.fire({
+          title: 'Manutenção Deletada!',
+          text: `A manutenção foi deletada com sucesso!`,
+          icon: 'success',
+          confirmButtonText: 'OK!'
+      })
         console.log('Manutenção excluída com sucesso:', response.data);
         console.log(props.manutencao.id);
         props.handleClose();
-        window.location.reload();
+        props.buscarManutencao();
       })
       .catch(error => {
         console.error('Erro ao excluir a manutenção:', error);

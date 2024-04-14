@@ -32,11 +32,6 @@ export default function CadastroAtivos() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
-        const dataExpiracaoAjustada = new Date(dataExpiracao)
-        dataExpiracaoAjustada.setDate(dataExpiracaoAjustada.getDate() + 1)
-
-        const dataAquisicaoAjustada = new Date(dataAquisicao)
-        dataAquisicaoAjustada.setDate(dataAquisicaoAjustada.getDate() + 1)
 
         if (!nome || !descricao || !status || !precoAquisicao || !modelo || !marca || (status.value.id=== 3 && !funcionario.trim()) || !dataAquisicao || !dataExpiracao) {
             Swal.fire({
@@ -58,8 +53,8 @@ export default function CadastroAtivos() {
                 modelo,
                 marca,
                 funcionario,
-                dataAquisicao: dataAquisicaoAjustada.toISOString().slice(0,10),
-                dataExpiracao: dataExpiracaoAjustada.toISOString().slice(0, 10)
+                dataAquisicao,
+                dataExpiracao
             });
 
             console.log(response.data);
