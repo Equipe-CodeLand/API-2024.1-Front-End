@@ -1,0 +1,36 @@
+.login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 5% auto;
+}
+
+.logo{
+    width: 50vh;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.username, .password {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 5%;
+    border: 1px solid black;
+    border-radius: 15px; /* Aumenta o raio da borda para torná-la mais redonda */
+    resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
+}
+
+.btn_login {
+    width: 180px;
+    height: 45px;
+    padding: 10px;
+    border: 1px solid;
+    background-color: var(--corPrimaria);
+    color: white;
+    cursor: pointer;
+    border-radius: 30px; 
+}

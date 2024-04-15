@@ -4,12 +4,14 @@ import AtivosPage from "../pages/ativosPage";
 import ManutencaoPage from "../pages/manutencaoPage";
 import CadastroAtivos from "../pages/ativosCadastroPage";
 import RouteManutecaoCadastro from "../pages/manutencaoCadastroPage";
+import LoginPage from "../pages/loginPage";
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/ativos" element={<AtivosPage />} />
                 <Route path="/manutencao" element={<ManutencaoPage />} />
                 <Route path="/cadastrar/ativos" element={<CadastroAtivos />} />
