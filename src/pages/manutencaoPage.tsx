@@ -72,6 +72,7 @@ export default function ManutencaoPage() {
             responsavel={manutencao.responsavel}
             key={manutencao.id}
             ativos_id={manutencao.ativos_id}
+            buscarManutencao={buscarManutencoes}
           ></ManutencaoComponent>
         })}
       </div>
