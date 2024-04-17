@@ -26,6 +26,7 @@ export default function Navbar(props: props) {
                 <ul>
                     <li><a className={(props.local === "ativos") ? styles.mark : ""} href="/ativos">Ativos</a></li>
                     <li><a className={(props.local === "manutencao") ? styles.mark : ""} href="/manutencao">Manutenções</a></li>
+                    <li><a className={(props.local === "usuarios") ? styles.mark : ""} href="/usuarios">Usuarios</a></li>
                 </ul>
             </div>
             <div className={!active ? styles.open : styles.closed }>
@@ -37,6 +38,7 @@ export default function Navbar(props: props) {
                     <ul>
                         <li><a className={(props.local === "ativos") ? styles.mark : ""} href="/ativos">Ativos</a></li>
                         <li><a className={(props.local === "manutencao") ? styles.mark : ""} href="/manutencao">Manutenções</a></li>
+                        <li><a className={(props.local === "usuarios") ? styles.mark : ""} href="/usuarios">Usuarios</a></li>
                     </ul>
                 </div>
             </div>
