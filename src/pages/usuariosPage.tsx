@@ -1,6 +1,9 @@
 import Footer from "../components/footer"
 import Navbar from "../components/navbar"
+import Usuario from "../components/usuario"
 import styles from "../styles/usuariosPage.module.css"
+
+
 
 export default function UsuariosPage() {
     var render
@@ -17,7 +20,10 @@ export default function UsuariosPage() {
                             </a>
                         </div>
                         <div className={styles.listarUsuario}>
-                            {render}
+                            <Usuario />
+                            <Usuario />
+                            <Usuario />
+                            <Usuario />
                         </div>
                     </main>
                 </div>

@@ -16,7 +16,7 @@
 }
 
 .conteudo main {
-    border: 1px solid lime;
+    /* border: 1px solid lime; */
 
     max-width: 900px;
     min-height: 90vh;
@@ -27,7 +27,7 @@
 }
 
 .adicionarUsuario {
-    border: 1px solid purple;
+    /* border: 1px solid purple; */
 
     padding: 20px;
 
@@ -65,7 +65,7 @@
 }
 
 .listarUsuario {
-    border: 1px solid orange;
+    /* border: 1px solid orange; */
 
     min-height: 300px;
     width: 100%;
