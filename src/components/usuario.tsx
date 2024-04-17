@@ -1,13 +1,13 @@
 import styles from "../styles/usuario.module.css"
+import { UsuarioType } from "../types/usuario.type"
 
-export default function Usuario(props: any) {
+export default function Usuario(props: UsuarioType) {
     return (
         <>
             <div className={styles.usuario} onClick={() => {console.log("usuario")}}>
-                <div className={styles.id}>ID: 1</div>
-                <div className={styles.nome}>Nome_Funcionario</div>
-                <div className={styles.cargo}>Administrador</div>
-                <div className={styles.setor}>Setor de prototipagem</div>
+                <div className={styles.id}>ID: {props.id}</div>
+                <div className={styles.nome}>{props.nome}</div>
+                <div className={styles.cargo}>{props.cargo}</div>
             </div>
         </>
     )

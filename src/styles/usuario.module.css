@@ -60,19 +60,6 @@
     font-weight: 800;
 }
 
-.setor {
-    height: 100%;
-    width: 350px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: black;
-    font-size: 1em;
-    font-weight: 500;
-}
-
 @media (max-width: 800px) {
     .usuario {
         position: relative;
@@ -101,10 +88,5 @@
         right: 15px;
         font-weight: 400;
         color: #666262;
-    }
-
-    .setor {
-        width: 100%;
-        margin-bottom: 10px;
     }
 }
