@@ -98,7 +98,7 @@ export default function CadastroAtivos() {
                 <br />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Nome do Ativo:
+                        Nome do Ativo: <span className={styles.required}>*</span>
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
@@ -106,17 +106,17 @@ export default function CadastroAtivos() {
                         <input type="text" name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                     </label>
                     <label>
-                        Status:
+                        Status: <span className={styles.required}>*</span>
                         <Select options={statusAtivo} onChange={handleSearch} placeholder="Status" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                     </label>
                     {status && status.label === 'Ocupado' && (
                         <label>
-                            Nome do Funcionário:
+                            Nome do Funcionário: <span className={styles.required}>*</span>
                             <input type="text" name="Nome do Funcionário" placeholder="Funcionário Responsável" value={funcionario} onChange={e => setFuncionario(e.target.value)} />
                         </label>
                     )}
                     <label>
-                        Preço de aquisição (R$):
+                        Preço de aquisição (R$): <span className={styles.required}>*</span>
                         <input type="text" name="Preço de aquisição" placeholder="Preço de aquisição" value={precoAquisicao} onChange={e => setPrecoAquisicao(e.target.value)} />
                     </label>
                     <label>
@@ -128,7 +128,7 @@ export default function CadastroAtivos() {
                         <input type="text" name="Marca" placeholder="Marca" value={marca} onChange={e => setMarca(e.target.value)} />
                     </label>
                     <label>
-                        Data de aquisição:
+                        Data de aquisição: <span className={styles.required}>*</span>
                         <input type="date" name="Data de aquisição" value={dataAquisicao} onChange={e => setDataAquisicao(e.target.value)} />
                     </label>
                     <label>
