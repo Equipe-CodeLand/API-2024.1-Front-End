@@ -1,10 +1,16 @@
 import Routes from "./routes/routes";
 import "./styles/global.css";
-import RouteManutecaoCadastro from './pages/manutencaoCadastroPage';
+import { AuthContext } from "./context/authContext";
+import { useState } from "react";
+import { IUsuario } from "./interfaces/usuario";
 
 function App() {
+  const [ usuario, setUsuario ] = useState<IUsuario | null>();
+
   return (
-    <Routes />
+    <AuthContext.Provider value={{ usuario, setUsuario }}>
+      <Routes />
+    </AuthContext.Provider>
   );
 }
 

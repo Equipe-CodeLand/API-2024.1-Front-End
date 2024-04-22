@@ -6,18 +6,43 @@ import CadastroAtivos from "../pages/ativosCadastroPage";
 import RouteManutecaoCadastro from "../pages/manutencaoCadastroPage";
 import LoginPage from "../pages/loginPage";
 import UsuariosPage from "../pages/usuariosPage";
+import { PrivateRoute } from "./privateRoute";
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/ativos" element={<AtivosPage />} />
-                <Route path="/manutencao" element={<ManutencaoPage />} />
-                <Route path="/usuarios" element={<UsuariosPage />} />
-                <Route path="/cadastrar/ativos" element={<CadastroAtivos />} />
-                <Route path="/cadastrar/manutencoes" element={<RouteManutecaoCadastro />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/home" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <HomePage />
+                    </PrivateRoute>
+                }/>                
+                <Route path="/ativos" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <AtivosPage />
+                    </PrivateRoute>
+                }/>
+                <Route path="/manutencao" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <ManutencaoPage />
+                    </PrivateRoute>
+                }/>
+                <Route path="/usuarios" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <UsuariosPage />
+                    </PrivateRoute>
+                }/>
+                <Route path="/cadastrar/ativos" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <CadastroAtivos />
+                    </PrivateRoute>
+                } />
+                <Route path="/cadastrar/manutencoes" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                        <RouteManutecaoCadastro />
+                    </PrivateRoute>
+                } />
             </Switch>
         </BrowserRouter>
     );
