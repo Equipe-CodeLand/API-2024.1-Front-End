@@ -55,7 +55,9 @@ export default function UsuariosPage() {
                         id = {usuario.id}
                         nome = {usuario.nome}
                         cargo = {usuario.cargo.nome}
+                        cpf = {usuario.credencial.cpf}
                         key = {usuario.id}
+                        buscarUsuarios={usuarios}
                      />
                 )
             })}
@@ -81,6 +83,9 @@ export default function UsuariosPage() {
                             <a className={styles.botao} href="/cadastrar/usuarios">
                                 Adicionar Usuário
                             </a>
+                            <button onClick={()=>{console.log(data)}}>
+                                teste
+                            </button>
                         </div>
                         <div className={styles.listarUsuario}>
                             { render }
