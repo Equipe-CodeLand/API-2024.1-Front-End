@@ -10,6 +10,7 @@ export default function UsuariosPage() {
     const [data, setData] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
+    const [ativos, setAtivos] = useState<Array<any>>([])
 
     const usuarios = async () => {
         try {
@@ -26,8 +27,25 @@ export default function UsuariosPage() {
         }
     }
 
+    const chamarAtivos = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/listar/ativos")
+            if (!response.ok) {
+                throw new Error("Erro ao buscar ativos")
+            }
+            const jsonData = await response.json()
+            setAtivos(jsonData)
+        } catch (error) {
+            setError(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
     useEffect(() => {
         usuarios()
+        chamarAtivos()
     }, [])
 
     var render
@@ -58,6 +76,7 @@ export default function UsuariosPage() {
                         cpf = {usuario.credencial.cpf}
                         key = {usuario.id}
                         buscarUsuarios={usuarios}
+                        ativos = {ativos.filter((ativo: any) => ativo.usuario.id === usuario.id)}
                      />
                 )
             })}
@@ -83,9 +102,6 @@ export default function UsuariosPage() {
                             <a className={styles.botao} href="/cadastrar/usuarios">
                                 Adicionar Usuário
                             </a>
-                            <button onClick={()=>{console.log(data)}}>
-                                teste
-                            </button>
                         </div>
                         <div className={styles.listarUsuario}>
                             { render }

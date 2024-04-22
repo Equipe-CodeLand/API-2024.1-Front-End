@@ -3,7 +3,24 @@ import { IModalUsuario } from "../interfaces/modalUsuario";
 import styles from "../styles/modalUsuario.module.css";
 
 export default function ModalUsuario(props: IModalUsuario) {
+    const ativos = props.usuario.ativos
+
     var render
+    if (ativos.length > 0) {
+        render =
+            <ul>
+                {ativos.map((ativo, index) => {
+                    return <li key={index}>
+                        <div>{ativo.id} - {ativo.nome}</div>
+                    </li>
+                })}
+            </ul>
+    } else {
+        render =
+            <div className={styles.semAtivos}>
+                - Não há ativos associados -
+            </div>
+    }
 
     return (
         <>
