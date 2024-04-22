@@ -21,7 +21,9 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao);
     const [funcionario, setFuncionario] = useState(props.ativo.funcionario);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
-    const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
+    const [dataExpiracao, setDataExpiracao] = useState(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
+
+    const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
         (manutencao) => new Date(manutencao.data_inicio) > new Date()
@@ -29,6 +31,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const toggleEditing = () => {
         setIsEditing(!isEditing);
+        setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,8 +42,8 @@ export default function ModalAtivo(props: IModalAtivo) {
     const saveChanges = () => {
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
-        const formattedDataExpiracao = formatDateForBackend(dataExpiracao);
-    
+        const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
+
         const ativosDto = {
             nome: nome,
             descricao: descricao,
@@ -52,7 +55,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
-    
+
         axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 Swal.fire({
@@ -79,7 +82,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 props.buscarAtivos();
             });
     };
-    
+
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -91,7 +94,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         return date.toLocaleDateString('pt-BR');
     };
     const excluirAtivo = () => {
-        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(()=> {
+        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(() => {
             Swal.fire({
                 title: 'Ativo Deletado!',
                 text: `O ativo foi deletado com sucesso!`,
@@ -145,7 +148,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     var render
     if (manutencoesFuturas.length > 0) {
-        render = 
+        render =
             <ul>
                 {manutencoesFuturas.map((manutencao, index) => {
                     return (
@@ -157,7 +160,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 })}
             </ul>
     } else {
-        render = 
+        render =
             <div className={styles.semManutencoes}>
                 - Não há manutenções futuras -
             </div>
@@ -172,7 +175,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
-                <div className={styles.titulo}>
+                    <div className={styles.titulo}>
                         <h3>
                             {isEditing ? (
                                 <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -183,8 +186,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             onClick={toggleEditing}
-                        />  
-                        
+                        />
                     </div>
                     <div className={styles.status}>
                         <ul>
@@ -245,8 +247,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <div>
                             <strong>Preço de aquisição: </strong>
                             {isEditing ? (
-                            <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
-                            ): props.ativo.preco_aquisicao}
+                                <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
+                            ) : props.ativo.preco_aquisicao}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
@@ -263,22 +265,23 @@ export default function ModalAtivo(props: IModalAtivo) {
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            onClick={toggleEditing} 
+                            onClick={toggleEditing}
                         />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
                             <strong>Data de expiração: </strong> {isEditing ? (
-                                <input type="text" value={dataExpiracao} onChange={e => setDataExpiracao(e.target.value)} />
+                                <input type="text" value={dataExpiracaoEdit} onChange={e => setDataExpiracaoEdit(e.target.value)} placeholder="dd/mm/aaaa" />
                             ) : (
-                                new Date(props.ativo.dataExpiracao).toLocaleDateString()
+                                props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString() : 'Data não especificada'
                             )}
                         </div>
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            onClick={toggleEditing} 
+                            onClick={toggleEditing}
                         />
                     </div>
+
                     <div className={styles.informacoes}>
                         <div>
                             <strong>Responsável: </strong>
@@ -299,7 +302,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         {render}
                     </div>
                 </Modal.Body>
-                <Modal.Footer> 
+                <Modal.Footer>
                     <div className={styles.botoes}>
                         <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
                         {isEditing ? (
@@ -313,3 +316,4 @@ export default function ModalAtivo(props: IModalAtivo) {
         </>
     )
 }
+
