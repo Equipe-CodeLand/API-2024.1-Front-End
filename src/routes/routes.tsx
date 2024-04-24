@@ -7,6 +7,7 @@ import RouteManutecaoCadastro from "../pages/manutencaoCadastroPage";
 import LoginPage from "../pages/loginPage";
 import UsuariosPage from "../pages/usuariosPage";
 import { PrivateRoute } from "./privateRoute";
+import UsuariosCadastroPage from "../pages/usuariosCadastroPage";
 
 export default function Routes() {
     return (
@@ -43,6 +44,7 @@ export default function Routes() {
                         <RouteManutecaoCadastro />
                     </PrivateRoute>
                 } />
+                <Route path="/cadastrar/usuarios" element={<UsuariosCadastroPage />} />
             </Switch>
         </BrowserRouter>
     );
