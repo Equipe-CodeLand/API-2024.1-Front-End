@@ -26,6 +26,10 @@ export const useAuth = () => {
     removeUsuario();
   };
 
+  const getToken = () => {
+    return usuario?.token
+  }
+
 
   useEffect(() => {
     const user = getItem("usuario")
@@ -35,6 +39,6 @@ export const useAuth = () => {
     setLoading(false)
   }, [])
 
-  return { usuario, login, logout, setUsuario, loading };
+  return { usuario, login, logout, setUsuario, getToken, loading };
 };
 

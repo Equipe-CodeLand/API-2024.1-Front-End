@@ -6,6 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 import ButtonMain from "./botao";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useAxios } from "../hooks/useAxios";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [isEditing, setIsEditing] = useState(false);
@@ -22,6 +23,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [funcionario, setFuncionario] = useState(props.ativo.funcionario);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
+    const { put, deletar } =  useAxios()
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
         (manutencao) => new Date(manutencao.data_inicio) > new Date()
@@ -53,33 +55,47 @@ export default function ModalAtivo(props: IModalAtivo) {
             status: { id: statusId }
         };
     
-        axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
-            .then(response => {
-                Swal.fire({
-                    title: 'Ativo Atualizado!',
-                    text: `O ativo foi atualizado com sucesso!`,
-                    icon: 'success',
-                    confirmButtonText: 'OK!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        setShow(false);
-                        props.buscarAtivos();
-                        window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao atualizar o ativo:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro ao atualizar o ativo',
-                    text: 'Ocorreu um erro ao tentar atualizar o ativo. Por favor, tente novamente.'
-                });
-                setShow(false);
-                props.buscarAtivos();
+        put(`/atualizar/ativos/${props.ativo.id}`, ativosDto).then(response => {
+            Swal.fire({
+                title: 'Ativo Atualizado!',
+                text: `O ativo foi atualizado com sucesso!`,
+                icon: 'success',
+                confirmButtonText: 'OK!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setShow(false);
+                    props.buscarAtivos();
+                    window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
+                }
             });
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar o ativo:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao atualizar o ativo',
+                text: 'Ocorreu um erro ao tentar atualizar o ativo. Por favor, tente novamente.'
+            });
+            setShow(false);
+            props.buscarAtivos();
+        });            
     };
     
+    const excluirAtivo = () => {
+        deletar(`/delete/ativos/${props.ativo.id}`)
+            .then(()=> {
+                Swal.fire({
+                    title: 'Ativo Deletado!',
+                    text: `O ativo foi deletado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                })
+                setShow(false)
+                props.buscarAtivos()
+            }).catch(error => {
+                console.log(error)
+            })
+    }
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -90,18 +106,6 @@ export default function ModalAtivo(props: IModalAtivo) {
         const date = new Date(dateString);
         return date.toLocaleDateString('pt-BR');
     };
-    const excluirAtivo = () => {
-        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(()=> {
-            Swal.fire({
-                title: 'Ativo Deletado!',
-                text: `O ativo foi deletado com sucesso!`,
-                icon: 'success',
-                confirmButtonText: 'OK!'
-            })
-            setShow(false)
-            props.buscarAtivos()
-        }).catch()
-    }
 
     const handleDisponivel = () => {
         setDisponivel(!disponivel)

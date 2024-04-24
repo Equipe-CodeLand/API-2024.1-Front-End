@@ -1,10 +1,10 @@
 import React, { useState, FormEvent } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import Footer from '../components/footer';
 import Navbar from '../components/navbar';
+import { useAxios } from '../hooks/useAxios';
 
 type StatusType = { value: {id:number, nome_status:string}, label: string } | null;
 
@@ -18,6 +18,7 @@ export default function CadastroAtivos() {
     const [funcionario, setFuncionario] = useState('');
     const [dataAquisicao, setDataAquisicao] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState('');
+    const { post } = useAxios()
 
     const statusAtivo = [
         { value: { id: 1, nome_status: "Disponível" }, label: 'Disponível' },
@@ -43,49 +44,47 @@ export default function CadastroAtivos() {
             return;
         }
 
-        try {
-            console.log(parseFloat(precoAquisicao))
-            const response = await axios.post('http://localhost:8080/cadastrar/ativos', {
-                nome,
-                descricao,
-                status: status.value,
-                preco_aquisicao: parseFloat(precoAquisicao),
-                modelo,
-                marca,
-                funcionario,
-                dataAquisicao,
-                dataExpiracao
-            });
+        console.log(parseFloat(precoAquisicao))
 
-            console.log(response.data);
+        post('/cadastrar/ativos', {
+            nome,
+            descricao,
+            status: status.value,
+            preco_aquisicao: parseFloat(precoAquisicao),
+            modelo,
+            marca,
+            funcionario,
+            dataAquisicao,
+            dataExpiracao})
+                .then(response => {
+                    console.log(response.data);
 
-            Swal.fire({
-                title: 'Ativo cadastrado!',
-                text: `O ativo ${nome} foi cadastrado com sucesso!`,
-                icon: 'success',
-                confirmButtonText: 'OK!'
-            })
+                    Swal.fire({
+                        title: 'Ativo cadastrado!',
+                        text: `O ativo ${nome} foi cadastrado com sucesso!`,
+                        icon: 'success',
+                        confirmButtonText: 'OK!'
+                    })
 
-            setNomeAtivo('');
-            setDescricao('');
-            setStatus(null);
-            setPrecoAquisicao('');
-            setModelo('');
-            setMarca('');
-            setFuncionario('');
-            setDataAquisicao('');
-            setDataExpiracao('');
+                    setNomeAtivo('');
+                    setDescricao('');
+                    setStatus(null);
+                    setPrecoAquisicao('');
+                    setModelo('');
+                    setMarca('');
+                    setFuncionario('');
+                    setDataAquisicao('');
+                    setDataExpiracao('');
+                }).catch( error => {
+                    console.error('Erro ao cadastrar o ativo:', error);
 
-        } catch (error) {
-            console.error('Erro ao cadastrar o ativo:', error);
-
-            Swal.fire({
-                title: 'Erro ao cadastrar o ativo!',
-                text: `Ocorreu um erro ao cadastrar o ativo ${nome}. Por favor, tente novamente!`,
-                icon: 'warning',
-                confirmButtonText: 'OK!'
-            })
-        }
+                    Swal.fire({
+                        title: 'Erro ao cadastrar o ativo!',
+                        text: `Ocorreu um erro ao cadastrar o ativo ${nome}. Por favor, tente novamente!`,
+                        icon: 'warning',
+                        confirmButtonText: 'OK!'
+                    })
+                })
     }
 
     return (

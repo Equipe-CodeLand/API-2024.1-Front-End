@@ -24,6 +24,11 @@
     resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
 }
 
+.erro {
+    margin-bottom: 1em;
+    color: red;
+}
+
 .btn_login {
     width: 180px;
     height: 45px;
