@@ -16,7 +16,7 @@ const UsuariosCadastroPage: React.FC = () => {
     { value: { id: 1, nome_cargo: "Administrador" }, label: 'Administrador' },
     { value: { id: 2, nome_cargo: "Funcionário" }, label: 'Funcionário' },
   ];
-
+ 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -27,7 +27,7 @@ const UsuariosCadastroPage: React.FC = () => {
 
     try {
       // Enviar os dados do novo usuário para o backend
-      const response = await fetch('http://localhost:8080/cadastrar/usuarios', {
+      const response = await fetch('http://localhost:8080/usuario/cadastrar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
