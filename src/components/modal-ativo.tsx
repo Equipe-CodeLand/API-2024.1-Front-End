@@ -24,7 +24,6 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [usuario, setUsuario] = useState(props.ativo.usuario);
     const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
-    const [dataExpiracao, setDataExpiracao] = useState(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
 
