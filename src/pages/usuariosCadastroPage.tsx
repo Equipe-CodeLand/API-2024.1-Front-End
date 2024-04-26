@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import Navbar from '../components/navbar'; 
+import Footer from '../components/footer';
 import styles from '../styles/formularioUsuario.module.css';
 
 const UsuariosCadastroPage: React.FC = () => {
@@ -74,42 +76,46 @@ const UsuariosCadastroPage: React.FC = () => {
   };
 
   return (
-    <div className={styles['form-container']}>
-      <h1>Cadastro de Usuário</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label>
-          Nome:
-          <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          CPF:
-          <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Cargo:
-          <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
-            <option value="">Selecione o cargo</option>
-            {cargos.map((cargo, index) => (
-              <option key={index} value={cargo.value.id}>{cargo.label}</option>
-            ))}
-          </select>
-        </label>
-        <br />
-        <label>
-          Email:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Senha:
-          <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
-        </label>
-        <br />
-        <button type="submit" className={styles['submit-button']}>Cadastrar Usuário</button>
-        {error && <p className={styles.error}>{error}</p>}
-      </form>
+    <div>
+      <Navbar local="usuarios" />
+      <div className={styles['form-container']}>
+        <h1>Cadastro de Usuário</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label>
+            Nome:
+            <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            CPF:
+            <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            Cargo:
+            <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
+              <option value="">Selecione o cargo</option>
+              {cargos.map((cargo, index) => (
+                <option key={index} value={cargo.value.id}>{cargo.label}</option>
+              ))}
+            </select>
+          </label>
+          <br />
+          <label>
+            Email:
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            Senha:
+            <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
+          </label>
+          <br />
+          <button type="submit" className={styles['submit-button']}>Cadastrar Usuário</button>
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 };

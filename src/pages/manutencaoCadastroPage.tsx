@@ -3,6 +3,7 @@ import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import Swal from 'sweetalert2';
 import Navbar from '../components/navbar';
+import Footer from '../components/footer';
 import { useAxios } from '../hooks/useAxios';
 
 
@@ -140,6 +141,7 @@ export default function ManutencaoCadastroPage() {
                 )}
             </form>
         </div>
+        <Footer />
         </>
     );
 }
