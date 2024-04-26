@@ -106,7 +106,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 // Verifica se o status foi alterado para "Ocupado"
-                if (statusId === 3) {
+                if (statusId === 3 && props.ativo.usuario?.id !== usuarioSelecionado?.id) {
                     // Se sim, adiciona um novo histórico
                     axios.post(`http://localhost:8080/adicionar/historico/${props.ativo.id}`)
                         .then(() => {
