@@ -111,3 +111,19 @@
     border-radius: 10px;
     border: none;
 }
+
+.historico strong {
+    font-size: 1.1em;
+}
+
+.historico ul {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 1em;
+}
+
+.semHistorico {
+    font-weight: 300;
+}
