@@ -7,7 +7,7 @@ export default function Ativo(props: IAtivo) {
     const [state, setState] = useState({
         show: false,
         ativoSelecionado: null as IAtivo | null
-    })
+    })    
 
     const handleClose = () => {
         setState((prevState) => ({

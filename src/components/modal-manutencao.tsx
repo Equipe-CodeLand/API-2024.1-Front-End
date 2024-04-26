@@ -118,10 +118,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                 props.manutencao.responsavel 
               )}
               </p>
-              <ButtonMain
-                icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                onClick={() => setIsEditing(!isEditing)}
-              />
+
             </div>
 
             <div className='p-icon'>
@@ -132,10 +129,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   props.manutencao.localizacao
                 )}
               </p>
-              <ButtonMain
-                icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                onClick={() => setIsEditing(!isEditing)}
-              />
+
             </div>
 
             <div className='p-icon'>
@@ -146,10 +140,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   dataInicio
                 )}
               </p>
-              <ButtonMain
-                icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                onClick={() => setIsEditing(!isEditing)}
-              />
+
             </div>
 
             <div className='p-icon'>
@@ -160,10 +151,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   dataFinal
                 )}
               </p>
-              <ButtonMain
-                icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                onClick={() => setIsEditing(!isEditing)}
-              />
+
             </div>
           </div>
         </div>
