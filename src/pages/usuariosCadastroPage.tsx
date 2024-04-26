@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import styles from '../styles/formulario.module.css';
+import styles from '../styles/formularioUsuario.module.css';
 
 const UsuariosCadastroPage: React.FC = () => {
   const navigate = useNavigate();
