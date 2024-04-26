@@ -61,8 +61,6 @@ const UsuariosCadastroPage: React.FC = () => {
         confirmButtonText: 'OK'
       });
 
-      // Redirecionar para a página de listagem de usuários ou para onde desejar
-      navigate('/listar/usuarios');
     } catch (error) {
       // Em caso de erro, mostrar uma mensagem de erro
       console.error('Erro ao cadastrar usuário:', error);
