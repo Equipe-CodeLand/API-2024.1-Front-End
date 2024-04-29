@@ -7,7 +7,7 @@ export interface IAtivo {
     modelo: string,
     nome: string,
     preco_aquisicao: string,
-    funcionario: string,
+    usuario: any,
     setor: {id: number, nome: string},
     status: {id: number, descricao: string},
     dataAquisicao: Date,

@@ -72,7 +72,7 @@ export default function AtivosPage() {
                         marca={ativo.marca}
                         modelo={ativo.modelo}
                         preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
-                        funcionario={ativo.funcionario}
+                        usuario={ativo.usuario}
                         setor={ativo.setor}
                         status={ativo.status}
                         dataAquisicao={ativo.dataAquisicao}

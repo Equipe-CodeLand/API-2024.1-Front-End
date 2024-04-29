@@ -124,25 +124,26 @@ export default function ManutencaoCadastroPage() {
                 {ativos && (
                     <>
                         <label>
-                            ID do Ativo:
+                            ID do Ativo: <span className={styles.required}>*</span>
                             <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id: ''} readOnly />
                         </label>
                         <label>
-                            Responsável:
+                            Responsável: <span className={styles.required}>*</span>
                             <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
                         </label>
                         <label>
-                            Data de Início:
+                            Data de Início: <span className={styles.required}>*</span>
                             <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
                         </label>
                         <label>
-                            Data Final:
+                            Data Final: <span className={styles.required}>*</span>
                             <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
                         </label>
                         <label>
-                            Localização:
+                            Localização: <span className={styles.required}>*</span>
                             <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
                         </label>
+
                         <input type="submit" value="Cadastrar Manutenção" />
                         <br/>
                     </>

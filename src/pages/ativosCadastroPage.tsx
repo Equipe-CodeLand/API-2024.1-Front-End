@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import axios from 'axios';
@@ -6,7 +6,9 @@ import Swal from 'sweetalert2';
 import Footer from '../components/footer';
 import Navbar from '../components/navbar';
 
-type StatusType = { value: {id:number, nome_status:string}, label: string } | null;
+type StatusType = { value: { id: number, nome_status: string }, label: string } | null;
+
+type UsuarioType = { value: number, id: number, nome: string } | null;
 
 export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
@@ -15,15 +17,39 @@ export default function CadastroAtivos() {
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
     const [marca, setMarca] = useState('');
-    const [funcionario, setFuncionario] = useState('');
+    const [usuario, setUsuario] = useState<UsuarioType[]>([]);
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState<UsuarioType | null>(null);
     const [dataAquisicao, setDataAquisicao] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState('');
 
     const statusAtivo = [
         { value: { id: 1, nome_status: "Disponível" }, label: 'Disponível' },
         { value: { id: 2, nome_status: "Em manutenção" }, label: 'Em manutenção' },
-        { value: { id: 3, nome_status: "Ocupado" } , label: 'Ocupado' },
+        { value: { id: 3, nome_status: "Ocupado" }, label: 'Ocupado' },
     ];
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/listar/usuarios')
+            .then(response => {
+                const usuarios = response.data.map((usuario: any) => ({
+                    value: usuario,
+                    id: usuario.id,
+                    label: usuario.nome,
+                }));
+                setUsuario(usuarios);
+            })
+            .catch(error => console.error('Erro ao buscar usuários:', error));
+    }, []);
+
+
+    const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
+        if (selectedOption) {
+            setUsuarioSelecionado(selectedOption);
+            console.log(usuarioSelecionado)
+        } else {
+            setUsuarioSelecionado(null);
+        }
+    }
 
     const handleSearch = (selectedOption: StatusType) => {
         setStatus(selectedOption);
@@ -33,7 +59,7 @@ export default function CadastroAtivos() {
         event.preventDefault();
 
 
-        if (!nome || !descricao || !status || !precoAquisicao || !modelo || !marca || (status.value.id=== 3 && !funcionario.trim()) || !dataAquisicao || !dataExpiracao) {
+        if (!nome || !status || !precoAquisicao || (status.value.id === 3 && !usuarioSelecionado) || !dataAquisicao) {
             Swal.fire({
                 title: 'Erro ao cadastrar o ativo!',
                 text: `Por favor, preencha todos os campos do formulário!`,
@@ -42,6 +68,7 @@ export default function CadastroAtivos() {
             })
             return;
         }
+
 
         try {
             console.log(parseFloat(precoAquisicao))
@@ -52,7 +79,7 @@ export default function CadastroAtivos() {
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
-                funcionario,
+                usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
             });
@@ -72,7 +99,7 @@ export default function CadastroAtivos() {
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
-            setFuncionario('');
+            setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
 
@@ -98,7 +125,7 @@ export default function CadastroAtivos() {
                 <br />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Nome do Ativo:
+                        Nome do Ativo: <span className={styles.required}>*</span>
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
@@ -106,17 +133,17 @@ export default function CadastroAtivos() {
                         <input type="text" name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                     </label>
                     <label>
-                        Status:
+                        Status: <span className={styles.required}>*</span>
                         <Select options={statusAtivo} onChange={handleSearch} placeholder="Status" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                     </label>
                     {status && status.label === 'Ocupado' && (
                         <label>
-                            Nome do Funcionário:
-                            <input type="text" name="Nome do Funcionário" placeholder="Funcionário Responsável" value={funcionario} onChange={e => setFuncionario(e.target.value)} />
+                            Funcionário Responsável: <span className={styles.required}>*</span>
+                            <Select options={usuario} onChange={handleUsuarioSearch} placeholder="Pesquisar Usuário" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                         </label>
                     )}
                     <label>
-                        Preço de aquisição (R$):
+                        Preço de aquisição (R$): <span className={styles.required}>*</span>
                         <input type="text" name="Preço de aquisição" placeholder="Preço de aquisição" value={precoAquisicao} onChange={e => setPrecoAquisicao(e.target.value)} />
                     </label>
                     <label>
@@ -128,7 +155,7 @@ export default function CadastroAtivos() {
                         <input type="text" name="Marca" placeholder="Marca" value={marca} onChange={e => setMarca(e.target.value)} />
                     </label>
                     <label>
-                        Data de aquisição:
+                        Data de aquisição: <span className={styles.required}>*</span>
                         <input type="date" name="Data de aquisição" value={dataAquisicao} onChange={e => setDataAquisicao(e.target.value)} />
                     </label>
                     <label>
