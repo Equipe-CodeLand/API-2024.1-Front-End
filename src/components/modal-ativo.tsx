@@ -368,7 +368,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <ul>
                                 {historico.map((historico: any, index: number) => (
                                     <li key={index}>
-                                        <p>Usuário: {historico.usuario.nome}</p>
+                                        <p>Usuário: {historico.usuario?.nome}</p>
                                         <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p> <br />
                                     </li>
                                 ))}
