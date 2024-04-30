@@ -30,7 +30,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
-    const { put, deletar } =  useAxios()
+    const { get, post, put, deletar } =  useAxios()
 
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
@@ -39,7 +39,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
 
     useEffect(() => {
-        axios.get('http://localhost:8080/listar/usuarios')
+        get('/listar/usuarios')
             .then(response => {
                 const usuarios = response.data.map((usuario: any) => ({
                     value: usuario,
@@ -55,7 +55,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         // Função para buscar o histórico do usuário ao abrir o modal
         const fetchHistorico = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/listar/historico/${props.ativo.id}`);
+                const response = await get(`/listar/historico/${props.ativo.id}`);
                 setHistorico(response.data); 
             } catch (error) {
                 console.error('Erro ao buscar histórico do usuário:', error);
@@ -108,12 +108,12 @@ export default function ModalAtivo(props: IModalAtivo) {
             status: { id: statusId }
         };
     
-        axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
+        put(`/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 // Verifica se o status foi alterado para "Ocupado"
                 if (statusId === 3 && props.ativo.usuario?.id !== usuarioSelecionado?.id) {
                     // Se sim, adiciona um novo histórico
-                    axios.post(`http://localhost:8080/adicionar/historico/${props.ativo.id}`)
+                    post(`/adicionar/historico/${props.ativo.id}`, {})
                         .then(() => {
                             Swal.fire({
                                 title: 'Ativo Atualizado!',
@@ -128,7 +128,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 }
                             });
                         })
-                        .catch(error => {
+                        .catch((error) => {
                             console.error('Erro ao adicionar novo histórico:', error);
                             Swal.fire({
                                 icon: 'error',
@@ -174,7 +174,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const excluirAtivo = () => {
-        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(() => {
+        deletar(`/delete/ativos/${props.ativo.id}`).then(() => {
             Swal.fire({
                 title: 'Ativo Deletado!',
                 text: `O ativo foi deletado com sucesso!`,
