@@ -5,39 +5,35 @@ import styles from "../styles/ativosPage.module.css"
 import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
 import { Manutencao } from "../types/manutencao.type";
+import { useAxios } from "../hooks/useAxios";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([])
     const [manutencoes, setManutencoes] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
+    const { get } = useAxios()
 
     const ativos = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/listar/ativos")
-            if (!response.ok) {
-                throw new Error("Erro ao buscar ativos")
-            }
-            const jsonData = await response.json()
-            setData(jsonData)
-        } catch (error) {
-            setError(error)
-        } finally {
-            setLoading(false)
-        }
+        get("/listar/ativos")
+            .then(response => {
+                setData(response.data)
+                setLoading(false)
+            })
+            .catch(error => {
+                setError(error)
+                setLoading(false)
+            })
     }
 
     const chamarManutencoes = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/manutencao")
-            if (!response.ok) {
-                throw new Error("Erro ao buscar manutenções")
-            }
-            const jsonData = await response.json()
-            setManutencoes(jsonData)
-        } catch (error) {
-            console.log(error)
-        }
+        get("/manutencao")
+            .then(response => {
+                setManutencoes(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     useEffect(() => {

@@ -3,6 +3,7 @@ import Footer from "../components/footer"
 import Navbar from "../components/navbar"
 import Usuario from "../components/usuario"
 import styles from "../styles/usuariosPage.module.css"
+import { useAxios } from "../hooks/useAxios"
 
 
 
@@ -10,20 +11,18 @@ export default function UsuariosPage() {
     const [data, setData] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
+    const { get } = useAxios()
 
     const usuarios = async () => {
-        try {
-            const res = await fetch("http://localhost:8080/listar/usuarios")
-            if (!res.ok) {
-                throw new Error("Erro ao buscar usuarios")
-            }
-            const jsonData = await res.json()
-            setData(jsonData)
-        } catch (error) {
-            setError(error)
-        } finally {
-            setLoading(false)
-        }
+        get("/listar/usuarios")
+            .then(response => {
+                setData(response.data)
+                setLoading(false)
+            })
+            .catch(error => {
+                setError(error)
+                setLoading(false)
+            })
     }
 
     useEffect(() => {

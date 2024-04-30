@@ -4,8 +4,8 @@ import ButtonMain from './botao';
 import '../styles/modal.css'
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
-import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useAxios } from '../hooks/useAxios';
 
 export default function ModalManutencao(props: IModalManutencao) {
   const [show, setShow] = useState(true);
@@ -16,6 +16,7 @@ export default function ModalManutencao(props: IModalManutencao) {
   const [localizacao, setLocalizacao] = useState(props.manutencao.localizacao);
   const [responsavel, setResponsavel] = useState(props.manutencao.responsavel);
   const [ativosId, setAtivosId] = useState(props.manutencao.ativos_id);
+  const { put, deletar } = useAxios();
   
   useEffect(() => {
     setAtivosId(ativosId);
@@ -35,8 +36,7 @@ export default function ModalManutencao(props: IModalManutencao) {
       ativos_id: ativosId
     };
   
-    axios
-      .put(`http://localhost:8080/manutencao/${props.manutencao.id}`, dadosAtualizados)
+    put(`/manutencao/${props.manutencao.id}`, dadosAtualizados)
       .then(response => {
         Swal.fire({
           title: 'Manutenção Atualizada!',
@@ -61,7 +61,7 @@ export default function ModalManutencao(props: IModalManutencao) {
   };
   
   const handleDelete = () => {
-    axios.delete(`http://localhost:8080/manutencao/${props.manutencao.id}`)
+    deletar(`/manutencao/${props.manutencao.id}`)
       .then(response => {
         Swal.fire({
           title: 'Manutenção Deletada!',

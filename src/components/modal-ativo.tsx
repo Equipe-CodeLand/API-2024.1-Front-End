@@ -6,10 +6,9 @@ import { FaRegEdit } from "react-icons/fa";
 import ButtonMain from "./botao";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Select from 'react-select';
+import { useAxios } from "../hooks/useAxios";
 
 export default function ModalAtivo(props: IModalAtivo) {
-    const [historico, setHistorico] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [show, setShow] = useState(true);
     const [disponivel, setDisponivel] = useState(true);
@@ -21,63 +20,17 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [modelo, setModelo] = useState(props.ativo.modelo);
     const [marca, setMarca] = useState(props.ativo.marca);
     const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao);
-    const [usuario, setUsuario] = useState(props.ativo.usuario);
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario);
+    const [funcionario, setFuncionario] = useState(props.ativo.funcionario);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
-
-    const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
+    const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
+    const { put, deletar } =  useAxios()
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
         (manutencao) => new Date(manutencao.data_inicio) > new Date()
     );
 
-
-    useEffect(() => {
-        axios.get('http://localhost:8080/listar/usuarios')
-            .then(response => {
-                const usuarios = response.data.map((usuario: any) => ({
-                    value: usuario,
-                    id: usuario.id,
-                    label: usuario.nome,
-                }));
-                setUsuario(usuarios);
-            })
-            .catch(error => console.error('Erro ao buscar usuários:', error));
-    }, []);
-
-    useEffect(() => {
-        // Função para buscar o histórico do usuário ao abrir o modal
-        const fetchHistorico = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/listar/historico/${props.ativo.id}`);
-                setHistorico(response.data); 
-            } catch (error) {
-                console.error('Erro ao buscar histórico do usuário:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro ao buscar histórico do usuário',
-                    text: 'Ocorreu um erro ao tentar buscar o histórico do usuário. Por favor, tente novamente.'
-                });
-            }
-        };
-
-        fetchHistorico(); 
-    }, [props.ativo.id]);
-
-
-    const handleUsuarioSearch = (selectedOption: any) => {
-        if (selectedOption) {
-            setUsuarioSelecionado(selectedOption);
-            console.log(selectedOption)
-        } else {
-            setUsuarioSelecionado(null);
-        }
-    };
-
-
     const toggleEditing = () => {
         setIsEditing(!isEditing);
-        setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +41,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const saveChanges = () => {
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
-        const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
+        const formattedDataExpiracao = formatDateForBackend(dataExpiracao);
     
         const ativosDto = {
             nome: nome,
@@ -96,66 +49,53 @@ export default function ModalAtivo(props: IModalAtivo) {
             modelo: modelo,
             marca: marca,
             preco_aquisicao: parseFloat(preco_aquisicao),
-            usuario: usuarioSelecionado,
+            funcionario: funcionario,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
     
-        axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
-            .then(response => {
-                // Verifica se o status foi alterado para "Ocupado"
-                if (statusId === 3 && props.ativo.usuario?.id !== usuarioSelecionado?.id) {
-                    // Se sim, adiciona um novo histórico
-                    axios.post(`http://localhost:8080/adicionar/historico/${props.ativo.id}`)
-                        .then(() => {
-                            Swal.fire({
-                                title: 'Ativo Atualizado!',
-                                text: `O ativo foi atualizado com sucesso e um novo histórico foi adicionado!`,
-                                icon: 'success',
-                                confirmButtonText: 'OK!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    setShow(false);
-                                    props.buscarAtivos();
-                                    window.location.reload();
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            console.error('Erro ao adicionar novo histórico:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Erro ao adicionar novo histórico',
-                                text: 'Ocorreu um erro ao tentar adicionar um novo histórico. Por favor, tente novamente.'
-                            });
-                        });
-                } else {
-                    Swal.fire({
-                        title: 'Ativo Atualizado!',
-                        text: `O ativo foi atualizado com sucesso!`,
-                        icon: 'success',
-                        confirmButtonText: 'OK!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            setShow(false);
-                            props.buscarAtivos();
-                            window.location.reload();
-                        }
-                    });
+        put(`/atualizar/ativos/${props.ativo.id}`, ativosDto).then(response => {
+            Swal.fire({
+                title: 'Ativo Atualizado!',
+                text: `O ativo foi atualizado com sucesso!`,
+                icon: 'success',
+                confirmButtonText: 'OK!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setShow(false);
+                    props.buscarAtivos();
+                    window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
                 }
-            })
-            .catch(error => {
-                console.error('Erro ao atualizar o ativo:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro ao atualizar o ativo',
-                    text: 'Ocorreu um erro ao tentar atualizar o ativo. Por favor, tente novamente.'
-                });
-                setShow(false);
-                props.buscarAtivos();
             });
-    };    
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar o ativo:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao atualizar o ativo',
+                text: 'Ocorreu um erro ao tentar atualizar o ativo. Por favor, tente novamente.'
+            });
+            setShow(false);
+            props.buscarAtivos();
+        });            
+    };
+    
+    const excluirAtivo = () => {
+        deletar(`/delete/ativos/${props.ativo.id}`)
+            .then(()=> {
+                Swal.fire({
+                    title: 'Ativo Deletado!',
+                    text: `O ativo foi deletado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                })
+                setShow(false)
+                props.buscarAtivos()
+            }).catch(error => {
+                console.log(error)
+            })
+    }
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -166,33 +106,21 @@ export default function ModalAtivo(props: IModalAtivo) {
         const date = new Date(dateString);
         return date.toLocaleDateString('pt-BR');
     };
-    const excluirAtivo = () => {
-        axios.delete(`http://localhost:8080/delete/ativos/${props.ativo.id}`).then(() => {
-            Swal.fire({
-                title: 'Ativo Deletado!',
-                text: `O ativo foi deletado com sucesso!`,
-                icon: 'success',
-                confirmButtonText: 'OK!'
-            })
-            setShow(false)
-            props.buscarAtivos()
-        }).catch()
-    }
 
     const handleDisponivel = () => {
-        setDisponivel(true)
+        setDisponivel(!disponivel)
         setOcupado(false)
         setEmManutencao(false)
     }
 
     const handleOcupado = () => {
-        setOcupado(true)
+        setOcupado(!ocupado)
         setDisponivel(false)
         setEmManutencao(false)
     }
 
     const handleEmManutencao = () => {
-        setEmManutencao(true)
+        setEmManutencao(!emManutencao)
         setDisponivel(false)
         setOcupado(false)
     }
@@ -221,7 +149,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     var render
     if (manutencoesFuturas.length > 0) {
-        render =
+        render = 
             <ul>
                 {manutencoesFuturas.map((manutencao, index) => {
                     return (
@@ -233,7 +161,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 })}
             </ul>
     } else {
-        render =
+        render = 
             <div className={styles.semManutencoes}>
                 - Não há manutenções futuras -
             </div>
@@ -248,7 +176,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
-                    <div className={styles.titulo}>
+                <div className={styles.titulo}>
                         <h3>
                             {isEditing ? (
                                 <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -259,7 +187,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             onClick={toggleEditing}
-                        />
+                        />  
+                        
                     </div>
                     <div className={styles.status}>
                         <ul>
@@ -283,6 +212,10 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 props.ativo.descricao
                             )}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing}
+                        />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
@@ -293,6 +226,10 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 props.ativo.modelo
                             )}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing}
+                        />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
@@ -303,14 +240,22 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 props.ativo.marca
                             )}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing}
+                        />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
                             <strong>Preço de aquisição: </strong>
                             {isEditing ? (
-                                <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
-                            ) : props.ativo.preco_aquisicao}
+                            <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
+                            ): props.ativo.preco_aquisicao}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing}
+                        />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
@@ -320,67 +265,45 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 new Date(props.ativo.dataAquisicao).toLocaleDateString()
                             )}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing} 
+                        />
                     </div>
                     <div className={styles.informacoes}>
                         <div>
                             <strong>Data de expiração: </strong> {isEditing ? (
-                                <input type="text" value={dataExpiracaoEdit} onChange={e => setDataExpiracaoEdit(e.target.value)} placeholder="dd/mm/aaaa" />
+                                <input type="text" value={dataExpiracao} onChange={e => setDataExpiracao(e.target.value)} />
                             ) : (
-                                props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString() : 'Data não especificada'
+                                new Date(props.ativo.dataExpiracao).toLocaleDateString()
                             )}
                         </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing} 
+                        />
                     </div>
                     <div className={styles.informacoes}>
-                        {ocupado && (
-                            <>
-                                {isEditing ? (
-                                    <label>
-                                        Responsável:
-                                        <Select
-                                            options={usuario}
-                                            value={usuario.find((user: { id: number; }) => user.id === usuarioSelecionado?.id)}
-                                            onChange={handleUsuarioSearch}
-                                            placeholder="Pesquisar Usuário"
-                                            styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
-                                        />
-                                    </label>
-                                ) : (
-                                    <div>
-                                        <strong>Responsável: </strong>
-                                        {props.ativo.usuario?.nome}
-                                    </div>
-                                )}
-                            </>
-                        )}
+                        <div>
+                            <strong>Responsável: </strong>
+                            {isEditing ? (
+                                <input type="text" value={funcionario} onChange={(e) => setFuncionario(e.target.value)} />
+                            ) : (
+                                props.ativo.funcionario
+                            )}
+                        </div>
+                        <ButtonMain
+                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                            onClick={toggleEditing}
+                        />
                     </div>
-
-
                     <hr />
                     <div className={styles.manutencoes}>
                         <strong>Manutenções futuras: </strong>
                         {render}
                     </div>
-
-                    <hr />
-                    <div className={styles.historico}>
-                        <strong>Histórico: </strong>
-                        {historico.length > 0 ? (
-                            <ul>
-                                {historico.map((historico: any, index: number) => (
-                                    <li key={index}>
-                                        <p>Usuário: {historico.usuario?.nome}</p>
-                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p> <br />
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <div className={styles.semHistorico}>
-                                - Não há histórico -
-                            </div>
-                        )}
-                    </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer> 
                     <div className={styles.botoes}>
                         <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
                         {isEditing ? (

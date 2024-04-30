@@ -4,20 +4,41 @@ import ManutencaoComponent from "../components/manutencao";
 import Navbar from "../components/navbar";
 import { Manutencao } from "../types/manutencao.type";
 import styles from "../styles/manutencaoPage.module.css";
-import axios from "axios";
+import { useAxios } from "../hooks/useAxios";
 
 export default function ManutencaoPage() {
 
   let [manutencoes, setManutencoes] = useState<Manutencao[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | unknown>(null)
+  const { get, loading, setLoading } = useAxios()
 
   useEffect(() => {
     buscarManutencoes()
   }, [])
 
   const buscarManutencoes = async () => {
-    try {
+    get("/manutencao")
+      .then(response => {
+        let manutencoes = response.data.map((manutencao: any) => {
+          return {
+            id: manutencao.id,
+            nome: manutencao.ativos.nome,
+            dataInicio: manutencao.data_inicio,
+            dataFinal: manutencao.data_final,
+            ativos_id: manutencao.ativos.id,
+            localizacao: manutencao.localizacao,
+            responsavel: manutencao.responsavel
+          }
+        })
+        setManutencoes(manutencoes)
+        setLoading(false)
+      })
+      .catch(err => {
+        setError(err)
+        setLoading(false)
+      })
+      
+    /*try {
       const response = await fetch("http://localhost:8080/manutencao")
       if (!response.ok) {
         throw new Error("Erro ao buscar manutenções")
@@ -40,7 +61,7 @@ export default function ManutencaoPage() {
       setError(error)
     } finally {
       setLoading(false)
-    }
+    } */
   }
 
   var render
