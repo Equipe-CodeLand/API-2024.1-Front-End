@@ -180,22 +180,24 @@ export default function ModalAtivo(props: IModalAtivo) {
     }
 
     const handleDisponivel = () => {
-        setDisponivel(true)
-        setOcupado(false)
-        setEmManutencao(false)
-    }
+        setDisponivel(true);
+        setOcupado(false);
+        setEmManutencao(false);
+        setUsuarioSelecionado(null);
+    };
 
     const handleOcupado = () => {
-        setOcupado(true)
-        setDisponivel(false)
-        setEmManutencao(false)
-    }
+        setOcupado(true);
+        setDisponivel(false);
+        setEmManutencao(false);
+    };
 
     const handleEmManutencao = () => {
-        setEmManutencao(true)
-        setDisponivel(false)
-        setOcupado(false)
-    }
+        setEmManutencao(true);
+        setDisponivel(false);
+        setOcupado(false);
+        setUsuarioSelecionado(null);
+    };
 
     useEffect(() => {
         switch (props.ativo.status.id) {
@@ -338,7 +340,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                         Responsável:
                                         <Select
                                             options={usuario}
-                                            value={usuario.find((user: { id: number; }) => user.id === usuarioSelecionado?.id)}
+                                            value={usuario.find((user: { id: number; }) => user.id === (usuarioSelecionado ? usuarioSelecionado.id : null))}
                                             onChange={handleUsuarioSearch}
                                             placeholder="Pesquisar Usuário"
                                             styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
