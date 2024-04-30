@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import Select from 'react-select';
 
 export default function ModalAtivo(props: IModalAtivo) {
-
+    const [historico, setHistorico] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [show, setShow] = useState(true);
     const [disponivel, setDisponivel] = useState(true);
@@ -24,7 +24,6 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [usuario, setUsuario] = useState(props.ativo.usuario);
     const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
-    const [dataExpiracao, setDataExpiracao] = useState(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
 
@@ -45,6 +44,25 @@ export default function ModalAtivo(props: IModalAtivo) {
             })
             .catch(error => console.error('Erro ao buscar usuários:', error));
     }, []);
+
+    useEffect(() => {
+        // Função para buscar o histórico do usuário ao abrir o modal
+        const fetchHistorico = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/listar/historico/${props.ativo.id}`);
+                setHistorico(response.data); 
+            } catch (error) {
+                console.error('Erro ao buscar histórico do usuário:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao buscar histórico do usuário',
+                    text: 'Ocorreu um erro ao tentar buscar o histórico do usuário. Por favor, tente novamente.'
+                });
+            }
+        };
+
+        fetchHistorico(); 
+    }, [props.ativo.id]);
 
 
     const handleUsuarioSearch = (selectedOption: any) => {
@@ -71,7 +89,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
-
+    
         const ativosDto = {
             nome: nome,
             descricao: descricao,
@@ -83,23 +101,49 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
-
-
-        console.log(ativosDto)
+    
         axios.put(`http://localhost:8080/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
-                Swal.fire({
-                    title: 'Ativo Atualizado!',
-                    text: `O ativo foi atualizado com sucesso!`,
-                    icon: 'success',
-                    confirmButtonText: 'OK!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        setShow(false);
-                        props.buscarAtivos();
-                        window.location.reload(); // Recarrega a página após o usuário pressionar "OK"
-                    }
-                });
+                // Verifica se o status foi alterado para "Ocupado"
+                if (statusId === 3 && props.ativo.usuario?.id !== usuarioSelecionado?.id) {
+                    // Se sim, adiciona um novo histórico
+                    axios.post(`http://localhost:8080/adicionar/historico/${props.ativo.id}`)
+                        .then(() => {
+                            Swal.fire({
+                                title: 'Ativo Atualizado!',
+                                text: `O ativo foi atualizado com sucesso e um novo histórico foi adicionado!`,
+                                icon: 'success',
+                                confirmButtonText: 'OK!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    setShow(false);
+                                    props.buscarAtivos();
+                                    window.location.reload();
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Erro ao adicionar novo histórico:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erro ao adicionar novo histórico',
+                                text: 'Ocorreu um erro ao tentar adicionar um novo histórico. Por favor, tente novamente.'
+                            });
+                        });
+                } else {
+                    Swal.fire({
+                        title: 'Ativo Atualizado!',
+                        text: `O ativo foi atualizado com sucesso!`,
+                        icon: 'success',
+                        confirmButtonText: 'OK!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            setShow(false);
+                            props.buscarAtivos();
+                            window.location.reload();
+                        }
+                    });
+                }
             })
             .catch(error => {
                 console.error('Erro ao atualizar o ativo:', error);
@@ -111,8 +155,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setShow(false);
                 props.buscarAtivos();
             });
-    };
-
+    };    
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -318,6 +361,25 @@ export default function ModalAtivo(props: IModalAtivo) {
                     <div className={styles.manutencoes}>
                         <strong>Manutenções futuras: </strong>
                         {render}
+                    </div>
+
+                    <hr />
+                    <div className={styles.historico}>
+                        <strong>Histórico: </strong>
+                        {historico.length > 0 ? (
+                            <ul>
+                                {historico.map((historico: any, index: number) => (
+                                    <li key={index}>
+                                        <p>Usuário: {historico.usuario?.nome}</p>
+                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p> <br />
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className={styles.semHistorico}>
+                                - Não há histórico -
+                            </div>
+                        )}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

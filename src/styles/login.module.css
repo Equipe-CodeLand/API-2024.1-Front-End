@@ -16,7 +16,6 @@
 }
 
 .username, .password {
-    width: 80%;
     padding: 10px;
     margin-bottom: 5%;
     border: 1px solid black;
