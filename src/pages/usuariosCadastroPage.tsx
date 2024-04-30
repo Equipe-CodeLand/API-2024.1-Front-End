@@ -10,7 +10,6 @@ const UsuariosCadastroPage: React.FC = () => {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [cargo, setCargo] = useState('');
-  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
 
@@ -22,13 +21,12 @@ const UsuariosCadastroPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!nome || !cpf || !cargo || !email || !senha) {
+    if (!nome || !cpf || !cargo || !senha) {
       setError('Todos os campos são obrigatórios');
       return;
     }
 
     try {
-      // Enviar os dados do novo usuário para o backend
       const response = await fetch('http://localhost:8080/usuario/cadastrar', {
         method: 'POST',
         headers: {
@@ -38,24 +36,25 @@ const UsuariosCadastroPage: React.FC = () => {
           nome,
           cpf,
           cargo,
-          email,
           senha
         })
       });
+
+      if (response.status === 401) {
+        setError('CPF já está em uso');
+        return;
+      }
 
       if (!response.ok) {
         throw new Error('Erro ao cadastrar usuário');
       }
 
-      // Limpar os campos do formulário após o cadastro
       setNome('');
       setCpf('');
       setCargo('');
-      setEmail('');
       setSenha('');
       setError('');
 
-      // Mostrar uma mensagem de sucesso
       Swal.fire({
         title: 'Usuário cadastrado!',
         text: 'O usuário foi cadastrado com sucesso!',
@@ -63,8 +62,7 @@ const UsuariosCadastroPage: React.FC = () => {
         confirmButtonText: 'OK'
       });
 
-    } catch (error) {
-      // Em caso de erro, mostrar uma mensagem de erro
+    } catch (error: any) {
       console.error('Erro ao cadastrar usuário:', error);
       Swal.fire({
         title: 'Erro!',
@@ -99,11 +97,6 @@ const UsuariosCadastroPage: React.FC = () => {
                 <option key={index} value={cargo.value.id}>{cargo.label}</option>
               ))}
             </select>
-          </label>
-          <br />
-          <label>
-            Email:
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <br />
           <label>
