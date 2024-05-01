@@ -6,6 +6,7 @@ import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
 import { Manutencao } from "../types/manutencao.type";
 import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([])
@@ -13,6 +14,7 @@ export default function AtivosPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
     const { get } = useAxios()
+    const { getCargo } = useAuth()
 
     const ativos = async () => {
         get("/listar/ativos")
@@ -97,9 +99,10 @@ export default function AtivosPage() {
                 <div className={styles.conteudo}>
                     <main>
                         <div className={styles.adicionarAtivo}>
-                            <a className={styles.botao} href="/cadastrar/ativos">
-                                Adicionar Ativo
-                            </a>
+                        { getCargo() === "Administrador" ? 
+                                <a className={styles.botao} href="/cadastrar/ativos">
+                                    Adicionar Ativo
+                                </a> : '' }
                         </div>
                         <div className={styles.listarAtivo}>
                             {render}

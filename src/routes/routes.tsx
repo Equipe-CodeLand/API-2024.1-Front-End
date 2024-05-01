@@ -8,20 +8,20 @@ import LoginPage from "../pages/loginPage";
 import UsuariosPage from "../pages/usuariosPage";
 import { PrivateRoute } from "./privateRoute";
 import UsuariosCadastroPage from "../pages/usuariosCadastroPage";
+import NotFoundPage from "../pages/notFoundPage";
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/home" element={
-                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                <Route path="/" element={
+                    <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <HomePage />
                     </PrivateRoute>
                 }/>                
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/ativos" element={
-                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                    <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <AtivosPage />
                     </PrivateRoute>
                 }/>
@@ -45,7 +45,12 @@ export default function Routes() {
                         <RouteManutecaoCadastro />
                     </PrivateRoute>
                 } />
-                <Route path="/cadastrar/usuarios" element={<UsuariosCadastroPage />} />
+                <Route path="/cadastrar/usuarios" element={
+                    <PrivateRoute cargosPermitidos={['Administrador']}>
+                           <UsuariosCadastroPage />
+                    </PrivateRoute>             
+                } />
+                <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
             </Switch>
         </BrowserRouter>
     );

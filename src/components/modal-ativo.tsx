@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Select from 'react-select';
 
 import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
 
 
 export default function ModalAtivo(props: IModalAtivo) {
@@ -32,7 +33,8 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
-    const { get, post, put, deletar } = useAxios()
+    const { get, post, put, deletar } =  useAxios()
+    const { getCargo } = useAuth()
 
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
@@ -288,10 +290,11 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 nome
                             )}
                         </h3>
-                        <ButtonMain
+                        { getCargo() === "Administrador" ? 
+                            <ButtonMain
                             icon={<FaRegEdit style={{ fontSize: 30 }} />}
                             onClick={toggleEditing}
-                        />
+                        /> : '' }
                     </div>
                     <div className={styles.status}>
                         <ul>
@@ -423,14 +426,16 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <div className={styles.botoes}>
-                        <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
-                        {isEditing ? (
-                            <button className={styles.editar} onClick={saveChanges}>SALVAR ALTERAÇÕES</button>
-                        ) : (
-                            <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
-                        )}
-                    </div>
+                    { getCargo() === "Administrador" ?
+                        <div className={styles.botoes}>
+                            <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
+                            {isEditing ? (
+                                <button className={styles.editar} onClick={saveChanges}>SALVAR ALTERAÇÕES</button>
+                            ) : (
+                                <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
+                            )}
+                        </div> : ''
+                    }
                 </Modal.Footer>
             </Modal>
         </>

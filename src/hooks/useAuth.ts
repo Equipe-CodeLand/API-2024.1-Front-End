@@ -29,6 +29,9 @@ export const useAuth = () => {
   const getToken = () => {
     return usuario?.token
   }
+  const getCargo = () => {
+    return usuario?.cargo
+  }
 
 
   useEffect(() => {
@@ -39,6 +42,6 @@ export const useAuth = () => {
     setLoading(false)
   }, [])
 
-  return { usuario, login, logout, setUsuario, getToken, loading };
+  return { usuario, login, logout, setUsuario, getToken,  getCargo, loading };
 };
 
