@@ -1,12 +1,7 @@
 .footer {
-    border-top: 2px solid var(--corSecundaria);
     padding: 20px;
     text-align: center;
     width: 100%;
     justify-items: center;
     justify-content: center;
-}
-
-.footer p {
-    margin: 0;
 }
