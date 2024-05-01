@@ -1,0 +1,74 @@
+.modal {
+    padding: 30px 40px !important;
+    min-height: 60vh;
+    max-height: auto;
+}
+
+.id {
+    font-size: 1em;
+}
+
+.titulo {
+    text-align: left;
+    font-weight: 700;
+    font-size: 1.5em;
+
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+.informacoes {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    display: flex;
+}
+
+.informacoes strong {
+    margin-right: 5px;
+}
+
+.informacoes div {
+    padding-right: 20px;
+}
+
+.informacoes button {
+    padding: 0;
+    padding-bottom: 10px;
+}
+
+.ativos {
+    font-size: 1.1em;
+}
+
+.ativos ul {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 1em;
+}
+
+.semAtivos {
+    font-weight: 300;
+}
+
+.botoes {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.botoes button {
+    font-weight: 700;
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: 2px solid #202020;
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.botoes button:hover {
+    background-color: #d9d9d9;
+}
