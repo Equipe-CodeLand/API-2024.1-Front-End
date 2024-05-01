@@ -27,11 +27,12 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao);
     const [usuario, setUsuario] = useState(props.ativo.usuario);
     const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario);
+    const [usuarioPreenchido, setUsuarioPreenchido] = useState(false);
     const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
-    const { get, post, put, deletar } =  useAxios()
+    const { get, post, put, deletar } = useAxios()
 
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
@@ -57,7 +58,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         const fetchHistorico = async () => {
             try {
                 const response = await get(`/listar/historico/${props.ativo.id}`);
-                setHistorico(response.data); 
+                setHistorico(response.data);
             } catch (error) {
                 console.error('Erro ao buscar histórico do usuário:', error);
                 Swal.fire({
@@ -68,7 +69,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             }
         };
 
-        fetchHistorico(); 
+        fetchHistorico();
     }, [props.ativo.id]);
 
 
@@ -93,10 +94,29 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const saveChanges = () => {
+
+        if (ocupado && !usuarioSelecionado) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campo obrigatório',
+                text: 'Por favor, preencha o campo do funcionário responsável.',
+            });
+            return;
+        }
+
+        if (!nome || !preco_aquisicao || !dataAquisicao) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos obrigatórios',
+                html: 'Por favor, preencha todos os campos obrigatórios:<br>(Nome, Preço de Aquisição e Data de Aquisição)',
+            });
+            return;
+        }
+
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
-    
+
         const ativosDto = {
             nome: nome,
             notaFiscal: notaFiscal,
@@ -109,7 +129,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }
         };
-    
+
         put(`/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
                 // Verifica se o status foi alterado para "Ocupado"
@@ -163,7 +183,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setShow(false);
                 props.buscarAtivos();
             });
-    };    
+    };
 
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('/');
@@ -357,7 +377,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <>
                                 {isEditing ? (
                                     <label>
-                                        Responsável:
+                                        <strong>Responsável: </strong>
                                         <Select
                                             options={usuario}
                                             value={usuario.find((user: { id: number; }) => user.id === (usuarioSelecionado ? usuarioSelecionado.id : null))}
