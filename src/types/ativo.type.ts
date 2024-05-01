@@ -1,6 +1,7 @@
 import { Manutencao } from "./manutencao.type"
 
 export type AtivoType = {
+    notaFiscal: string
     id: number,
     descricao: string,
     marca: string,

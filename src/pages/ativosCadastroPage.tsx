@@ -11,6 +11,7 @@ type StatusType = { value: {id:number, nome_status:string}, label: string } | nu
 export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
+    const [notaFiscal, setNotaFiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
@@ -34,7 +35,7 @@ export default function CadastroAtivos() {
         event.preventDefault();
 
 
-        if (!nome || !descricao || !status || !precoAquisicao || !modelo || !marca || (status.value.id=== 3 && !funcionario.trim()) || !dataAquisicao || !dataExpiracao) {
+        if (!nome || !notaFiscal || !descricao || !status || !precoAquisicao || !modelo || !marca || (status.value.id=== 3 && !funcionario.trim()) || !dataAquisicao || !dataExpiracao) {
             Swal.fire({
                 title: 'Erro ao cadastrar o ativo!',
                 text: `Por favor, preencha todos os campos do formulário!`,
@@ -48,6 +49,7 @@ export default function CadastroAtivos() {
 
         post('/cadastrar/ativos', {
             nome,
+            notaFiscal,
             descricao,
             status: status.value,
             preco_aquisicao: parseFloat(precoAquisicao),
@@ -67,6 +69,7 @@ export default function CadastroAtivos() {
                     })
 
                     setNomeAtivo('');
+                    setNotaFiscal('');
                     setDescricao('');
                     setStatus(null);
                     setPrecoAquisicao('');
@@ -99,6 +102,10 @@ export default function CadastroAtivos() {
                     <label>
                         Nome do Ativo:
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
+                    </label>
+                    <label>
+                        Código da Nota Fiscal:
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} />
                     </label>
                     <label>
                         Descrição:

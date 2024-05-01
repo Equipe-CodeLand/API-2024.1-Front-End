@@ -64,6 +64,7 @@ export default function AtivosPage() {
                     return <Ativo
                         id={ativo.id}
                         nome={ativo.nome}
+                        notaFiscal={ativo.notaFiscal}
                         descricao={ativo.descricao}
                         marca={ativo.marca}
                         modelo={ativo.modelo}

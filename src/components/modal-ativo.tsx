@@ -20,6 +20,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [emManutencao, setEmManutencao] = useState(false);
 
     const [nome, setNome] = useState(props.ativo.nome);
+    const [notaFiscal, setNotaFiscal] = useState(props.ativo.notaFiscal);
     const [descricao, setDescricao] = useState(props.ativo.descricao);
     const [modelo, setModelo] = useState(props.ativo.modelo);
     const [marca, setMarca] = useState(props.ativo.marca);
@@ -98,6 +99,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     
         const ativosDto = {
             nome: nome,
+            notaFiscal: notaFiscal,
             descricao: descricao,
             modelo: modelo,
             marca: marca,
@@ -283,6 +285,16 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 <input type="checkbox" checked={emManutencao} onChange={handleEmManutencao} /> Em manutenção
                             </li>
                         </ul>
+                    </div>
+                    <div className={styles.informacoes}>
+                        <div>
+                            <strong>Código da Nota Fiscal: </strong>
+                            {isEditing ? (
+                                <input type="text" value={notaFiscal} onChange={(e) => setNotaFiscal(e.target.value)} />
+                            ) : (
+                                props.ativo.notaFiscal
+                            )}
+                        </div>
                     </div>
                     <div className={styles.informacoes}>
                         <div>
