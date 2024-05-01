@@ -4,7 +4,6 @@ import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
 import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
-import { Manutencao } from "../types/manutencao.type";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 

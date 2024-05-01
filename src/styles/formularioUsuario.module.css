@@ -18,7 +18,7 @@ label {
     width: 80%;
 }
 
-input[type="text"], input[type="email"], input[type="password"], select {
+input[type="text"], input[type="email"], .senha, select {
     width: 100%;
     padding: 15px;
     margin-top: 5px;

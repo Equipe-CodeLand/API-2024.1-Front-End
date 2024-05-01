@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Navbar from '../components/navbar'; 
 import Footer from '../components/footer';
 import styles from '../styles/formularioUsuario.module.css';
 
 const UsuariosCadastroPage: React.FC = () => {
-  const navigate = useNavigate();
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [cargo, setCargo] = useState('');
@@ -101,7 +99,7 @@ const UsuariosCadastroPage: React.FC = () => {
           <br />
           <label>
             Senha: *
-            <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
+            <input className={styles.senha} type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
           </label>
           <br />
           <button type="submit" className={styles['submit-button']}>Cadastrar Usuário</button>
