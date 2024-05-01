@@ -29,10 +29,6 @@ export default function HomePage() {
               <VscTools size="38" />
               <span>Manutenções</span>
             </Link>
-            <Link to="/usuarios" className={styles.usuarios} style={{ flexDirection: 'column' }}>
-              <VscTools size="38" />
-              <span>Usuários</span>
-            </Link>
           </div>
         </div>
       </div>
