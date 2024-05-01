@@ -80,17 +80,17 @@ const UsuariosCadastroPage: React.FC = () => {
         <h1>Cadastro de Usuário</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>
-            Nome:
+            Nome: *
             <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
           <br />
           <label>
-            CPF:
+            CPF: *
             <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
           </label>
           <br />
           <label>
-            Cargo:
+            Cargo: *
             <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
               <option value="">Selecione o cargo</option>
               {cargos.map((cargo, index) => (
@@ -100,7 +100,7 @@ const UsuariosCadastroPage: React.FC = () => {
           </label>
           <br />
           <label>
-            Senha:
+            Senha: *
             <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
           </label>
           <br />
