@@ -25,17 +25,23 @@ export default function Usuario(props: IUsuario) {
         }))
     }
 
+    if (props.buscarUsuarios != undefined) {
+        return (
+            <>
+                {state.show && state.usuarioSelecionado && (
+                    <ModalUsuario usuario={state.usuarioSelecionado} handleClose={handleClose} 
+                    buscarUsuarios={props.buscarUsuarios} />
+                )}
+                <div className={styles.usuario} onClick={() => handleShow(props)}>
+                    <div className={styles.id}>ID: {props.id}</div>
+                    <div className={styles.nome}>{props.nome}</div>
+                    <div className={styles.cargo}>{props.cargo}</div>
+                </div>
+            </>
+        )
+    }
+
     return (
-        <>
-            {state.show && state.usuarioSelecionado && (
-                <ModalUsuario usuario={state.usuarioSelecionado} handleClose={handleClose} 
-                buscarUsuarios={props.buscarUsuarios} />
-            )}
-            <div className={styles.usuario} onClick={() => handleShow(props)}>
-                <div className={styles.id}>ID: {props.id}</div>
-                <div className={styles.nome}>{props.nome}</div>
-                <div className={styles.cargo}>{props.cargo}</div>
-            </div>
-        </>
+        <></>
     )
 }

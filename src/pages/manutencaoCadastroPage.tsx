@@ -3,6 +3,8 @@ import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import Swal from 'sweetalert2';
 import Navbar from '../components/navbar';
+import Footer from '../components/footer';
+import { useAxios } from '../hooks/useAxios';
 
 
 // Define o tipo para os ativos
@@ -15,23 +17,25 @@ export default function ManutencaoCadastroPage() {
     const [data_inicio, setData_inicio] = useState('');
     const [data_final, setData_final] = useState('');
     const [localizacao, setLocalizacao] = useState('');
+    const { get, post } = useAxios()
 
     useEffect(() => {
         // Buscar ativos do servidor quando o componente é montado
-        fetch('http://localhost:8080/listar/ativos')
-        .then(response => response.json())
-        .then(data => {
-                console.log('Resposta do servidor:', data); // Log da resposta do servidor
+        get("/listar/ativos")
+            .then(response => {
+                console.log('Resposta do servidor:', response.data); // Log da resposta do servidor
                 // Transformar os dados recebidos para o formato { value, label }
-                const ativosTransformados = data.map((ativo: any) => ({
+                const ativosTransformados = response.data.map((ativo: any) => ({
                     value: ativo,
                     id: ativo.id,
                     label: ativo.nome,
                 }));
                 setAtivos(ativosTransformados);
-                console.log('Ativos transformados:', ativosTransformados); // Log dos ativos após a transformação
+                console.log('Ativos transformados:', ativosTransformados);  // Log dos ativos após a transformação
             })
-        .catch(error => console.error('Erro ao buscar ativos:', error));
+            .catch(error => {
+                console.error('Erro ao buscar ativos:', error)
+            })
     }, []);
 
     
@@ -66,47 +70,35 @@ export default function ManutencaoCadastroPage() {
             return;
         }
 
-        const response = await fetch(`http://localhost:8080/manutencao/cadastrar/${ativoSelecionado?.id}`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        post(`/manutencao/cadastrar/${ativoSelecionado?.id}`, {
                 ativos: ativoSelecionado?.value,
                 responsavel,
                 data_inicio: formattedDataInicio,
                 data_final: formattedDataFinal,
                 localizacao,
-            }),
-        });
-
-        console.log(formattedDataFinal);
-        console.log(formattedDataInicio);
-
-        const data = await response.json();
-        console.log(data); 
-
-        if (response.ok) {
-            Swal.fire({
-                title: 'Manutenção cadastrada!',
-                text: `A Manutenção foi cadastrada com sucesso!`,
-                icon: 'success',
-                confirmButtonText: 'OK!'
             })
-
-            setAtivos([]);
-            setResponsavel('');
-            setData_inicio('');
-            setData_final('');
-            setLocalizacao('');
-        } else {
-            Swal.fire({
-                title: 'Erro ao cadastrar a manutenção!',
-                text: `Ocorreu um erro ao cadastrar a manutenção!`,
-                icon: 'error',
-                confirmButtonText: 'OK!'
+            .then(() => {
+                Swal.fire({
+                    title: 'Manutenção cadastrada!',
+                    text: `A Manutenção foi cadastrada com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                })
+    
+                setAtivos([]);
+                setResponsavel('');
+                setData_inicio('');
+                setData_final('');
+                setLocalizacao('');
             })
-        }
+            .catch(() => {
+                Swal.fire({
+                    title: 'Erro ao cadastrar a manutenção!',
+                    text: `Ocorreu um erro ao cadastrar a manutenção!`,
+                    icon: 'error',
+                    confirmButtonText: 'OK!'
+                })
+            })
     };
 
     return (
@@ -124,31 +116,33 @@ export default function ManutencaoCadastroPage() {
                 {ativos && (
                     <>
                         <label>
-                            ID do Ativo:
+                            ID do Ativo: <span className={styles.required}>*</span>
                             <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id: ''} readOnly />
                         </label>
                         <label>
-                            Responsável:
+                            Responsável: <span className={styles.required}>*</span>
                             <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
                         </label>
                         <label>
-                            Data de Início:
+                            Data de Início: <span className={styles.required}>*</span>
                             <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
                         </label>
                         <label>
-                            Data Final:
+                            Data Final: <span className={styles.required}>*</span>
                             <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
                         </label>
                         <label>
-                            Localização:
+                            Localização: <span className={styles.required}>*</span>
                             <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
                         </label>
+
                         <input type="submit" value="Cadastrar Manutenção" />
                         <br/>
                     </>
                 )}
             </form>
         </div>
+        <Footer />
         </>
     );
 }
