@@ -14,7 +14,7 @@ export default function UsuariosPage() {
     const { get } = useAxios()
 
     const usuarios = async () => {
-        get("/listar/usuarios")
+        get("/usuario/listar")
             .then(response => {
                 setData(response.data)
                 setLoading(false)

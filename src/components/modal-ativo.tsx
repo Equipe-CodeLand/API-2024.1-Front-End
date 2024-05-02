@@ -43,7 +43,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
 
     useEffect(() => {
-        get('/listar/usuarios')
+        get('/usuario/listar')
             .then(response => {
                 const usuarios = response.data.map((usuario: any) => ({
                     value: usuario,
