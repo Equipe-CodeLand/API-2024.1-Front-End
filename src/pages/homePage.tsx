@@ -15,12 +15,14 @@ export default function HomePage() {
       <div className={styles.div}>
         <div className={styles.container}>
           <h1 className={styles.tituloHome}>Bem-vindo à nossa Plataforma de Gestão de Ativos!</h1>
-          <p className={styles.sobreHome}>
-            Gerencie seus ativos, visualize informações detalhadas, verifique suas manutenções e muito mais com o nosso site.
-          </p>
-          <p className={styles.sobreHome}>
-            Para começar escolha uma das opções abaixo:
-          </p>
+          <div className={styles.sobreHome}>
+            <p>
+              Gerencie seus ativos, visualize informações detalhadas, verifique suas manutenções e muito mais com o nosso site.
+            </p>
+            <p style={{textAlign: 'center'}}>              
+              Para começar escolha uma das opções abaixo:
+            </p>
+          </div>
         </div>
         <div className={styles.content}>
           <div className={styles.button}>
