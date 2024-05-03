@@ -27,7 +27,6 @@ export default function CadastroAtivos() {
 
     const statusAtivo = [
         { value: { id: 1, nome_status: "Disponível" }, label: 'Disponível' },
-        { value: { id: 2, nome_status: "Em manutenção" }, label: 'Em manutenção' },
         { value: { id: 3, nome_status: "Ocupado" }, label: 'Ocupado' },
     ];
 
