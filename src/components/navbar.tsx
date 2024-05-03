@@ -20,7 +20,7 @@ export default function Navbar(props: props) {
     return (
         <nav className={styles.navbar}>
             <div className={styles.logo}>
-                <a href="/">
+                <a href="/home">
                     <img src={logo} alt="logo Youtan" />    
                 </a>
             </div>
