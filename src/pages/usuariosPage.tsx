@@ -11,7 +11,15 @@ export default function UsuariosPage() {
     const [data, setData] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
+    const [ativos, setAtivos] = useState<Array<any>>([])
     const { get } = useAxios()
+
+    const chamarAtivos = async () => {
+        get("/listar/ativos")
+            .then(response => {
+                setAtivos(response.data)
+            })
+    }
 
     const usuarios = async () => {
         get("/usuario/listar")
@@ -27,7 +35,9 @@ export default function UsuariosPage() {
 
     useEffect(() => {
         usuarios()
+        chamarAtivos()
     }, [])
+    
 
     var render
     if (loading) {
@@ -49,14 +59,19 @@ export default function UsuariosPage() {
         render = 
         <div className={styles.listarUsuario}>
             {data.map((usuario) => {
-                return (
-                    <Usuario
-                        id = {usuario.id}
-                        nome = {usuario.nome}
-                        cargo = {usuario.cargo.nome}
-                        key = {usuario.id}
-                     />
-                )
+                if (usuario !== undefined) {
+                    return (
+                        <Usuario
+                            id = {usuario.id}
+                            nome = {usuario.nome}
+                            cargo = {usuario.cargo.nome}
+                            cpf = {usuario.credencial.cpf}
+                            key = {usuario.id}
+                            buscarUsuarios={usuarios}
+                            ativos = {ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
+                         />
+                    )
+                }
             })}
         </div>
     } else {

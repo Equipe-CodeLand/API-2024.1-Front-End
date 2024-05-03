@@ -1,5 +1,12 @@
+import { AtivoType } from "../types/ativo.type";
+
 export interface IUsuario {
-    sub: string
+    id?: number,
+    nome?: string,
+    cpf?: string,
+    cargo: string,
+    ativos?: AtivoType[],
+    buscarUsuarios?: Function
+    sub?: string
     token?: string;
-    cargo: string
 }

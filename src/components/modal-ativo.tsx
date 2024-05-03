@@ -224,13 +224,6 @@ export default function ModalAtivo(props: IModalAtivo) {
         setEmManutencao(false);
     };
 
-    const handleEmManutencao = () => {
-        setEmManutencao(true);
-        setDisponivel(false);
-        setOcupado(false);
-        setUsuarioSelecionado(null);
-    };
-
     useEffect(() => {
         switch (props.ativo.status.id) {
             case 1:
@@ -242,11 +235,6 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setEmManutencao(true);
                 setDisponivel(false);
                 setOcupado(false);
-                break;
-            case 3:
-                setOcupado(true);
-                setDisponivel(false);
-                setEmManutencao(false);
                 break;
             default:
                 break;
@@ -303,9 +291,6 @@ export default function ModalAtivo(props: IModalAtivo) {
                             </li>
                             <li>
                                 <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
-                            </li>
-                            <li>
-                                <input type="checkbox" checked={emManutencao} onChange={handleEmManutencao} /> Em manutenção
                             </li>
                         </ul>
                     </div>
