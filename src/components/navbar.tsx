@@ -2,6 +2,7 @@ import styles from "../styles/navbar.module.css";
 import { useState } from "react";
 import logo from "../images/logo-youtan-branco.png"
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 type props = {
     local: string;
@@ -20,17 +21,17 @@ export default function Navbar(props: props) {
     return (
         <nav className={styles.navbar}>
             <div className={styles.logo}>
-                <a href="/home">
+                <Link to="/">
                     <img src={logo} alt="logo Youtan" />    
-                </a>
+                </Link>
             </div>
             { usuario ? <>
                 <div className={styles.nav}>
                     <ul>
-                        <li><a className={(props.local === "ativos") ? styles.mark : ""} href="/ativos">Ativos</a></li>
+                        <li><Link className={(props.local === "ativos") ? styles.mark : ""} to="/ativos">Ativos</Link></li>
                         { getCargo() === "Administrador" ? <>
-                            <li><a className={(props.local === "manutencao") ? styles.mark : ""} href="/manutencao">Manutenções</a></li> 
-                            <li><a className={(props.local === "usuarios") ? styles.mark : ""} href="/usuarios">Usuarios</a></li>
+                            <li><Link className={(props.local === "manutencao") ? styles.mark : ""} to="/manutencao">Manutenções</Link></li> 
+                            <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuarios</Link></li>
                         </> : '' }    
                         <li className={styles.logout} onClick={logout} >Sair</li>
                     </ul>
@@ -42,10 +43,10 @@ export default function Navbar(props: props) {
                     </div>
                     <div className={styles.menu}>
                         <ul>
-                            <li><a className={(props.local === "ativos") ? styles.mark : ""} href="/ativos">Ativos</a></li>
+                            <li><Link className={(props.local === "ativos") ? styles.mark : ""} to="/ativos">Ativos</Link></li>
                             { getCargo() === "Administrador" ? <>
-                                <li><a className={(props.local === "manutencao") ? styles.mark : ""} href="/manutencao">Manutenções</a></li> 
-                                <li><a className={(props.local === "usuarios") ? styles.mark : ""} href="/usuarios">Usuarios</a></li>
+                                <li><Link className={(props.local === "manutencao") ? styles.mark : ""} to="/manutencao">Manutenções</Link></li> 
+                                <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuarios</Link></li>
                             </> : '' }    
                             <li className={styles.logout} onClick={logout}>Sair</li>
                         </ul>

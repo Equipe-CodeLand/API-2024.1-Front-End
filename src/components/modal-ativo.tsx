@@ -236,6 +236,11 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setDisponivel(false);
                 setOcupado(false);
                 break;
+            case 3:
+                setDisponivel(false);
+                setOcupado(true);
+                setEmManutencao(false);
+                break;
             default:
                 break;
         }
@@ -284,16 +289,25 @@ export default function ModalAtivo(props: IModalAtivo) {
                             onClick={toggleEditing}
                         /> : '' }
                     </div>
-                    <div className={styles.status}>
-                        <ul>
-                            <li>
-                                <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
-                            </li>
-                            <li>
-                                <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
-                            </li>
-                        </ul>
-                    </div>
+                    {
+                        isEditing && props.ativo.status.id !== 2 ? <>
+                            <div className={styles.status}>
+                                <ul>
+                                    <li>
+                                        <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
+                                    </li>
+                                </ul>
+                            </div>
+                        </> : !isEditing ? <div className={styles.informacoes}>
+                            <div>
+                                <strong>Status: </strong> {props.ativo.status.nome_status}
+                            </div>
+                        </div> : ''
+                    }
+                    
                     <div className={styles.informacoes}>
                         <div>
                             <strong>Código da Nota Fiscal: </strong>

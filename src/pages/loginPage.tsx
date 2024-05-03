@@ -5,6 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../hooks/useAxios";
+import axios from "axios";
 
 interface JwtPayload {
     sub: string
@@ -18,23 +19,25 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const { post } = useAxios();
     const [erro, setErro] = useState(false)
-    
+
     const handleLogin = () => {
         post(`/login`, {cpf, senha})
-            .then(res => {
+            .then(async res => {
                 const data = res.data
                 const decoded = jwtDecode<JwtPayload>(data.token);
+                const cargo = await axios.get(`http://localhost:8080/usuario/${decoded.sub}/cargo`, {headers: {Authorization: `Bearer ${data.token}`}})	
                 login({
                     sub: decoded.sub,
-                    cargo: "Administrador",
+                    cargo: cargo.data,
                     token: data.token
                 })
-                navigate("/home", { replace: true });
+                navigate("/", { replace: true });
             })
-            .catch(() => {
+            .catch(err => {
                 setErro(true)
-            }) 
-    }
+            })
+    }  
+
 
     return(
         <div className={styles.login}>

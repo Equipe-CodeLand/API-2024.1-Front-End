@@ -6,6 +6,7 @@ import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([])
@@ -99,9 +100,9 @@ export default function AtivosPage() {
                     <main>
                         <div className={styles.adicionarAtivo}>
                         { getCargo() === "Administrador" ? 
-                                <a className={styles.botao} href="/cadastrar/ativos">
+                                <Link className={styles.botao} to="/cadastrar/ativos">
                                     Adicionar Ativo
-                                </a> : '' }
+                                </Link> : '' }
                         </div>
                         <div className={styles.listarAtivo}>
                             {render}

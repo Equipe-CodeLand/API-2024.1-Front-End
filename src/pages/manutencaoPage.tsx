@@ -5,6 +5,7 @@ import Navbar from "../components/navbar";
 import { Manutencao } from "../types/manutencao.type";
 import styles from "../styles/manutencaoPage.module.css";
 import { useAxios } from "../hooks/useAxios";
+import { Link } from "react-router-dom";
 
 export default function ManutencaoPage() {
 
@@ -38,30 +39,6 @@ export default function ManutencaoPage() {
         setLoading(false)
       })
       
-    /*try {
-      const response = await fetch("http://localhost:8080/manutencao")
-      if (!response.ok) {
-        throw new Error("Erro ao buscar manutenções")
-      }
-      const jsonData = await response.json()
-      console.log(jsonData)
-      let manutencoes = jsonData.map((manutencao: any) => {
-        return {
-          id: manutencao.id,
-          nome: manutencao.ativos.nome,
-          dataInicio: manutencao.data_inicio,
-          dataFinal: manutencao.data_final,
-          ativos_id: manutencao.ativos.id,
-          localizacao: manutencao.localizacao,
-          responsavel: manutencao.responsavel
-        }
-      })
-      setManutencoes(manutencoes)
-    } catch (error) {
-      setError(error)
-    } finally {
-      setLoading(false)
-    } */
   }
 
   var render
@@ -114,7 +91,7 @@ export default function ManutencaoPage() {
         <div className={styles.conteudo}>
           <main>
             <div className={styles.adicionarManutencao}>
-              <a className={styles.botao} href="/cadastrar/manutencoes">Adicionar Manutenções</a>
+              <Link className={styles.botao} to="/cadastrar/manutencoes">Adicionar Manutenções</Link>
             </div>
             <div className={styles.listarManutencao}>
               {render}

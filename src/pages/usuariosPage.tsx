@@ -4,6 +4,7 @@ import Navbar from "../components/navbar"
 import Usuario from "../components/usuario"
 import styles from "../styles/usuariosPage.module.css"
 import { useAxios } from "../hooks/useAxios"
+import { Link } from "react-router-dom"
 
 
 
@@ -92,9 +93,9 @@ export default function UsuariosPage() {
                 <div className={styles.conteudo}>
                     <main>
                         <div className={styles.adicionarUsuario}>
-                            <a className={styles.botao} href="/cadastrar/usuarios">
+                            <Link className={styles.botao} to="/cadastrar/usuarios">
                                 Adicionar Usuário
-                            </a>
+                            </Link>
                         </div>
                         <div className={styles.listarUsuario}>
                             { render }

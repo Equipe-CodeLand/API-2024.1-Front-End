@@ -11,7 +11,7 @@ export type AtivoType = {
     usuario: { nome: string },
     usuario_id: number,
     setor: {id: number, nome: string},
-    status: {id: number, descricao: string},
+    status: {id: number, nome_status: string},
     dataAquisicao: Date,
     dataExpiracao: Date,
     manutencoes: Manutencao[]

@@ -14,12 +14,12 @@ export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/home" element={
+                <Route path="/" element={
                     <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <HomePage />
                     </PrivateRoute>
                 }/>                
-                <Route path="/" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/ativos" element={
                     <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <AtivosPage />
