@@ -6,10 +6,11 @@ export interface IAtivo {
     marca: string,
     modelo: string,
     nome: string,
+    notaFiscal: string,
     preco_aquisicao: string,
-    funcionario: string,
+    usuario: any,
     setor: {id: number, nome: string},
-    status: {id: number, descricao: string},
+    status: {id: number, nome_status: string},
     dataAquisicao: Date,
     dataExpiracao: Date,
     manutencoes: Manutencao[]

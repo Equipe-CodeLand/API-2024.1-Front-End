@@ -1,29 +1,58 @@
-import React, { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import Footer from '../components/footer';
 import Navbar from '../components/navbar';
+import { useAxios } from '../hooks/useAxios';
 
-type StatusType = { value: {id:number, nome_status:string}, label: string } | null;
+type StatusType = { value: { id: number, nome_status: string }, label: string } | null;
+
+type UsuarioType = { value: number, id: number, nome: string } | null;
 
 export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
+    const [notaFiscal, setNotaFiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
     const [marca, setMarca] = useState('');
-    const [funcionario, setFuncionario] = useState('');
+    const [usuario, setUsuario] = useState<UsuarioType[]>([]);
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState<UsuarioType | null>(null);
     const [dataAquisicao, setDataAquisicao] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState('');
+    const { get } = useAxios()
+    const { post } = useAxios()
 
     const statusAtivo = [
         { value: { id: 1, nome_status: "Disponível" }, label: 'Disponível' },
-        { value: { id: 2, nome_status: "Em manutenção" }, label: 'Em manutenção' },
-        { value: { id: 3, nome_status: "Ocupado" } , label: 'Ocupado' },
+        { value: { id: 3, nome_status: "Ocupado" }, label: 'Ocupado' },
     ];
+
+    useEffect(() => {
+        get('http://localhost:8080/usuario/listar')
+            .then(response => {
+                const usuarios = response.data.map((usuario: any) => ({
+                    value: usuario,
+                    id: usuario.id,
+                    label: usuario.nome,
+                }));
+                setUsuario(usuarios);
+                console.log(usuarios)
+            })
+            .catch(error => console.error('Erro ao buscar usuários:', error));
+    }, []);
+
+
+    const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
+        if (selectedOption) {
+            setUsuarioSelecionado(selectedOption);
+            console.log(usuarioSelecionado)
+        } else {
+            setUsuarioSelecionado(null);
+        }
+    }
 
     const handleSearch = (selectedOption: StatusType) => {
         setStatus(selectedOption);
@@ -33,7 +62,7 @@ export default function CadastroAtivos() {
         event.preventDefault();
 
 
-        if (!nome || !descricao || !status || !precoAquisicao || !modelo || !marca || (status.value.id=== 3 && !funcionario.trim()) || !dataAquisicao || !dataExpiracao) {
+        if (!nome || !status || !precoAquisicao || (status.value.id === 3 && !usuarioSelecionado) || !dataAquisicao) {
             Swal.fire({
                 title: 'Erro ao cadastrar o ativo!',
                 text: `Por favor, preencha todos os campos do formulário!`,
@@ -43,16 +72,18 @@ export default function CadastroAtivos() {
             return;
         }
 
+
         try {
             console.log(parseFloat(precoAquisicao))
-            const response = await axios.post('http://localhost:8080/cadastrar/ativos', {
+            const response = await post('http://localhost:8080/cadastrar/ativos', {
                 nome,
                 descricao,
+                notaFiscal,
                 status: status.value,
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
-                funcionario,
+                usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
             });
@@ -67,12 +98,13 @@ export default function CadastroAtivos() {
             })
 
             setNomeAtivo('');
+            setNotaFiscal('');
             setDescricao('');
             setStatus(null);
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
-            setFuncionario('');
+            setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
 
@@ -102,6 +134,10 @@ export default function CadastroAtivos() {
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
+                        Código da Nota Fiscal:
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} />
+                    </label>
+                    <label>
                         Descrição:
                         <input type="text" name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                     </label>
@@ -111,8 +147,8 @@ export default function CadastroAtivos() {
                     </label>
                     {status && status.label === 'Ocupado' && (
                         <label>
-                            Nome do Funcionário: <span className={styles.required}>*</span>
-                            <input type="text" name="Nome do Funcionário" placeholder="Funcionário Responsável" value={funcionario} onChange={e => setFuncionario(e.target.value)} />
+                            Funcionário Responsável: <span className={styles.required}>*</span>
+                            <Select options={usuario} onChange={handleUsuarioSearch} placeholder="Pesquisar Usuário" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                         </label>
                     )}
                     <label>

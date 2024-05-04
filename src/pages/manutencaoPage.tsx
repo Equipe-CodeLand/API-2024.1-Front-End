@@ -4,43 +4,41 @@ import ManutencaoComponent from "../components/manutencao";
 import Navbar from "../components/navbar";
 import { Manutencao } from "../types/manutencao.type";
 import styles from "../styles/manutencaoPage.module.css";
-import axios from "axios";
+import { useAxios } from "../hooks/useAxios";
+import { Link } from "react-router-dom";
 
 export default function ManutencaoPage() {
 
   let [manutencoes, setManutencoes] = useState<Manutencao[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | unknown>(null)
+  const { get, loading, setLoading } = useAxios()
 
   useEffect(() => {
     buscarManutencoes()
   }, [])
 
   const buscarManutencoes = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/manutencao")
-      if (!response.ok) {
-        throw new Error("Erro ao buscar manutenções")
-      }
-      const jsonData = await response.json()
-      console.log(jsonData)
-      let manutencoes = jsonData.map((manutencao: any) => {
-        return {
-          id: manutencao.id,
-          nome: manutencao.ativos.nome,
-          dataInicio: manutencao.data_inicio,
-          dataFinal: manutencao.data_final,
-          ativos_id: manutencao.ativos.id,
-          localizacao: manutencao.localizacao,
-          responsavel: manutencao.responsavel
-        }
+    get("/manutencao")
+      .then(response => {
+        let manutencoes = response.data.map((manutencao: any) => {
+          return {
+            id: manutencao.id,
+            nome: manutencao.ativos.nome,
+            dataInicio: manutencao.data_inicio,
+            dataFinal: manutencao.data_final,
+            ativos_id: manutencao.ativos.id,
+            localizacao: manutencao.localizacao,
+            responsavel: manutencao.responsavel
+          }
+        })
+        setManutencoes(manutencoes)
+        setLoading(false)
       })
-      setManutencoes(manutencoes)
-    } catch (error) {
-      setError(error)
-    } finally {
-      setLoading(false)
-    }
+      .catch(err => {
+        setError(err)
+        setLoading(false)
+      })
+      
   }
 
   var render
@@ -93,7 +91,7 @@ export default function ManutencaoPage() {
         <div className={styles.conteudo}>
           <main>
             <div className={styles.adicionarManutencao}>
-              <a className={styles.botao} href="/cadastrar/manutencoes">Adicionar Manutenções</a>
+              <Link className={styles.botao} to="/cadastrar/manutencoes">Adicionar Manutenções</Link>
             </div>
             <div className={styles.listarManutencao}>
               {render}

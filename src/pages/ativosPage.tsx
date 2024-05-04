@@ -4,40 +4,38 @@ import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
 import { AtivoType } from "../types/ativo.type";
 import { useEffect, useState } from "react";
-import { Manutencao } from "../types/manutencao.type";
+import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([])
     const [manutencoes, setManutencoes] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
+    const { get } = useAxios()
+    const { getCargo } = useAuth()
 
     const ativos = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/listar/ativos")
-            if (!response.ok) {
-                throw new Error("Erro ao buscar ativos")
-            }
-            const jsonData = await response.json()
-            setData(jsonData)
-        } catch (error) {
-            setError(error)
-        } finally {
-            setLoading(false)
-        }
+        get("/listar/ativos")
+            .then(response => {
+                setData(response.data)
+                setLoading(false)
+            })
+            .catch(error => {
+                setError(error)
+                setLoading(false)
+            })
     }
 
     const chamarManutencoes = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/manutencao")
-            if (!response.ok) {
-                throw new Error("Erro ao buscar manutenções")
-            }
-            const jsonData = await response.json()
-            setManutencoes(jsonData)
-        } catch (error) {
-            console.log(error)
-        }
+        get("/manutencao")
+            .then(response => {
+                setManutencoes(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     useEffect(() => {
@@ -68,11 +66,12 @@ export default function AtivosPage() {
                     return <Ativo
                         id={ativo.id}
                         nome={ativo.nome}
+                        notaFiscal={ativo.notaFiscal}
                         descricao={ativo.descricao}
                         marca={ativo.marca}
                         modelo={ativo.modelo}
                         preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
-                        funcionario={ativo.funcionario}
+                        usuario={ativo.usuario}
                         setor={ativo.setor}
                         status={ativo.status}
                         dataAquisicao={ativo.dataAquisicao}
@@ -100,9 +99,10 @@ export default function AtivosPage() {
                 <div className={styles.conteudo}>
                     <main>
                         <div className={styles.adicionarAtivo}>
-                            <a className={styles.botao} href="/cadastrar/ativos">
-                                Adicionar Ativo
-                            </a>
+                        { getCargo() === "Administrador" ? 
+                                <Link className={styles.botao} to="/cadastrar/ativos">
+                                    Adicionar Ativo
+                                </Link> : '' }
                         </div>
                         <div className={styles.listarAtivo}>
                             {render}

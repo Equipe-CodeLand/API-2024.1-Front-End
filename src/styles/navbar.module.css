@@ -13,6 +13,11 @@
     position: relative;
 }
 
+.logout {
+    cursor: pointer;
+    color: white;
+}
+
 .logo {
     width: 100%;
 }

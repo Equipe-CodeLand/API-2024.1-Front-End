@@ -16,12 +16,18 @@
 }
 
 .username, .password {
-    width: 80%;
+    display: block;
+    width: 400px;
     padding: 10px;
     margin-bottom: 5%;
     border: 1px solid black;
     border-radius: 15px; /* Aumenta o raio da borda para torná-la mais redonda */
     resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
+}
+
+.erro {
+    margin-bottom: 1em;
+    color: red;
 }
 
 .btn_login {
