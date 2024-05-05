@@ -1,0 +1,97 @@
+.body {
+    display: flex;
+    height: max-content;
+}
+
+/* 
+.filtro {
+    background-color: purple;
+    width: 300px;
+    height: calc(100vh - 64px);
+}
+*/
+
+.conteudo {
+    width: 100%;
+}
+
+.conteudo main {
+    /* border: 1px solid lime; */
+
+    max-width: 900px;
+    min-height: 90vh;
+    max-height: none;
+
+    margin: 0 auto;
+    padding: 64px;
+}
+
+.adicionarUsuario {
+    /* border: 1px solid purple; */
+
+    padding: 20px;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+.botao {
+    background-color: var(--corPrimaria);
+
+    width: 200px;
+
+    border: 2px solid var(--corPrimaria);
+    border-radius: 10px;
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
+
+    font-family: var(--inter);
+    font-size: 1.1em;
+    font-weight: 400;
+    text-decoration: none;
+    text-align: center;
+    line-height: 50px;
+    color: white;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.botao:hover {
+    background-color: white;
+    color: var(--corPrimaria);
+}
+
+.listarUsuario {
+    /* border: 1px solid orange; */
+
+    min-height: 300px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 30px;
+
+    padding: 20px;
+}
+
+.semUsuarios {
+    align-self: center;
+    margin-top: 20%;
+
+    font-family: var(--inter);
+    font-weight: 400;
+    text-align: center;
+    text-justify: center;
+    line-height: 1.5em;
+    color: black;
+}
+
+@media screen and (max-width: 600px) {
+    .conteudo main {
+        padding: 32px;
+    }
+}

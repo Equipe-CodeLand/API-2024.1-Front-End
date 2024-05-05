@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
-import { IModalUsuario } from "../interfaces/modalUsuario";
 import styles from "../styles/modalUsuario.module.css";
+import { IModalUsuario } from "../interfaces/modalUsuario";
 
 export default function ModalUsuario(props: IModalUsuario) {
     const ativos = props.usuario.ativos
@@ -10,7 +10,7 @@ export default function ModalUsuario(props: IModalUsuario) {
         if (ativos.length > 0) {
             render =
                 <ul>
-                    {ativos.map((ativo, index) => {
+                    {ativos.map((ativo: any, index: any) => {
                         return <li key={index}>
                             <div>{ativo.id} - {ativo.nome}</div>
                         </li>
