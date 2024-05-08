@@ -1,28 +1,64 @@
+import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "../styles/modalUsuario.module.css";
 import { IModalUsuario } from "../interfaces/modalUsuario";
+import { useAxios } from "../hooks/useAxios";
+import Swal from 'sweetalert2';
+import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
 
 export default function ModalUsuario(props: IModalUsuario) {
-    const ativos = props.usuario.ativos
+    const [nome, setNome] = useState(props.usuario.nome);
+    const [cpf, setCpf] = useState(props.usuario.cpf);
+    const [cargo, setCargo] = useState(props.usuario.cargo);
+    const [ativos, setAtivos] = useState(props.usuario.ativos);
+    const [isEditing, setIsEditing] = useState(false);
+    const { put, deletar } = useAxios();
 
-    var render
-    if (ativos != undefined) {
-        if (ativos.length > 0) {
-            render =
-                <ul>
-                    {ativos.map((ativo: any, index: any) => {
-                        return <li key={index}>
-                            <div>{ativo.id} - {ativo.nome}</div>
-                        </li>
-                    })}
-                </ul>
-        } else {
-            render =
-                <div className={styles.semAtivos}>
-                    - Não há ativos associados -
-                </div>
+    const handleChangeNome = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNome(event.target.value);
+    };
+
+    const handleChangeCpf = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCpf(event.target.value);
+    };
+
+    const handleChangeCargo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCargo(event.target.value);
+    };
+
+    const handleSave = () => {
+
+        let cargoUsuario;
+
+        if (cargo == 'Funcionário'){
+            cargoUsuario = 2
+        } else if (cargo == "Administrador"){
+            cargoUsuario = 1
         }
-    }
+
+        const usuarioAtualizado = {
+            nome: nome,
+            cpf: cpf,
+            cargo: cargoUsuario
+        };
+
+        put(`/usuario/atualizar/usuario/${props.usuario.id}`, usuarioAtualizado)
+        .then(response => {
+          Swal.fire({
+            title: 'Usuário Atualizado!',
+            text: `O usuário foi atualizado com sucesso!`,
+            icon: 'success',
+            confirmButtonText: 'OK!'
+          });
+          console.log('Dados atualizados com sucesso:', response.data);
+          console.log(usuarioAtualizado);
+          props.handleClose();
+          props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
+        })
+        .catch(error => {
+          console.error('Erro ao atualizar os dados:', error);
+        });
+    };
 
     return (
         <>
@@ -33,25 +69,40 @@ export default function ModalUsuario(props: IModalUsuario) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
+                    {/* Campos editáveis */}
                     <div className={styles.titulo}>
-                        <h3>{props.usuario.nome}</h3>
+                        <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
+                        <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
                     </div>
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
-                        {props.usuario.cpf}
+                        {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
                     </div>
                     <div className={styles.informacoes}>
                         <strong>Cargo: </strong>
-                        {props.usuario.cargo}
+                        {isEditing ? <input type="text" value={cargo} onChange={handleChangeCargo} /> : cargo}
                     </div>
                     <hr />
                     <div className={styles.ativos}>
                         <strong>Ativos: </strong>
-                        {render}
+                        {/* Lista de ativos */}
+                        {ativos !== undefined && ativos.length > 0 ? (
+                            <ul>
+                                {ativos.map((ativo: any, index: any) => (
+                                    <li key={index}>{ativo.id} - {ativo.nome}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className={styles.semAtivos}>- Não há ativos associados -</div>
+                        )}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.botoes}>
+                        {/* Botão de salvar e fechar */}
+                        {isEditing && (
+                            <button onClick={handleSave}>SALVAR</button>
+                        )}
                         <button onClick={props.handleClose}>FECHAR</button>
                     </div>
                 </Modal.Footer>
