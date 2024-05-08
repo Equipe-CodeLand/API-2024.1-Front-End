@@ -9,4 +9,5 @@ export interface IUsuario {
     buscarUsuarios?: Function
     sub?: string
     token?: string;
+    estaAtivo?: boolean
 }

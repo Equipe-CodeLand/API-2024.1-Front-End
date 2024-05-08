@@ -26,6 +26,23 @@ export default function ModalUsuario(props: IModalUsuario) {
         setCargo(event.target.value);
     };
 
+    const mudarStatusUsuário = (opcao: string) => {
+        put(`usuario/${props.usuario.id}/${opcao}`, {})
+            .then(() => {
+                Swal.fire({
+                    title: 'Usuário Atualizado!',
+                    text: `O usuário foi atualizado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                  });
+                  props.handleClose();
+                  props.buscarUsuarios();
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     const handleSave = () => {
 
         let cargoUsuario;
@@ -74,6 +91,9 @@ export default function ModalUsuario(props: IModalUsuario) {
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
                         <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
                     </div>
+                    <div className={styles.informacoes}><strong>Status: </strong>{
+                        props.usuario.estaAtivo ? "Ativo" : "Inativo"
+                    }</div>
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
@@ -99,11 +119,14 @@ export default function ModalUsuario(props: IModalUsuario) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.botoes}>
+                        {
+                            props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
+                             <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
+                        }                        
                         {/* Botão de salvar e fechar */}
                         {isEditing && (
                             <button onClick={handleSave}>SALVAR</button>
                         )}
-                        <button onClick={props.handleClose}>FECHAR</button>
                     </div>
                 </Modal.Footer>
             </Modal>

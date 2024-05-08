@@ -69,6 +69,7 @@ export default function UsuariosPage() {
                             cpf = {usuario.credencial.cpf}
                             key = {usuario.id}
                             buscarUsuarios={usuarios}
+                            estaAtivo={usuario.estaAtivo}
                             ativos = {ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
                          />
                     )
