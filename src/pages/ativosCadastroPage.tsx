@@ -135,7 +135,7 @@ export default function CadastroAtivos() {
                     </label>
                     <label>
                         Código da Nota Fiscal:
-                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} />
+                        <input type="file" name="Nota fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} accept="application/pdf,application/vnd.ms-excel" />
                     </label>
                     <label>
                         Descrição:
