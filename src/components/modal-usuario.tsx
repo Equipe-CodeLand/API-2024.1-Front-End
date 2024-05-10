@@ -4,6 +4,7 @@ import styles from "../styles/modalUsuario.module.css";
 import { IModalUsuario } from "../interfaces/modalUsuario";
 import { useAxios } from "../hooks/useAxios";
 import Swal from 'sweetalert2';
+import Select from 'react-select';
 import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
 
 export default function ModalUsuario(props: IModalUsuario) {
@@ -22,34 +23,21 @@ export default function ModalUsuario(props: IModalUsuario) {
         setCpf(event.target.value);
     };
 
-    const handleChangeCargo = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCargo(event.target.value);
+    const handleChangeCargo = (selectedOption: any) => {
+        if (selectedOption) {
+            setCargo(selectedOption.value); // Corrigido para armazenar apenas o valor do cargo
+        } else {
+            setCargo(''); // Limpar o cargo se nada for selecionado
+        }
     };
-
-    const mudarStatusUsuário = (opcao: string) => {
-        put(`usuario/${props.usuario.id}/${opcao}`, {})
-            .then(() => {
-                Swal.fire({
-                    title: 'Usuário Atualizado!',
-                    text: `O usuário foi atualizado com sucesso!`,
-                    icon: 'success',
-                    confirmButtonText: 'OK!'
-                  });
-                  props.handleClose();
-                  props.buscarUsuarios();
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
 
     const handleSave = () => {
 
         let cargoUsuario;
 
-        if (cargo == 'Funcionário'){
+        if (cargo === 'Funcionário'){
             cargoUsuario = 2
-        } else if (cargo == "Administrador"){
+        } else if (cargo === "Administrador"){
             cargoUsuario = 1
         }
 
@@ -91,16 +79,32 @@ export default function ModalUsuario(props: IModalUsuario) {
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
                         <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
                     </div>
-                    <div className={styles.informacoes}><strong>Status: </strong>{
-                        props.usuario.estaAtivo ? "Ativo" : "Inativo"
-                    }</div>
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
                     </div>
                     <div className={styles.informacoes}>
-                        <strong>Cargo: </strong>
-                        {isEditing ? <input type="text" value={cargo} onChange={handleChangeCargo} /> : cargo}
+                        {isEditing && ( // Renderizar o dropdown apenas se estiver editando
+                            <label>
+                                <strong>Cargo: </strong>
+                                <Select
+                                    options={[
+                                        { value: 'Funcionário', label: 'Funcionário' },
+                                        { value: 'Administrador', label: 'Administrador' }
+                                    ]}
+                                    value={{ value: cargo, label: cargo }} // Definir valor e rótulo do dropdown
+                                    onChange={handleChangeCargo}
+                                    placeholder="Selecione um cargo"
+                                    styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
+                                />
+                            </label>
+                        )}
+                        {!isEditing && ( // Se não estiver editando, mostrar apenas o cargo
+                            <div>
+                                <strong>Cargo: </strong>
+                                {cargo}
+                            </div>
+                        )}
                     </div>
                     <hr />
                     <div className={styles.ativos}>
@@ -119,17 +123,14 @@ export default function ModalUsuario(props: IModalUsuario) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.botoes}>
-                        {
-                            props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
-                             <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
-                        }                        
-                        {/* Botão de salvar e fechar */}
                         {isEditing && (
                             <button onClick={handleSave}>SALVAR</button>
                         )}
+                        <button onClick={props.handleClose}>FECHAR</button>
                     </div>
                 </Modal.Footer>
             </Modal>
         </>
     )
+    
 }
