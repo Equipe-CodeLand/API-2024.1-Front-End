@@ -12,7 +12,7 @@ export default function AlteracaoSenhaPage() {
     const [cpf, setCpf] = useState('');
     const [modoVerificacao, setModoVerificacao] = useState(false); 
     const [codigoVerificacao, setCodigoVerificacao] = useState('');
-    const [ erro ] = useState(false);
+    const [erro] = useState(false);
     const { put } = useAxios();
 
     const alterarSenha = async () => {
@@ -74,21 +74,25 @@ export default function AlteracaoSenhaPage() {
             <div className={styles.container}>
                 <h1>Alteração de Senha</h1>
                 {erro ? <div className={styles.erro}>CPF ou senha incorretos</div> : ""}
-                <div className={styles.camposInput}>
-                    <div>
-                        <label>{usuario ? "Nova Senha:" : "Digite o seu CPF:"}</label>
-                        {!usuario && (
-                            <input type="text" placeholder="123456789101" value={cpf} onChange={(e) => setCpf(e.target.value)} />
-                        )}
-                        <input type="password" placeholder="Digite a nova senha" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} />
+                {!modoVerificacao && (
+                    <div className={styles.camposInput}>
+                        <div>
+                            <label>{usuario ? "Nova Senha:" : "Digite o seu CPF:"}</label>
+                            {!usuario && (
+                                <input type="text" placeholder="123456789101" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+                            )}
+                            <input type="password" placeholder="Digite a nova senha" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} />
+                        </div>
                     </div>
-                    {modoVerificacao && (
+                )}
+                {modoVerificacao && (
+                    <div className={styles.camposInput}>
                         <div>
                             <label>Código de Verificação:</label>
                             <input type="text" placeholder="Digite o código de verificação" value={codigoVerificacao} onChange={(e) => setCodigoVerificacao(e.target.value)} />
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
                 {!modoVerificacao ? (
                     <button className={styles.submit} type="submit" onClick={enviarEmailVerificacao}>Enviar email de verificação</button>
                 ) : (

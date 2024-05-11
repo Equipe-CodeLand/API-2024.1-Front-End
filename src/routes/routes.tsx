@@ -21,11 +21,7 @@ export default function Routes() {
                     </PrivateRoute>
                 }/>                
                 <Route path="/" element={<LoginPage />} />
-                <Route path="/alteracao/senha" element={
-                    <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
-                        <AlteracaoSenhaPage />
-                    </PrivateRoute>
-                } />
+                <Route path="/alteracao/senha" element={<AlteracaoSenhaPage />} />
                 <Route path="/ativos" element={
                     <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <AtivosPage />
