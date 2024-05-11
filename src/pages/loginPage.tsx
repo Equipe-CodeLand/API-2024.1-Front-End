@@ -39,7 +39,7 @@ export default function LoginPage() {
                 login(usuarioData)
                 setUsuario(usuarioData)
 
-                navigate("/", { replace: true });
+                navigate("/home", { replace: true });
             })
             .catch(err => {
                 setErro(true)
