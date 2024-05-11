@@ -12,7 +12,7 @@ export default function AlteracaoSenhaPage() {
     const [cpf, setCpf] = useState('');
     const [modoVerificacao, setModoVerificacao] = useState(false); 
     const [codigoVerificacao, setCodigoVerificacao] = useState('');
-    const [erro, setErro] = useState(false);
+    const [ erro ] = useState(false);
     const { put } = useAxios();
 
     const alterarSenha = async () => {

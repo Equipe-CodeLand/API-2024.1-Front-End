@@ -7,6 +7,7 @@ import styles from '../styles/formularioUsuario.module.css';
 const UsuariosCadastroPage: React.FC = () => {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
+  const [email, setEmail] = useState('');
   const [cargo, setCargo] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
@@ -33,6 +34,7 @@ const UsuariosCadastroPage: React.FC = () => {
         body: JSON.stringify({
           nome,
           cpf,
+          email,
           cargo,
           senha
         })
@@ -49,6 +51,7 @@ const UsuariosCadastroPage: React.FC = () => {
 
       setNome('');
       setCpf('');
+      setEmail('');
       setCargo('');
       setSenha('');
       setError('');
@@ -85,6 +88,11 @@ const UsuariosCadastroPage: React.FC = () => {
           <label>
             CPF: *
             <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            Email: *
+            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <br />
           <label>
