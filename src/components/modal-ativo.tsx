@@ -119,6 +119,9 @@ export default function ModalAtivo(props: IModalAtivo) {
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
 
+        console.log(formattedDataAquisicao)
+        console.log(formattedDataExpiracao)
+
         const ativosDto = {
             nome: nome,
             notaFiscal: notaFiscal,
@@ -148,7 +151,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 if (result.isConfirmed) {
                                     setShow(false);
                                     props.buscarAtivos();
-                                    window.location.reload();
+                                    // window.location.reload();
                                 }
                             });
                         })
@@ -188,8 +191,11 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const formatDateForBackend = (dateString: string) => {
-        const parts = dateString.split('/');
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        if (dateString != null) {
+            const parts = dateString.split('/');
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+        return null
     };
 
     const formatDate = (dateString: string) => {
