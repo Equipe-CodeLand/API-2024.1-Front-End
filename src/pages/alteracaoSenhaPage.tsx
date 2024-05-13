@@ -1,19 +1,23 @@
 import { useContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"; 
 import Navbar from "../components/navbar"
 import Footer from "../components/footer"
 import styles from '../styles/alteracaoSenha.module.css'
 import { useAxios } from "../hooks/useAxios"
 import Swal from "sweetalert2"
 import { AuthContext } from "../context/authContext"
+import { useAuth } from "../hooks/useAuth"
 
 export default function AlteracaoSenhaPage() {
     const { usuario } = useContext(AuthContext);
+    const { logout } = useAuth()
     const [novaSenha, setNovaSenha] = useState('');
     const [cpf, setCpf] = useState('');
     const [modoVerificacao, setModoVerificacao] = useState(false); 
     const [codigoVerificacao, setCodigoVerificacao] = useState('');
     const [erro] = useState(false);
     const { put } = useAxios();
+    const navigate = useNavigate(); 
 
     const alterarSenha = async () => {
         const cpfFormatado = cpf.replace(/\D/g, ''); 
@@ -65,8 +69,10 @@ export default function AlteracaoSenhaPage() {
 
     useEffect(() => {
         if (!usuario) {
+            logout();
+            navigate("/"); 
         }
-    }, [usuario]); 
+    }, [usuario, logout, navigate]); 
 
     return (
         <>
