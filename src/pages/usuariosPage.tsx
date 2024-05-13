@@ -7,7 +7,6 @@ import { useAxios } from "../hooks/useAxios"
 import { Link } from "react-router-dom"
 
 
-
 export default function UsuariosPage() {
     const [data, setData] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
@@ -92,10 +91,17 @@ export default function UsuariosPage() {
                 <div className={styles.filtro}></div>
                 <div className={styles.conteudo}>
                     <main>
-                        <div className={styles.adicionarUsuario}>
-                            <Link className={styles.botao} to="/cadastrar/usuarios">
-                                Adicionar Usuário
-                            </Link>
+                        <div className={styles.botoes}>
+                            <div className={styles.trocarSenha}>
+                                <Link className={styles.botao} to="/alteracao/senha">
+                                    Trocar minha senha
+                                </Link>
+                            </div>
+                            <div className={styles.adicionarUsuario}>
+                                <Link className={styles.botao} to="/cadastrar/usuarios">
+                                    Adicionar Usuário
+                                </Link>
+                            </div>
                         </div>
                         <div className={styles.listarUsuario}>
                             { render }

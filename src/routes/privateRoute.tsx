@@ -9,7 +9,7 @@ export const PrivateRoute = ({ children, cargosPermitidos }: { children: JSX.Ele
   if(loading) return <div>Carregando ...</div>
 
   if(!usuario){
-    return <Navigate to="/login" replace/>
+    return <Navigate to="/" replace/>
   }
 
   if( usuario && cargosPermitidos.includes(usuario.cargo)) {
