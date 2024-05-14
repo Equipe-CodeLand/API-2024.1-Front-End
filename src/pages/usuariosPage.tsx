@@ -37,58 +37,72 @@ export default function UsuariosPage() {
         usuarios()
         chamarAtivos()
     }, [])
-    
+
 
     var render
     if (loading) {
-        render = 
-        <div className={styles.listarUsuario}>
-            <div className={styles.semUsuarios}>
-                Carregando usuários...
+        render =
+            <div className={styles.listarUsuario}>
+                <div className={styles.semUsuarios}>
+                    Carregando usuários...
+                </div>
             </div>
-        </div>
     } else if (error) {
-        render = 
-        <div className={styles.listarUsuario}>
-            <div className={styles.semUsuarios}>
-                Erro ao carregar usuários! <br />
-                :(  
+        render =
+            <div className={styles.listarUsuario}>
+                <div className={styles.semUsuarios}>
+                    Erro ao carregar usuários! <br />
+                    :(
+                </div>
             </div>
-        </div>
     } else if (data.length > 0) {
-        render = 
-        <div className={styles.listarUsuario}>
-            {data.map((usuario) => {
-                if (usuario !== undefined) {
-                    return (
-                        <Usuario
-                            id = {usuario.id}
-                            nome = {usuario.nome}
-                            cargo = {usuario.cargo.nome}
-                            cpf = {usuario.credencial.cpf}
-                            key = {usuario.id}
-                            buscarUsuarios={usuarios}
-                            ativos = {ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
-                         />
-                    )
-                }
-            })}
-        </div>
+        render =
+            <div className={styles.listarUsuario}>
+                {data.map((usuario) => {
+                    if (usuario !== undefined) {
+                        return (
+                            <Usuario
+                                id={usuario.id}
+                                nome={usuario.nome}
+                                cargo={usuario.cargo.nome}
+                                cpf={usuario.credencial.cpf}
+                                key={usuario.id}
+                                buscarUsuarios={usuarios}
+                                ativos={ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
+                            />
+                        )
+                    }
+                })}
+            </div>
     } else {
         render =
-        <div className={styles.listarUsuario}>
-            <div className={styles.semUsuarios}>
-                Nenhum usuário encontrado! <br />
-                :/
+            <div className={styles.listarUsuario}>
+                <div className={styles.semUsuarios}>
+                    Nenhum usuário encontrado! <br />
+                    :/
+                </div>
             </div>
-        </div>
     }
 
-    return(
+    return (
         <>
-            <Navbar local="usuarios"/>
+            <Navbar local="usuarios" />
             <div className={styles.body}>
-                <div className={styles.filtro}></div>
+                <div className={styles.filtro}>
+                    <h2>Filtro</h2>
+                    <div className={styles.inputs}>
+                        <input type="text" placeholder="ID" />
+                        <input type="text" placeholder="Nome" />
+                        <hr />
+                        <select name="" id="tipoUsuario">
+                            <option value=""></option>
+                            <option value="">Administrador</option>
+                        </select>
+                    </div>
+                    <div className={styles.filtrar}>
+                        <button>Aplicar</button>
+                    </div>
+                </div>
                 <div className={styles.conteudo}>
                     <main>
                         <div className={styles.botoes}>
@@ -104,7 +118,7 @@ export default function UsuariosPage() {
                             </div>
                         </div>
                         <div className={styles.listarUsuario}>
-                            { render }
+                            {render}
                         </div>
                     </main>
                 </div>
