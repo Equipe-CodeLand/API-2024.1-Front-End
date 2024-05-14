@@ -1,5 +1,6 @@
 import Footer from "../components/footer";
 import { TbZoomMoney } from "react-icons/tb";
+import { GoPeople } from "react-icons/go";
 import { VscTools } from "react-icons/vsc";
 import styles from "../styles/home.module.css";
 import { Link } from "react-router-dom";
@@ -30,13 +31,19 @@ export default function HomePage() {
               <TbZoomMoney size="38" strokeWidth="1.5" />
               <span>Ativos</span>
             </Link>
+            { getCargo() === "Funcionário" ? 
+              <Link to="/alteracao/senha" className={styles.usuarios} style={{ flexDirection: 'column' }}>
+                <GoPeople size="38" />
+                <span>Alterar Senha</span>
+              </Link> : ''
+            }
             { getCargo() === "Administrador" ? <>
               <Link to="/manutencao" className={styles.manutencoes} style={{ flexDirection: 'column' }}>
                 <VscTools size="38" />
                 <span>Manutenções</span>
               </Link>
               <Link to="/usuarios" className={styles.usuarios} style={{ flexDirection: 'column' }}>
-                <VscTools size="38" />
+                <GoPeople size="38" />
                 <span>Usuários</span>
               </Link> </> : ''
             }

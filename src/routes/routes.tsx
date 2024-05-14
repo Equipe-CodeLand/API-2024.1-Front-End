@@ -9,17 +9,19 @@ import UsuariosPage from "../pages/usuariosPage";
 import { PrivateRoute } from "./privateRoute";
 import UsuariosCadastroPage from "../pages/usuariosCadastroPage";
 import NotFoundPage from "../pages/notFoundPage";
+import AlteracaoSenhaPage from "../pages/alteracaoSenhaPage";
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" element={
+                <Route path="/home" element={
                     <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <HomePage />
                     </PrivateRoute>
                 }/>                
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/alteracao/senha" element={<AlteracaoSenhaPage />} />
                 <Route path="/ativos" element={
                     <PrivateRoute cargosPermitidos={['Administrador', 'Funcionário']}>
                         <AtivosPage />

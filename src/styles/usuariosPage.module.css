@@ -26,6 +26,12 @@
     padding: 64px;
 }
 
+.botoes{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
 .adicionarUsuario {
     /* border: 1px solid purple; */
 
@@ -35,6 +41,17 @@
 
     display: flex;
     justify-content: flex-end;
+}
+
+.trocarSenha {
+    /* border: 1px solid purple; */
+
+    padding: 20px;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-start;
 }
 
 .botao {
