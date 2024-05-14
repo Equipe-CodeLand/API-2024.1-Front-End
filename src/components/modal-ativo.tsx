@@ -191,7 +191,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const formatDateForBackend = (dateString: string) => {
-        if (dateString != null) {
+        if (dateString !== "") {
             const parts = dateString.split('/');
             return `${parts[2]}-${parts[1]}-${parts[0]}`;
         }
