@@ -147,7 +147,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 if (result.isConfirmed) {
                                     setShow(false);
                                     props.buscarAtivos();
-                                    // window.location.reload();
+                                    window.location.reload();
                                 }
                             });
                         })
