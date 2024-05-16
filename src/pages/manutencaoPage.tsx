@@ -64,12 +64,14 @@ export default function ManutencaoPage() {
         response = await get(`/manutencao/${idInput}`);
       } else if (nomeInput) {
         response = await get(`/manutencao/filtrar/${nomeInput}`);
-      } else if (dataInicio) {
+      } else if (dataInicio && dataFinal) {
         const dataInicioFormatada = formatarData(dataInicio);
-        response = await get(`/manutencao/filtrar/dataInicio?dataInicio=${dataInicioFormatada}`);
-      } else if (dataFinal) {
         const dataFinalFormatada = formatarData(dataFinal);
-        response = await get(`/manutencao/filtrar/dataFinal?dataFinal=${dataFinalFormatada}`);
+        response = await get(`/manutencao/filtrar/dataInicio/dataFinal?dataInicio=${dataInicioFormatada}&dataFinal=${dataFinalFormatada}`);
+      } else if (dataInicio !== '') { 
+        response = await get(`/manutencao/filtrar/dataInicio?dataInicio=${dataInicio}`);
+      } else if (dataFinal !== '') { 
+        response = await get(`/manutencao/filtrar/dataFinal?dataFinal=${dataFinal}`);
       } else {
         return;
       }
@@ -79,8 +81,8 @@ export default function ManutencaoPage() {
       const manutencoesFiltradas = data.map((manutencao: any) => ({
         id: manutencao.id,
         nome: manutencao.ativos.nome,
-        dataInicio: manutencao.data_inicio ? formatarData(manutencao.data_inicio.join('-')) : "",
-        dataFinal: manutencao.data_final ? formatarData(manutencao.data_final.join('-')) : "",
+        dataInicio: manutencao.data_inicio ? `${manutencao.data_inicio[0]}-${manutencao.data_inicio[1]}-${manutencao.data_inicio[2]}` : "",
+        dataFinal: manutencao.data_final ? `${manutencao.data_final[0]}-${manutencao.data_final[1]}-${manutencao.data_final[2]}` : "",
         ativos_id: manutencao.ativos.id,
         localizacao: manutencao.localizacao,
         responsavel: manutencao.responsavel
@@ -89,13 +91,12 @@ export default function ManutencaoPage() {
       console.log(manutencoesFiltradas)
       setManutencoes(manutencoesFiltradas);
       setLoading(false);
-      limparFiltros(); 
     } catch (error) {
       console.error("Erro ao filtrar manutenções:", error);
       setError(error);
       setLoading(false);
     }
-  };  
+  }; 
 
   const formatarData = (data: string) => {
     const [ano, mes, dia] = data.split("-");
