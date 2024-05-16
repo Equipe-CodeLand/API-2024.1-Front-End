@@ -78,7 +78,6 @@ export default function ModalAtivo(props: IModalAtivo) {
     const handleUsuarioSearch = (selectedOption: any) => {
         if (selectedOption) {
             setUsuarioSelecionado(selectedOption);
-            console.log(selectedOption)
         } else {
             setUsuarioSelecionado(null);
         }
@@ -188,8 +187,11 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const formatDateForBackend = (dateString: string) => {
-        const parts = dateString.split('/');
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        if (dateString !== "") {
+            const parts = dateString.split('/');
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+        return null
     };
 
     const formatDate = (dateString: string) => {
@@ -413,7 +415,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 {historico.map((historico: any, index: number) => (
                                     <li key={index}>
                                         <p>Usuário: {historico.usuario?.nome}</p>
-                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p> <br />
+                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p>
                                     </li>
                                 ))}
                             </ul>
