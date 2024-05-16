@@ -4,9 +4,10 @@ export interface IUsuario {
     id?: number,
     nome?: string,
     cpf?: string,
-    cargo: string,
+    cargo: any,
     ativos?: AtivoType[],
     buscarUsuarios?: Function
     sub?: string
     token?: string;
+    estaAtivo?: boolean
 }

@@ -42,7 +42,7 @@ export default function LoginPage() {
                 navigate("/home", { replace: true });
             })
             .catch(err => {
-                setErro(true)
+                setErro(err.response.data)
             })
     }  
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
                 <img className={styles.logo} src={logo} alt="logo-youtan" />
             </div>
             <div>
-                {erro ? <div className={styles.erro}>CPF ou senha incorretos</div> : ""}                
+                {erro ? <div className={styles.erro}>{erro}</div> : ""}                
                 <input className={styles.username} placeholder="CPF" onChange={e => setCpf(e.target.value)}/>
                 <input className={styles.password} type="password" placeholder="Senha" onChange={e => setSenha(e.target.value)}/>
                 <button className={styles.btn_login} onClick={handleLogin}>Entrar</button>

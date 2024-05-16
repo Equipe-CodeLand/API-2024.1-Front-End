@@ -57,7 +57,8 @@
 .botoes {
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    text-align: center;
 }
 
 .botoes button {
