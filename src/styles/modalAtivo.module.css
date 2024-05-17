@@ -13,6 +13,8 @@
 
     display: flex;
     justify-content: space-between;
+
+    margin-bottom: 20px;
 }
 
 .titulo button {
@@ -46,7 +48,7 @@
 }
 
 .status {
-    padding: 20px 5px;
+    padding: 0px 5px 20px 5px;
 }
 
 .status ul {
@@ -117,11 +119,18 @@
 }
 
 .historico ul {
-    margin-top: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    margin-top: 10px;
     font-size: 1em;
+}
+
+.historico li {
+    height: 70px;
+}
+
+.historico p {
+    margin-bottom: 5px;
 }
 
 .semHistorico {

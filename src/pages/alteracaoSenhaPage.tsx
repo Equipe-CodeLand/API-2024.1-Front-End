@@ -69,10 +69,8 @@ export default function AlteracaoSenhaPage() {
 
     useEffect(() => {
         if (!usuario) {
-            logout();
-            navigate("/"); 
         }
-    }, [usuario, logout, navigate]); 
+    }, [usuario]); 
 
     return (
         <>
