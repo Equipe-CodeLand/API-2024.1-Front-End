@@ -31,8 +31,7 @@ export default function Routes() {
                     <PrivateRoute cargosPermitidos={['Administrador']}>
                         <ManutencaoPage />
                     </PrivateRoute>
-                    }
-                />
+                }/>
                 <Route path="/usuarios" element={
                     <PrivateRoute cargosPermitidos={['Administrador']}>
                         <UsuariosPage />

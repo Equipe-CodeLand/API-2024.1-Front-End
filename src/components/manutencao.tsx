@@ -27,12 +27,8 @@ export default function ManutencaoComponent(props: IManutencao) {
   return (
     <div>
       {state.show && state.manutencaoSelecionada && (
-        <ModalManutencao
-          nomeBotao="Fechar"
-          handleClose={handleClose}
-          manutencao={state.manutencaoSelecionada}
-          buscarManutencao={props.buscarManutencao ? props.buscarManutencao : () => {}}
-        />
+        <ModalManutencao nomeBotao="Fechar" handleClose={handleClose} manutencao={state.manutencaoSelecionada}
+        buscarManutencao={props.buscarManutencao} />
       )}
       <div className={styles.manutencao} onClick={() => handleShow(props)}>
         <div className={styles.id}>ID: {props.id}</div>

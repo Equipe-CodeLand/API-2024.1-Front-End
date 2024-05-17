@@ -4,15 +4,4 @@
     width: 100%;
     justify-items: center;
     justify-content: center;
-    background-color: var(--corPrimaria);
-}
-
-.footer p {
-    margin: 0;
-    padding: 0;
-    color: white;
-}
-
-.footer a {
-    color: white;
 }
