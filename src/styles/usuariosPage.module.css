@@ -3,13 +3,70 @@
     height: max-content;
 }
 
-/* 
+/* Filtros */
+
 .filtro {
-    background-color: purple;
+    padding: 60px 20px;
+    background-color: var(--corSecundaria);
     width: 300px;
     height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
-*/
+
+.filtro h2 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.inputs {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px 0px;
+}
+
+.inputs > input, select {
+    margin: 0 auto !important;
+    padding: 0px 10px !important;
+    border-radius: 10px !important;
+    height: 40px !important;
+    width: 180px !important;
+    font-family: var(--inter);
+    font-weight: 500 !important;
+}
+
+.inputs > select > .sem_filtro {
+    color: #ddd;
+}
+
+.filtrar {
+    display: flex;
+    justify-content: center;
+}
+
+.filtrar button {
+    padding: 5px 20px;
+    border: 2px solid transparent;
+    color: white;
+    background-color: var(--corPrimaria) !important;
+    border-radius: 10px;
+    font-weight: 600;
+    background-color: transparent;
+    transition: all ease-in-out 0.2s;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filtrar button:hover {
+    background-color: white !important;
+    border: 2px solid var(--corPrimaria);
+    color: var(--corPrimaria);
+}
+
+/* -------------------- */
 
 .conteudo {
     width: 100%;
