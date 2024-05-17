@@ -29,7 +29,8 @@
     padding: 20px 0px;
 }
 
-.inputs > input, select {
+.inputs>input,
+select {
     margin: 0 auto !important;
     padding: 0px 10px !important;
     border-radius: 10px !important;
@@ -39,8 +40,12 @@
     font-weight: 500 !important;
 }
 
-.inputs > select > .sem_filtro {
-    color: #ddd;
+.inputs>select {
+    color: #757575;
+}
+
+.escolhida {
+    color: red;
 }
 
 .filtrar {
@@ -83,7 +88,7 @@
     padding: 64px;
 }
 
-.botoes{
+.botoes {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -100,15 +105,8 @@
     justify-content: flex-end;
 }
 
-.trocarSenha {
-    /* border: 1px solid purple; */
-
-    padding: 20px;
-
-    width: 100%;
-
-    display: flex;
-    justify-content: flex-start;
+.botaoFiltro {
+    display: none;
 }
 
 .botao {
@@ -164,8 +162,34 @@
     color: black;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
     .conteudo main {
         padding: 32px;
+    }
+
+    .filtro {
+        display: none;
+    }
+
+    .botaoFiltro {
+        display: block;
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .botoes {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .botoes div {
+        width: 50%;
+        font-size: 0.9em;
+    }
+
+    .botoes div .botao {
+        margin: auto;
     }
 }
