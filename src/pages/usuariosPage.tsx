@@ -56,24 +56,25 @@ export default function UsuariosPage() {
                 </div>
             </div>
     } else if (data.length > 0) {
-        render =
-            <div className={styles.listarUsuario}>
-                {data.map((usuario) => {
-                    if (usuario !== undefined) {
-                        return (
-                            <Usuario
-                                id={usuario.id}
-                                nome={usuario.nome}
-                                cargo={usuario.cargo.nome}
-                                cpf={usuario.credencial.cpf}
-                                key={usuario.id}
-                                buscarUsuarios={usuarios}
-                                ativos={ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
-                            />
-                        )
-                    }
-                })}
-            </div>
+        render = 
+        <div className={styles.listarUsuario}>
+            {data.map((usuario) => {
+                if (usuario !== undefined) {
+                    return (
+                        <Usuario
+                            id = {usuario.id}
+                            nome = {usuario.nome}
+                            cargo = {usuario.cargo.nome}
+                            cpf = {usuario.credencial.cpf}
+                            key = {usuario.id}
+                            buscarUsuarios={usuarios}
+                            estaAtivo={usuario.estaAtivo}
+                            ativos = {ativos.filter((ativo: any) => ativo.usuario?.id === usuario?.id)}
+                         />
+                    )
+                }
+            })}
+        </div>
     } else {
         render =
             <div className={styles.listarUsuario}>

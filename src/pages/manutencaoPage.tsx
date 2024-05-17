@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import ManutencaoComponent from "../components/manutencao";
 import Navbar from "../components/navbar";
-import { Manutencao } from "../types/manutencao.type";
 import styles from "../styles/manutencaoPage.module.css";
 import { useAxios } from "../hooks/useAxios";
+import { Button, Modal } from "react-bootstrap";
+import { Manutencao } from "../types/manutencao.type";
 
 export default function ManutencaoPage() {
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
@@ -16,9 +17,20 @@ export default function ManutencaoPage() {
   const [dataInicio, setDataInicio] = useState("");
   const [dataFinal, setDataFinal] = useState("");
   const [filtro, setFiltro] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
     buscarManutencoes();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const buscarManutencoes = async () => {
@@ -31,7 +43,7 @@ export default function ManutencaoPage() {
         dataFinal: manutencao.data_final,
         ativos_id: manutencao.ativos.id,
         localizacao: manutencao.localizacao,
-        responsavel: manutencao.responsavel
+        responsavel: manutencao.responsavel,
       }));
       setManutencoes(manutencoesData);
       setLoading(false);
@@ -44,7 +56,7 @@ export default function ManutencaoPage() {
   const limpar = () => {
     limparFiltros();
     window.location.reload();
-  }
+  };
 
   const limparFiltros = () => {
     setIdInput("");
@@ -68,9 +80,9 @@ export default function ManutencaoPage() {
         const dataInicioFormatada = formatarData(dataInicio);
         const dataFinalFormatada = formatarData(dataFinal);
         response = await get(`/manutencao/filtrar/dataInicio/dataFinal?dataInicio=${dataInicioFormatada}&dataFinal=${dataFinalFormatada}`);
-      } else if (dataInicio !== '') { 
+      } else if (dataInicio !== "") {
         response = await get(`/manutencao/filtrar/dataInicio?dataInicio=${dataInicio}`);
-      } else if (dataFinal !== '') { 
+      } else if (dataFinal !== "") {
         response = await get(`/manutencao/filtrar/dataFinal?dataFinal=${dataFinal}`);
       } else {
         return;
@@ -85,18 +97,19 @@ export default function ManutencaoPage() {
         dataFinal: manutencao.data_final ? `${manutencao.data_final[0]}-${manutencao.data_final[1]}-${manutencao.data_final[2]}` : "",
         ativos_id: manutencao.ativos.id,
         localizacao: manutencao.localizacao,
-        responsavel: manutencao.responsavel
-      }));   
+        responsavel: manutencao.responsavel,
+      }));
 
-      console.log(manutencoesFiltradas)
+      console.log(manutencoesFiltradas);
       setManutencoes(manutencoesFiltradas);
       setLoading(false);
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Erro ao filtrar manutenções:", error);
       setError(error);
       setLoading(false);
     }
-  }; 
+  };
 
   const formatarData = (data: string) => {
     const [ano, mes, dia] = data.split("-");
@@ -106,94 +119,172 @@ export default function ManutencaoPage() {
   return (
     <div>
       <Navbar local="manutencao" />
-      <div className={styles.body}>
-        <div className={styles.filtro}>
-          <h2>Filtro</h2>
-          <div className={styles.inputs}>
-            <select
-              name=""
-              id="filtrarPor"
-              className={`${styles.filtrarPor}`}
-              onChange={(e) => setFiltro(e.target.value)}
-            >
-              <option value="">Filtrar por</option>
-              <option value="ID">ID</option>
-              <option value="Nome">Nome</option>
-            </select>
-            {filtro === "ID" && (
-              <input
-                type="number"
-                placeholder="ID"
-                value={idInput}
-                onChange={(e) => setIdInput(e.target.value)}
-              />
-            )}
-            {filtro === "Nome" && (
-              <input
-                type="text"
-                placeholder="Nome"
-                value={nomeInput}
-                onChange={(e) => setNomeInput(e.target.value)}
-              />
-            )}
-            <hr />
-            <div>
-              <label>Data Início</label>
-              <input
-                type="date"
-                placeholder="Data Início"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Data Final</label>
-              <input
-                type="date"
-                placeholder="Data Final"
-                value={dataFinal}
-                onChange={(e) => setDataFinal(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className={styles.filtrar}>
-            <button onClick={limpar}>Limpar</button>
-            <button onClick={filtrar}>Aplicar</button>
-          </div>
-        </div>
-        <div className={styles.conteudo}>
-          <main>
-            <div className={styles.adicionarManutencao}>
-              <Link className={styles.botao} to="/cadastrar/manutencoes">
-                Adicionar Manutenções
-              </Link>
-            </div>
-            <div className={styles.listarManutencao}>
-              {loading ? (
-                <span className={styles.semManutencao}>Carregando manutenções...</span>
-              ) : error ? (
-                <span className={styles.semManutencao}>Erro ao carregar manutenções! :(</span>
-              ) : manutencoes.length > 0 ? (
-                manutencoes.map((manutencao) => (
-                  <ManutencaoComponent
-                    id={manutencao.id}
-                    nome={manutencao.nome}
-                    dataInicio={manutencao.dataInicio}
-                    dataFinal={manutencao.dataFinal}
-                    localizacao={manutencao.localizacao}
-                    responsavel={manutencao.responsavel}
-                    key={manutencao.id}
-                    ativos_id={manutencao.ativos_id}
-                    buscarManutencao={filtro ? undefined : buscarManutencoes}
-                  />
-                ))
-              ) : (
-                <span className={styles.semManutencao}>Sem manutenções cadastradas</span>
+      <div>
+        <div className={styles.body}>
+          <div className={styles.filtro}>
+            <h2>Filtro</h2>
+            <div className={styles.inputs}>
+              <select
+                name=""
+                id="filtrarPor"
+                className={`${styles.filtrarPor}`}
+                onChange={(e) => setFiltro(e.target.value)}
+              >
+                <option value="">Filtrar por</option>
+                <option value="ID">ID</option>
+                <option value="Nome">Nome</option>
+              </select>
+              {filtro === "ID" && (
+                <input
+                  type="number"
+                  placeholder="ID"
+                  value={idInput}
+                  className={styles.idInput}
+                  onChange={(e) => setIdInput(e.target.value)}
+                />
               )}
+              {filtro === "Nome" && (
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  value={nomeInput}
+                  className={styles.nomeInput}
+                  onChange={(e) => setNomeInput(e.target.value)}
+                />
+              )}
+              <hr />
+              <div>
+                <label>Data Início</label>
+                <input
+                  type="date"
+                  placeholder="Data Início"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                />
+              </div>
+              <div>
+                <label>Data Final</label>
+                <input
+                  type="date"
+                  placeholder="Data Final"
+                  value={dataFinal}
+                  onChange={(e) => setDataFinal(e.target.value)}
+                />
+              </div>
+              <div className={styles.espaco}></div>
             </div>
-          </main>
+            <div className={styles.filtrar}>
+              <button onClick={limpar}>Limpar</button>
+              <button onClick={filtrar}>Aplicar</button>
+            </div>
+          </div>
+          <div className={styles.conteudo}>
+            <main>
+              <div className={styles.botoes}>
+                {isMobile && (
+                  <div className={styles.filtroModal}>
+                    <button className={styles.botao} onClick={() => setIsModalOpen(true)}>
+                      Filtro
+                    </button>
+                  </div>
+                )}
+                <div className={styles.adicionarManutencao}>
+                  <Link className={styles.botao} to="/cadastrar/manutencoes">
+                    Adicionar Manutenções
+                  </Link>
+                </div>
+              </div>
+              <div className={styles.listarManutencao}>
+                {loading ? (
+                  <span className={styles.semManutencao}>Carregando manutenções...</span>
+                ) : error ? (
+                  <span className={styles.semManutencao}>Erro ao carregar manutenções! :(</span>
+                ) : manutencoes.length > 0 ? (
+                  manutencoes.map((manutencao) => (
+                    <ManutencaoComponent
+                      id={manutencao.id}
+                      nome={manutencao.nome}
+                      dataInicio={manutencao.dataInicio}
+                      dataFinal={manutencao.dataFinal}
+                      localizacao={manutencao.localizacao}
+                      responsavel={manutencao.responsavel}
+                      key={manutencao.id}
+                      ativos_id={manutencao.ativos_id}
+                      buscarManutencao={filtro ? undefined : buscarManutencoes}
+                    />
+                  ))
+                ) : (
+                  <span className={styles.semManutencao}>Sem manutenções cadastradas</span>
+                )}
+              </div>
+            </main>
+          </div>
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title className={styles.modalTitulo}>Filtros</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className={styles.bodyModal}>
+            <div className={styles.inputs}>
+              <select
+                name=""
+                id="filtrarPor"
+                className="filtrarPor"
+                value={filtro}
+                onChange={(e) => setFiltro(e.target.value)}
+              >
+                <option value="">Filtrar por</option>
+                <option value="ID">ID</option>
+                <option value="Nome">Nome</option>
+              </select>
+              {filtro === "ID" && (
+                <input
+                  type="number"
+                  placeholder="ID"
+                  value={idInput}
+                  onChange={(e) => setIdInput(e.target.value)}
+                />
+              )}
+              {filtro === "Nome" && (
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  value={nomeInput}
+                  onChange={(e) => setNomeInput(e.target.value)}
+                />
+              )}
+              <div>
+                <label>Data Início</label>
+                <input
+                  type="date"
+                  placeholder="Data Início"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                />
+              </div>
+              <div>
+                <label>Data Final</label>
+                <input
+                  type="date"
+                  placeholder="Data Final"
+                  value={dataFinal}
+                  onChange={(e) => setDataFinal(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className={styles.filtrar}>
+              <Button className={styles.botaoModal} onClick={limpar}>
+                Limpar
+              </Button>
+              <Button className={styles.botaoModal} onClick={filtrar}>
+                Aplicar
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
       <Footer />
     </div>
   );
