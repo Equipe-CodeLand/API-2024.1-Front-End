@@ -1,111 +1,200 @@
-import Ativo from "../components/ativo";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
-import styles from "../styles/ativosPage.module.css"
-import { AtivoType } from "../types/ativo.type";
-import { useEffect, useState } from "react";
+import styles from "../styles/ativosPage.module.css";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { AtivoType } from "../types/ativo.type";
+import Ativo from "../components/ativo";
 
 export default function AtivosPage() {
-    const [data, setData] = useState<Array<AtivoType>>([])
-    const [manutencoes, setManutencoes] = useState<Array<any>>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<Error | unknown>(null)
-    const { get } = useAxios()
-    const { getCargo } = useAuth()
+    const [data, setData] = useState<Array<AtivoType>>([]);
+    const [filteredData, setFilteredData] = useState<Array<AtivoType>>([]);
+    const [manutencoes, setManutencoes] = useState<Array<any>>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | unknown>(null);
+    const { get } = useAxios();
+    const { getCargo } = useAuth();
+    const [filtro, setFiltro] = useState("");
+    const [idInput, setIdInput] = useState("");
+    const [nomeInput, setNomeInput] = useState("");
+    const [statusDisponivel, setStatusDisponivel] = useState(false);
+    const [statusEmManutencao, setStatusEmManutencao] = useState(false);
+    const [statusOcupado, setStatusOcupado] = useState(false);
 
     const ativos = async () => {
-        get("/listar/ativos")
-            .then(response => {
-                setData(response.data)
-                setLoading(false)
-            })
-            .catch(error => {
-                setError(error)
-                setLoading(false)
-            })
-    }
+        try {
+            const response = await get("/listar/ativos");
+            setData(response.data);
+            setFilteredData(response.data);
+            setLoading(false);
+        } catch (error) {
+            setError(error);
+            setLoading(false);
+        }
+    };
 
     const chamarManutencoes = async () => {
-        get("/manutencao")
-            .then(response => {
-                setManutencoes(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
+        try {
+            const response = await get("/manutencao");
+            setManutencoes(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
-        ativos()
-        chamarManutencoes()
-    }, [])
+        ativos();
+        chamarManutencoes();
+    }, []);
 
-    var render
-    if (loading) {
-        render =
-            <div className={styles.listarAtivo}>
-                <span className={styles.semAtivos}>
-                    Carregando ativos...
-                </span>
-            </div>
-    } else if (error) {
-        render =
-            <div className={styles.listarAtivo}>
-                <span className={styles.semAtivos}>
-                    Erro ao carregar ativos! <br />
-                    :(
-                </span>
-            </div>
-    } else if (data.length > 0) {
-        render =
-            <div className={styles.listarAtivo}>
-                {data.map((ativo, index) => {
-                    return <Ativo
-                        id={ativo.id}
-                        nome={ativo.nome}
-                        notaFiscal={ativo.notaFiscal}
-                        descricao={ativo.descricao}
-                        marca={ativo.marca}
-                        modelo={ativo.modelo}
-                        preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
-                        usuario={ativo.usuario}
-                        setor={ativo.setor}
-                        status={ativo.status}
-                        dataAquisicao={ativo.dataAquisicao}
-                        dataExpiracao={ativo.dataExpiracao}
-                        manutencoes={manutencoes.filter(manut => manut.ativos.id === ativo.id)}
-                        buscarAtivos={ativos}
-                        key={ativo.id}
-                    />
-                })}
-            </div>
-    } else {
-        render =
-            <div className={styles.listarAtivo}>
-                <span className={styles.semAtivos}>
-                    Nenhum ativo encontrado! <br />
-                    :/
-                </span>
-            </div>
-    }
+    const limparFiltros = () => {
+        setIdInput("");
+        setNomeInput("");
+        setFiltro("");
+        setStatusDisponivel(false);
+        setStatusEmManutencao(false);
+        setStatusOcupado(false);
+        setFilteredData(data);
+    };
+
+    const filtrar = () => {
+        let filtered = data;
+
+        if (filtro === "ID" && idInput.trim() !== "") {
+            filtered = filtered.filter((ativo) => ativo.id.toString() === idInput);
+        } else if (filtro === "Nome" && nomeInput.trim() !== "") {
+            filtered = filtered.filter((ativo) => ativo.nome.toLowerCase().includes(nomeInput.toLowerCase()));
+        }
+
+        const statusFilters: number[] = [];
+        if (statusDisponivel) statusFilters.push(1);
+        if (statusEmManutencao) statusFilters.push(2);
+        if (statusOcupado) statusFilters.push(3);
+
+        if (statusFilters.length > 0) {
+            filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
+        }
+
+        setFilteredData(filtered);
+    };
+
     return (
         <div>
             <Navbar local="ativos" />
             <div className={styles.body}>
-                <div className={styles.filtro}></div>
+                <div className={styles.filtro}>
+                    <h2>Filtro</h2>
+                    <div className={styles.inputs}>
+                        <select
+                            name=""
+                            id="filtrarPor"
+                            className={styles.filtrarPor}
+                            onChange={(e) => setFiltro(e.target.value)}
+                        >
+                            <option value="">Filtrar por</option>
+                            <option value="ID">ID</option>
+                            <option value="Nome">Nome</option>
+                        </select>
+                        {filtro === "ID" && (
+                            <input
+                                type="number"
+                                placeholder="ID"
+                                value={idInput}
+                                onChange={(e) => setIdInput(e.target.value)}
+                            />
+                        )}
+                        {filtro === "Nome" && (
+                            <input
+                                type="text"
+                                placeholder="Nome"
+                                value={nomeInput}
+                                onChange={(e) => setNomeInput(e.target.value)}
+                            />
+                        )}
+                        <hr />
+                        <div className={styles.status}>
+                            <h4>Status:</h4>
+                            <ul>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={statusDisponivel}
+                                        onChange={(e) => setStatusDisponivel(e.target.checked)}
+                                    />
+                                    Disponível
+                                </li>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={statusEmManutencao}
+                                        onChange={(e) => setStatusEmManutencao(e.target.checked)}
+                                    />
+                                    Em manutenção
+                                </li>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={statusOcupado}
+                                        onChange={(e) => setStatusOcupado(e.target.checked)}
+                                    />
+                                    Ocupado
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div className={styles.filtrar}>
+                        <button onClick={limparFiltros}>Limpar</button>
+                        <button onClick={filtrar}>Aplicar</button>
+                    </div>
+                </div>
                 <div className={styles.conteudo}>
                     <main>
                         <div className={styles.adicionarAtivo}>
-                        { getCargo() === "Administrador" ? 
+                            {getCargo() === "Administrador" ? (
                                 <Link className={styles.botao} to="/cadastrar/ativos">
                                     Adicionar Ativo
-                                </Link> : '' }
+                                </Link>
+                            ) : (
+                                ''
+                            )}
                         </div>
                         <div className={styles.listarAtivo}>
-                            {render}
+                            {loading ? (
+                                <span className={styles.semAtivos}>
+                                    Carregando ativos...
+                                </span>
+                            ) : error ? (
+                                <span className={styles.semAtivos}>
+                                    Erro ao carregar ativos! :(
+                                </span>
+                            ) : filteredData.length > 0 ? (
+                                filteredData.map((ativo) => (
+                                    <Ativo
+                                        id={ativo.id}
+                                        nome={ativo.nome}
+                                        notaFiscal={ativo.notaFiscal}
+                                        descricao={ativo.descricao}
+                                        marca={ativo.marca}
+                                        modelo={ativo.modelo}
+                                        preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                                        usuario={ativo.usuario}
+                                        setor={ativo.setor}
+                                        status={ativo.status}
+                                        dataAquisicao={ativo.dataAquisicao}
+                                        dataExpiracao={ativo.dataExpiracao}
+                                        manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
+                                        buscarAtivos={ativos}
+                                        key={ativo.id}
+                                    />
+                                ))
+                            ) : (
+                                <span className={styles.semAtivos}>
+                                    Nenhum ativo encontrado! :/
+                                </span>
+                            )}
                         </div>
                     </main>
                 </div>
