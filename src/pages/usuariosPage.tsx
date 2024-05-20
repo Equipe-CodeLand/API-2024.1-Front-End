@@ -56,7 +56,6 @@ export default function UsuariosPage() {
         }
 
         setUsuariosFiltrados(usuarios)
-        setIsModalOpen(false)
         limparFiltros()
     }
 
@@ -64,6 +63,7 @@ export default function UsuariosPage() {
         setId("")
         setNome("")
         setTipoUsuario("")
+        setIsModalOpen(false)
     }
 
     useEffect(() => {
@@ -148,6 +148,10 @@ export default function UsuariosPage() {
                         </select>
                     </div>
                     <div className={styles.filtrar}>
+                        <button onClick={() => {
+                            setUsuariosFiltrados(data)
+                            limparFiltros()
+                        }}></button>
                         <button onClick={filtrarUsuarios}>Aplicar</button>
                     </div>
                 </div>
@@ -205,6 +209,10 @@ export default function UsuariosPage() {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.filtrar}>
+                        <button onClick={() => {
+                            setUsuariosFiltrados(data)
+                            limparFiltros()
+                        }}></button>
                         <button onClick={filtrarUsuarios}>Aplicar</button>
                     </div>
                 </Modal.Footer>

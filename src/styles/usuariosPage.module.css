@@ -52,7 +52,7 @@ select {
 
 .filtrar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .filtrar button {
