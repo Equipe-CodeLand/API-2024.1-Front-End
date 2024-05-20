@@ -5,7 +5,11 @@
 
 /* Filtros */
 
+/* Filtros */
+
 .filtro {
+    padding: 60px 20px;
+    background-color: var(--corSecundaria);
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
