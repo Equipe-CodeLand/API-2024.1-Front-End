@@ -5,6 +5,7 @@ import Usuario from "../components/usuario"
 import styles from "../styles/usuariosPage.module.css"
 import { useAxios } from "../hooks/useAxios"
 import { Link } from "react-router-dom"
+import { Modal } from "react-bootstrap"
 
 
 export default function UsuariosPage() {
@@ -17,6 +18,7 @@ export default function UsuariosPage() {
     const [nome, setNome] = useState("")
     const [tipoUsuario, setTipoUsuario] = useState("")
     const { get } = useAxios()
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const chamarAtivos = async () => {
         get("/listar/ativos")
@@ -41,19 +43,20 @@ export default function UsuariosPage() {
     const filtrarUsuarios = () => {
         let usuarios = data
 
-        if (id != "") {
+        if (id !== "") {
             usuarios = usuarios.filter((usuario) => usuario.id == id)
         }
 
-        if (nome != "") {
-            usuarios = usuarios.filter((usuario) => usuario.nome == nome)
+        if (nome !== "") {
+            usuarios = usuarios.filter((usuario) => usuario.nome.toLowerCase() == nome.toLowerCase())
         }
 
-        if (tipoUsuario != "") {
+        if (tipoUsuario !== "") {
             usuarios = usuarios.filter((usuario) => usuario.cargo.id == tipoUsuario)
         }
 
         setUsuariosFiltrados(usuarios)
+        setIsModalOpen(false)
         limparFiltros()
     }
 
@@ -152,9 +155,9 @@ export default function UsuariosPage() {
                     <main>
                         <div className={styles.botoes}>
                             <div className={styles.botaoFiltro}>
-                                <Link className={styles.botao} to="#">
+                                <button className={styles.botao} onClick={() => setIsModalOpen(true)}>
                                     Filtros
-                                </Link>
+                                </button>
                             </div>
                             <div className={styles.adicionarUsuario}>
                                 <Link className={styles.botao} to="/cadastrar/usuarios">
@@ -168,6 +171,44 @@ export default function UsuariosPage() {
                     </main>
                 </div>
             </div>
+            <Modal
+                show={isModalOpen}
+                onHide={() => setIsModalOpen(false)}
+                className={styles.modal}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Filtros</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className={styles.inputs}>
+                        <input
+                            type="text"
+                            placeholder="ID"
+                            onChange={(e) => setId(e.target.value)}
+                            value={id}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nome"
+                            onChange={(e) => setNome(e.target.value)}
+                            value={nome}
+                        />
+                        <select
+                            onChange={(e) => setTipoUsuario(e.target.value)}
+                            value={tipoUsuario}
+                        >
+                            <option value="">Filtrar por</option>
+                            <option value="1">Administrador</option>
+                            <option value="2">Funcionário</option>
+                        </select>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className={styles.filtrar}>
+                        <button onClick={filtrarUsuarios}>Aplicar</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
             <Footer />
         </>
     )

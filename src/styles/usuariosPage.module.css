@@ -5,8 +5,6 @@
 
 /* Filtros */
 
-/* Filtros */
-
 .filtro {
     padding: 60px 20px;
     background-color: var(--corSecundaria);
@@ -74,6 +72,11 @@ select {
     border: 2px solid var(--corPrimaria);
     color: var(--corPrimaria);
 }
+
+.modal .inputs {
+    height: auto;
+}
+
 
 /* -------------------- */
 
