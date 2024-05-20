@@ -7,6 +7,7 @@ import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import Ativo from "../components/ativo";
+import { Button, Modal } from "react-bootstrap";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([]);
@@ -22,6 +23,22 @@ export default function AtivosPage() {
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 700);
+        };
+
+        window.addEventListener("resize", handleResize);
+        ativos();
+        chamarManutencoes();
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     const ativos = async () => {
         try {
@@ -43,11 +60,6 @@ export default function AtivosPage() {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        ativos();
-        chamarManutencoes();
-    }, []);
 
     const limparFiltros = () => {
         setIdInput("");
@@ -78,89 +90,102 @@ export default function AtivosPage() {
         }
 
         setFilteredData(filtered);
+        setIsModalOpen(false);
     };
 
     return (
         <div>
             <Navbar local="ativos" />
             <div className={styles.body}>
-                <div className={styles.filtro}>
-                    <h2>Filtro</h2>
-                    <div className={styles.inputs}>
-                        <select
-                            name=""
-                            id="filtrarPor"
-                            className={styles.filtrarPor}
-                            onChange={(e) => setFiltro(e.target.value)}
-                        >
-                            <option value="">Filtrar por</option>
-                            <option value="ID">ID</option>
-                            <option value="Nome">Nome</option>
-                        </select>
-                        {filtro === "ID" && (
-                            <input
-                                type="number"
-                                placeholder="ID"
-                                value={idInput}
-                                onChange={(e) => setIdInput(e.target.value)}
-                            />
+                {isMobile ? (
+                    <div className={styles.botoes}>
+                        <button className={styles.botao} onClick={() => setIsModalOpen(true)}>
+                            Filtro
+                        </button>
+                        {getCargo() === "Administrador" && (
+                            <Link className={styles.botao} to="/cadastrar/ativos">
+                                Adicionar Ativo
+                            </Link>
                         )}
-                        {filtro === "Nome" && (
-                            <input
-                                type="text"
-                                placeholder="Nome"
-                                value={nomeInput}
-                                onChange={(e) => setNomeInput(e.target.value)}
-                            />
-                        )}
-                        <hr />
-                        <div className={styles.status}>
-                            <h4>Status:</h4>
-                            <ul>
-                                <li>
-                                    <input
-                                        type="checkbox"
-                                        checked={statusDisponivel}
-                                        onChange={(e) => setStatusDisponivel(e.target.checked)}
-                                    />
-                                    Disponível
-                                </li>
-                                <li>
-                                    <input
-                                        type="checkbox"
-                                        checked={statusEmManutencao}
-                                        onChange={(e) => setStatusEmManutencao(e.target.checked)}
-                                    />
-                                    Em manutenção
-                                </li>
-                                <li>
-                                    <input
-                                        type="checkbox"
-                                        checked={statusOcupado}
-                                        onChange={(e) => setStatusOcupado(e.target.checked)}
-                                    />
-                                    Ocupado
-                                </li>
-                            </ul>
+                    </div>
+                ) : (
+                    <div className={styles.filtro}>
+                        <h2>Filtro</h2>
+                        <div className={styles.inputs}>
+                            <select
+                                name=""
+                                id="filtrarPor"
+                                className={styles.filtrarPor}
+                                onChange={(e) => setFiltro(e.target.value)}
+                            >
+                                <option value="">Filtrar por</option>
+                                <option value="ID">ID</option>
+                                <option value="Nome">Nome</option>
+                            </select>
+                            {filtro === "ID" && (
+                                <input
+                                    type="number"
+                                    placeholder="ID"
+                                    value={idInput}
+                                    onChange={(e) => setIdInput(e.target.value)}
+                                />
+                            )}
+                            {filtro === "Nome" && (
+                                <input
+                                    type="text"
+                                    placeholder="Nome"
+                                    value={nomeInput}
+                                    onChange={(e) => setNomeInput(e.target.value)}
+                                />
+                            )}
+                            <hr />
+                            <div className={styles.status}>
+                                <h4>Status:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusDisponivel}
+                                            onChange={(e) => setStatusDisponivel(e.target.checked)}
+                                        />
+                                        Disponível
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusEmManutencao}
+                                            onChange={(e) => setStatusEmManutencao(e.target.checked)}
+                                        />
+                                        Em manutenção
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusOcupado}
+                                            onChange={(e) => setStatusOcupado(e.target.checked)}
+                                        />
+                                        Ocupado
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-
+                        <div className={styles.filtrar}>
+                            <button onClick={limparFiltros}>Limpar</button>
+                            <button onClick={filtrar}>Aplicar</button>
+                        </div>
                     </div>
-                    <div className={styles.filtrar}>
-                        <button onClick={limparFiltros}>Limpar</button>
-                        <button onClick={filtrar}>Aplicar</button>
-                    </div>
-                </div>
+                )}
                 <div className={styles.conteudo}>
                     <main>
-                        <div className={styles.adicionarAtivo}>
-                            {getCargo() === "Administrador" ? (
-                                <Link className={styles.botao} to="/cadastrar/ativos">
-                                    Adicionar Ativo
-                                </Link>
-                            ) : (
-                                ''
-                            )}
-                        </div>
+                        {!isMobile && (
+                            <div className={styles.botoes}>
+                                {getCargo() === "Administrador" && (
+                                    <Link className={styles.botao} to="/cadastrar/ativos">
+                                        Adicionar Ativo
+                                    </Link>
+                                )}
+                            </div>
+                        )}
                         <div className={styles.listarAtivo}>
                             {loading ? (
                                 <span className={styles.semAtivos}>
@@ -200,6 +225,81 @@ export default function AtivosPage() {
                 </div>
             </div>
             <Footer />
+            <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title className={styles.modalTitulo}>Filtros</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className={styles.bodyModal}>
+                        <div className={styles.inputs}>
+                            <select
+                                name=""
+                                id="filtrarPor"
+                                className={styles.filtrarPor}
+                                onChange={(e) => setFiltro(e.target.value)}
+                            >
+                                <option value="">Filtrar por</option>
+                                <option value="ID">ID</option>
+                                <option value="Nome">Nome</option>
+                            </select>
+                            {filtro === "ID" && (
+                                <input
+                                    type="number"
+                                    placeholder="ID"
+                                    value={idInput}
+                                    onChange={(e) => setIdInput(e.target.value)}
+                                />
+                            )}
+                            {filtro === "Nome" && (
+                                <input
+                                    type="text"
+                                    placeholder="Nome"
+                                    value={nomeInput}
+                                    onChange={(e) => setNomeInput(e.target.value)}
+                                />
+                            )}
+                            <div className={styles.status}>
+                                <h4>Status:</h4>
+                                <br></br>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusDisponivel}
+                                            onChange={(e) => setStatusDisponivel(e.target.checked)}
+                                        />
+                                        Disponível
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusEmManutencao}
+                                            onChange={(e) => setStatusEmManutencao(e.target.checked)}
+                                        />
+                                        Em manutenção
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={statusOcupado}
+                                            onChange={(e) => setStatusOcupado(e.target.checked)}
+                                        />
+                                        Ocupado
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className={styles.filtrar}>
+                            <Button className={styles.botaoModal} onClick={limparFiltros}>
+                                Limpar
+                            </Button>
+                            <Button className={styles.botaoModal} onClick={filtrar}>
+                                Aplicar
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }
