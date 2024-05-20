@@ -1,12 +1,14 @@
+import { INotaFiscal } from "../interfaces/notaFiscal"
 import { Manutencao } from "./manutencao.type"
 
 export type AtivoType = {
-    notaFiscal: string
+    notaFiscal: INotaFiscal
     id: number,
     descricao: string,
     marca: string,
     modelo: string,
     nome: string,
+    codigoNotaFiscal: string,
     preco_aquisicao: number,
     usuario: { nome: string },
     usuario_id: number,

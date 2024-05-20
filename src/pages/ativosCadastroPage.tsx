@@ -14,6 +14,7 @@ export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
     const [notaFiscal, setNotaFiscal] = useState<File>();
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
@@ -87,6 +88,7 @@ export default function CadastroAtivos() {
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
+                codigoNotaFiscal,
                 usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
@@ -113,6 +115,7 @@ export default function CadastroAtivos() {
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
+            setCodigoNotaFiscal('');
             setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
@@ -143,8 +146,12 @@ export default function CadastroAtivos() {
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
+                        Nota Fiscal:
+                        <input type="file" name="Nota fiscal" onChange={e => handleNotaFiscal(e)} accept="application/pdf,application/xml,text/xml" />
+                    </label>
+                    <label>
                         Código da Nota Fiscal:
-                        <input type="file" name="Nota fiscal" onChange={e => handleNotaFiscal(e)} accept="application/pdf,application/vnd.ms-excel" />
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={codigoNotaFiscal} onChange={e => setCodigoNotaFiscal(e.target.value)} />
                     </label>
                     <label>
                         Descrição:

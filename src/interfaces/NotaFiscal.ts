@@ -3,4 +3,5 @@ export interface INotaFiscal {
     nome: string,
     tamanho: string,
     tipo: string
+    codigo: string
 }
