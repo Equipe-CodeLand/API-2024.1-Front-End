@@ -75,7 +75,7 @@ export default function AlteracaoSenhaPage() {
     return (
         <>
             <Navbar local={""} />
-            <div className={styles.container}>
+            <main className={styles.container}>
                 <h1>Alteração de Senha</h1>
                 {erro ? <div className={styles.erro}>CPF ou senha incorretos</div> : ""}
                 {!modoVerificacao && (
@@ -102,7 +102,7 @@ export default function AlteracaoSenhaPage() {
                 ) : (
                     <button className={styles.submit} type="submit" onClick={alterarSenha}>Enviar</button>
                 )}
-            </div>
+            </main>
             <Footer />
         </>
     )
