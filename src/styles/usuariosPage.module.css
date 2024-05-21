@@ -8,8 +8,6 @@
 .filtro {
     padding: 60px 20px;
     background-color: var(--corSecundaria);
-    padding: 60px 20px;
-    background-color: var(--corSecundaria);
     width: 300px;
     height: calc(100vh - 64px);
     display: flex;

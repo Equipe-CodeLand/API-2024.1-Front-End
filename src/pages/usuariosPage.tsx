@@ -70,16 +70,16 @@ export default function UsuariosPage() {
         usuarios()
         chamarAtivos()
     }, [])
-
+    
 
     var render
     if (loading) {
-        render =
-            <div className={styles.listarUsuario}>
-                <div className={styles.semUsuarios}>
-                    Carregando usuários...
-                </div>
+        render = 
+        <div className={styles.listarUsuario}>
+            <div className={styles.semUsuarios}>
+                Carregando usuários...
             </div>
+        </div>
     } else if (error) {
         render =
             <div className={styles.listarUsuario}>
@@ -110,17 +110,17 @@ export default function UsuariosPage() {
             </div>
     } else {
         render =
-            <div className={styles.listarUsuario}>
-                <div className={styles.semUsuarios}>
-                    Nenhum usuário encontrado! <br />
-                    :/
-                </div>
+        <div className={styles.listarUsuario}>
+            <div className={styles.semUsuarios}>
+                Nenhum usuário encontrado! <br />
+                :/
             </div>
+        </div>
     }
 
-    return (
+    return(
         <>
-            <Navbar local="usuarios" />
+            <Navbar local="usuarios"/>
             <div className={styles.body}>
                 <div className={styles.filtro}>
                     <h2>Filtro</h2>
@@ -170,7 +170,7 @@ export default function UsuariosPage() {
                             </div>
                         </div>
                         <div className={styles.listarUsuario}>
-                            {render}
+                            { render }
                         </div>
                     </main>
                 </div>

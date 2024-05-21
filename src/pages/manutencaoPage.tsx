@@ -22,7 +22,7 @@ export default function ManutencaoPage() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 700);
+      setIsMobile(window.innerWidth <= 1000);
     };
 
     window.addEventListener("resize", handleResize);
@@ -152,7 +152,6 @@ export default function ManutencaoPage() {
                   onChange={(e) => setNomeInput(e.target.value)}
                 />
               )}
-              <hr />
               <div>
                 <label>Data Início</label>
                 <input
