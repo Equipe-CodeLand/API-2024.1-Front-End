@@ -1,46 +1,53 @@
-.container{
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    gap: 100px;
+    padding: 20px;
+}
+
+.texto {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    height: 45vh;
 }
 
-.content{
+.menu {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-content: center;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
-.button{
+.button {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 5rem;
-    margin: 5rem 0;
-    margin-top: 0px;
 }
 
-.tituloHome{
+.tituloHome {
     color: #00A0B9;
     font-family: Zilla Slab;
-    margin-bottom: 1%;
-    margin-top: 0;
 }
 
-.sobreHome{
+.sobreHome {
     color: #7A7A7A;
     font-family: Bitter;
     font-size: 16px;
-    margin: 5%;
     justify-content: center;
 }
 
-.ativos, .manutencoes, .usuarios {
+.ativos,
+.manutencoes,
+.usuarios {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,34 +62,33 @@
 }
 
 @media screen and (max-width: 650px) {
-    .div{
+    .main {
         display: block;
-        width: 90%;
         justify-content: center;
+        padding: 100px 20px;
     }
 
-    .tituloHome{
+    .tituloHome {
         text-align: center;
         justify-content: center;
-        margin-left: 10%;
     }
 
-    .sobreHome{
+    .sobreHome {
         display: flex;
         width: 80%;
-        text-align: justify;
+        text-align: center;
         justify-content: center;
-        margin-left: 10%;
+        flex-direction: column;
     }
 
-    .container{
+    .text {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
     }
 
-    .content {
+    .menu {
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
@@ -94,7 +100,7 @@
         margin-top: 2rem;
     }
 
-    .button{
+    .button {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -102,11 +108,11 @@
         text-align: center;
         width: 100%;
         gap: 2rem;
-        margin: 2rem;
-        margin-top: 0px;
     }
 
-    .ativos, .manutencoes, .usuarios {
+    .ativos,
+    .manutencoes,
+    .usuarios {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
