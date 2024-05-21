@@ -151,7 +151,7 @@ export default function UsuariosPage() {
                         <button onClick={() => {
                             setUsuariosFiltrados(data)
                             limparFiltros()
-                        }}></button>
+                        }}>Limpar</button>
                         <button onClick={filtrarUsuarios}>Aplicar</button>
                     </div>
                 </div>
@@ -212,7 +212,7 @@ export default function UsuariosPage() {
                         <button onClick={() => {
                             setUsuariosFiltrados(data)
                             limparFiltros()
-                        }}></button>
+                        }}>Limpar</button>
                         <button onClick={filtrarUsuarios}>Aplicar</button>
                     </div>
                 </Modal.Footer>
