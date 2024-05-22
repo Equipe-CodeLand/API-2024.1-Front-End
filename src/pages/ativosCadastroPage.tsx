@@ -142,7 +142,7 @@ export default function CadastroAtivos() {
                 <br />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Nome do Ativo: <span className={styles.required}>*</span>
+                        <span className="input_required">Nome do Ativo:</span>
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
@@ -158,17 +158,17 @@ export default function CadastroAtivos() {
                         <input type="text" name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                     </label>
                     <label>
-                        Status: <span className={styles.required}>*</span>
+                        <span className='input_required'>Status:</span>
                         <Select options={statusAtivo} onChange={handleSearch} placeholder="Status" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                     </label>
                     {status && status.label === 'Ocupado' && (
                         <label>
-                            Funcionário Responsável: <span className={styles.required}>*</span>
+                            <span className="input_required">Funcionário Responsável:</span>
                             <Select options={usuario} onChange={handleUsuarioSearch} placeholder="Pesquisar Usuário" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                         </label>
                     )}
                     <label>
-                        Preço de aquisição (R$): <span className={styles.required}>*</span>
+                        <span className='input_required'>Preço de aquisição (R$):</span>
                         <input type="text" name="Preço de aquisição" placeholder="Preço de aquisição" value={precoAquisicao} onChange={e => setPrecoAquisicao(e.target.value)} />
                     </label>
                     <label>
@@ -180,7 +180,7 @@ export default function CadastroAtivos() {
                         <input type="text" name="Marca" placeholder="Marca" value={marca} onChange={e => setMarca(e.target.value)} />
                     </label>
                     <label>
-                        Data de aquisição: <span className={styles.required}>*</span>
+                        <span className="input_required">Data de aquisição:</span>
                         <input type="date" name="Data de aquisição" value={dataAquisicao} onChange={e => setDataAquisicao(e.target.value)} />
                     </label>
                     <label>
