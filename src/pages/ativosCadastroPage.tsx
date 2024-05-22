@@ -94,11 +94,11 @@ export default function CadastroAtivos() {
                 dataExpiracao
             }
             let json = JSON.stringify(ativosDto)
-            form.append("ativosDto", new Blob([json], {type: 'application/json'}))
-            if(notaFiscal) {
+            form.append("ativosDto", new Blob([json], { type: 'application/json' }))
+            if (notaFiscal) {
                 form.append("file", notaFiscal)
             }
-            const response = await post('http://localhost:8080/cadastrar/ativos', form, {headers: {"Content-Type": "multipart/form-data"}});
+            const response = await post('http://localhost:8080/cadastrar/ativos', form, { headers: { "Content-Type": "multipart/form-data" } });
 
             console.log(response.data);
 
@@ -128,7 +128,9 @@ export default function CadastroAtivos() {
                 text: `Ocorreu um erro ao cadastrar o ativo ${nome}. Por favor, tente novamente!`,
                 icon: 'warning',
                 confirmButtonText: 'OK!'
-            })
+            }).then(() => {
+                window.location.href = '/ativos';
+            });
         }
     }
 

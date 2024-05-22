@@ -99,7 +99,9 @@ export default function ManutencaoCadastroPage() {
                     text: `Ocorreu um erro ao cadastrar a manutenção!`,
                     icon: 'error',
                     confirmButtonText: 'OK!'
-                })
+                }).then(() => {
+                    window.location.href = '/manutencao';
+                  });
             })
     };
 
