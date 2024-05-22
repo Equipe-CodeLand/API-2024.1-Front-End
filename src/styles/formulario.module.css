@@ -9,7 +9,8 @@
 form {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza os elementos filhos horizontalmente */
+    align-items: center;
+    gap: 5px;
 }
 
 label {
@@ -22,8 +23,12 @@ input[type="text"], input[type="email"], textarea, input[type="date"] {
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;
-    border-radius: 20px; /* Aumenta o raio da borda para torná-la mais redonda */
-    resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
+    border-radius: 20px;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 5px 0px;
 }
 
 .date-inputs {

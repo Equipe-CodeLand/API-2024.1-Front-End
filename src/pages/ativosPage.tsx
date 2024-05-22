@@ -1,23 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Ativo from "../components/ativo";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
-import { AtivoType } from "../types/ativo.type";
+import { IAtivo } from "../interfaces/ativo";
 import { useEffect, useState } from "react";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 
 export default function AtivosPage() {
-    const [data, setData] = useState<Array<AtivoType>>([])
+    const [data, setData] = useState<Array<IAtivo>>([])
     const [manutencoes, setManutencoes] = useState<Array<any>>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
     const { get } = useAxios()
-    const { getCargo } = useAuth()
+    const { getCargo, getSub } = useAuth()
 
     const ativos = async () => {
-        get("/listar/ativos")
+        
+        const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
+        get(rota)
             .then(response => {
                 setData(response.data)
                 setLoading(false)
@@ -27,7 +30,6 @@ export default function AtivosPage() {
                 setLoading(false)
             })
     }
-
     const chamarManutencoes = async () => {
         get("/manutencao")
             .then(response => {
@@ -63,14 +65,16 @@ export default function AtivosPage() {
         render =
             <div className={styles.listarAtivo}>
                 {data.map((ativo, index) => {
+                    const isFuncionario = getCargo() === "Funcionário";
                     return <Ativo
                         id={ativo.id}
                         nome={ativo.nome}
                         notaFiscal={ativo.notaFiscal}
+                        codigoNotaFiscal={ativo.notaFiscal.codigo}
                         descricao={ativo.descricao}
                         marca={ativo.marca}
                         modelo={ativo.modelo}
-                        preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                        preco_aquisicao={ativo.preco_aquisicao}
                         usuario={ativo.usuario}
                         setor={ativo.setor}
                         status={ativo.status}
@@ -79,6 +83,7 @@ export default function AtivosPage() {
                         manutencoes={manutencoes.filter(manut => manut.ativos.id === ativo.id)}
                         buscarAtivos={ativos}
                         key={ativo.id}
+                        isEditable={!isFuncionario}
                     />
                 })}
             </div>

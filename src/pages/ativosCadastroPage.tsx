@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, ChangeEvent } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import Swal from 'sweetalert2';
@@ -13,7 +13,8 @@ type UsuarioType = { value: number, id: number, nome: string } | null;
 export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
-    const [notaFiscal, setNotaFiscal] = useState('');
+    const [notaFiscal, setNotaFiscal] = useState<File>();
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
@@ -43,6 +44,10 @@ export default function CadastroAtivos() {
             })
             .catch(error => console.error('Erro ao buscar usuários:', error));
     }, []);
+
+    const handleNotaFiscal = (e: any) => {
+        e.target.files[0] ? setNotaFiscal(e.target.files[0]) : setNotaFiscal(undefined)
+    }
 
 
     const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
@@ -75,18 +80,25 @@ export default function CadastroAtivos() {
 
         try {
             console.log(parseFloat(precoAquisicao))
-            const response = await post('http://localhost:8080/cadastrar/ativos', {
+            let form = new FormData();
+            let ativosDto = {
                 nome,
                 descricao,
-                notaFiscal,
                 status: status.value,
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
+                codigoNotaFiscal,
                 usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
-            });
+            }
+            let json = JSON.stringify(ativosDto)
+            form.append("ativosDto", new Blob([json], {type: 'application/json'}))
+            if(notaFiscal) {
+                form.append("file", notaFiscal)
+            }
+            const response = await post('http://localhost:8080/cadastrar/ativos', form, {headers: {"Content-Type": "multipart/form-data"}});
 
             console.log(response.data);
 
@@ -98,12 +110,12 @@ export default function CadastroAtivos() {
             })
 
             setNomeAtivo('');
-            setNotaFiscal('');
             setDescricao('');
             setStatus(null);
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
+            setCodigoNotaFiscal('');
             setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
@@ -134,8 +146,12 @@ export default function CadastroAtivos() {
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
+                        Nota Fiscal:
+                        <input type="file" name="Nota fiscal" onChange={e => handleNotaFiscal(e)} accept="application/pdf,application/xml,text/xml" />
+                    </label>
+                    <label>
                         Código da Nota Fiscal:
-                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} />
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={codigoNotaFiscal} onChange={e => setCodigoNotaFiscal(e.target.value)} />
                     </label>
                     <label>
                         Descrição:

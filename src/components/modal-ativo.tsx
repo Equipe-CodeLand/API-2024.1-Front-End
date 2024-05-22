@@ -21,7 +21,8 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [emManutencao, setEmManutencao] = useState(false);
 
     const [nome, setNome] = useState(props.ativo.nome);
-    const [notaFiscal, setNotaFiscal] = useState(props.ativo.notaFiscal);
+    const [notaFiscal, setNotaFiscal] = useState(props.ativo.notaFiscal.nome);
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.notaFiscal.codigo);
     const [descricao, setDescricao] = useState(props.ativo.descricao);
     const [modelo, setModelo] = useState(props.ativo.modelo);
     const [marca, setMarca] = useState(props.ativo.marca);
@@ -74,6 +75,8 @@ export default function ModalAtivo(props: IModalAtivo) {
         fetchHistorico();
     }, [props.ativo.id]);
 
+
+    const isEditable = getCargo() === "Administrador";
 
     const handleUsuarioSearch = (selectedOption: any) => {
         if (selectedOption) {
@@ -128,7 +131,8 @@ export default function ModalAtivo(props: IModalAtivo) {
             usuario: usuarioSelecionado,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
-            status: { id: statusId }
+            status: { id: statusId },
+            codigoNotaFiscal: codigoNotaFiscal
         };
 
         put(`/atualizar/ativos/${props.ativo.id}`, ativosDto)
@@ -312,11 +316,21 @@ export default function ModalAtivo(props: IModalAtivo) {
                     
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Código da Nota Fiscal: </strong>
+                            <strong>Nota Fiscal: </strong>
                             {isEditing ? (
                                 <input type="text" value={notaFiscal} onChange={(e) => setNotaFiscal(e.target.value)} />
                             ) : (
-                                props.ativo.notaFiscal
+                                props.ativo.notaFiscal.nome
+                            )}
+                        </div>
+                    </div>
+                    <div className={styles.informacoes}>
+                        <div>
+                            <strong>Código Nota Fiscal: </strong>
+                            {isEditing ? (
+                                <input type="text" value={codigoNotaFiscal} onChange={(e) => setCodigoNotaFiscal(e.target.value)} />
+                            ) : (
+                                props.ativo.notaFiscal.codigo
                             )}
                         </div>
                     </div>
