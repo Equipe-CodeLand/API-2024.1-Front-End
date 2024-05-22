@@ -1,5 +1,6 @@
 import Footer from "../components/footer";
 import { TbZoomMoney } from "react-icons/tb";
+import { RiUserSettingsLine } from "react-icons/ri";
 import { GoPeople } from "react-icons/go";
 import { VscTools } from "react-icons/vsc";
 import styles from "../styles/home.module.css";
@@ -31,12 +32,6 @@ export default function HomePage() {
               <TbZoomMoney size="38" strokeWidth="1.5" />
               <span>Ativos</span>
             </Link>
-            { getCargo() === "Funcionário" ? 
-              <Link to="/alteracao/senha" className={styles.usuarios} style={{ flexDirection: 'column' }}>
-                <GoPeople size="38" />
-                <span>Alterar Senha</span>
-              </Link> : ''
-            }
             { getCargo() === "Administrador" ? <>
               <Link to="/manutencao" className={styles.manutencoes} style={{ flexDirection: 'column' }}>
                 <VscTools size="38" />
@@ -47,6 +42,10 @@ export default function HomePage() {
                 <span>Usuários</span>
               </Link> </> : ''
             }
+            <Link to="/alteracao/senha" className={styles.usuarios} style={{ flexDirection: 'column' }}>
+              <RiUserSettingsLine size="38" />
+              <span>Alterar Minha Senha</span>
+            </Link> 
           </div>
         </div>
       </div>

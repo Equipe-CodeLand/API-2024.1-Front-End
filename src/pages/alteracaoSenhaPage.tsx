@@ -1,26 +1,62 @@
-import { useContext, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"; 
-import Navbar from "../components/navbar"
-import Footer from "../components/footer"
-import styles from '../styles/alteracaoSenha.module.css'
-import { useAxios } from "../hooks/useAxios"
-import Swal from "sweetalert2"
-import { AuthContext } from "../context/authContext"
-import { useAuth } from "../hooks/useAuth"
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
+import styles from '../styles/alteracaoSenha.module.css';
+import { useAxios } from "../hooks/useAxios";
+import Swal from "sweetalert2";
+import { AuthContext } from "../context/authContext";
 
 export default function AlteracaoSenhaPage() {
     const { usuario } = useContext(AuthContext);
-    const { logout } = useAuth()
     const [novaSenha, setNovaSenha] = useState('');
     const [cpf, setCpf] = useState('');
-    const [modoVerificacao, setModoVerificacao] = useState(false); 
+    const [modoVerificacao, setModoVerificacao] = useState(false);
     const [codigoVerificacao, setCodigoVerificacao] = useState('');
-    const [erro] = useState(false);
-    const { put } = useAxios();
-    const navigate = useNavigate(); 
+    const [erro, setErro] = useState(false);
+    const { put, get } = useAxios();
+
+    const limparCampos = () => {
+        setNovaSenha('');
+        setCpf('');
+        setModoVerificacao(false);
+        setCodigoVerificacao('');
+    };
+
+    const verificacaoSenhaIgual = async() => {
+        const cpfFormatado = cpf.replace(/\D/g, ''); 
+        try {
+            const response = await get(`/credencial/${cpfFormatado}/verificar-senha?senha=${novaSenha}`);
+            if (response.status === 200 && response.data) {
+                Swal.fire({
+                    title: 'Nova senha igual à senha antiga!',
+                    text: 'A nova senha é a mesma que a senha atual, por favor, digite uma nova senha!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                limparCampos();
+                return true;
+            } else {
+                await enviarEmailVerificacao();
+                return false;
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Erro!',
+                text: 'Erro ao verificar a senha!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return true;
+        }
+    };
 
     const alterarSenha = async () => {
         const cpfFormatado = cpf.replace(/\D/g, ''); 
+        const senhaIgual = await verificacaoSenhaIgual();
+        if (senhaIgual) {
+            return;
+        }
 
         try {
             const cpfUsuario = usuario ? usuario.cpf : cpfFormatado;
@@ -32,7 +68,7 @@ export default function AlteracaoSenhaPage() {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
-                window.location.reload();
+                limparCampos();
             } else {
                 throw new Error('Erro ao alterar senha');
             }
@@ -44,7 +80,7 @@ export default function AlteracaoSenhaPage() {
                 confirmButtonText: 'OK'
             });
         }
-    }
+    };
 
     const enviarEmailVerificacao = async () => {
         const cpfFormatado = cpf.replace(/\D/g, ''); 
@@ -65,12 +101,13 @@ export default function AlteracaoSenhaPage() {
                 confirmButtonText: 'OK'
             });
         }
-    }
+    };
 
     useEffect(() => {
         if (!usuario) {
+            setCpf('');
         }
-    }, [usuario]); 
+    }, [usuario]);
 
     return (
         <>
@@ -98,12 +135,12 @@ export default function AlteracaoSenhaPage() {
                     </div>
                 )}
                 {!modoVerificacao ? (
-                    <button className={styles.submit} type="submit" onClick={enviarEmailVerificacao}>Enviar email de verificação</button>
+                    <button className={styles.submit} type="submit" onClick={verificacaoSenhaIgual}>Enviar email de verificação</button>
                 ) : (
                     <button className={styles.submit} type="submit" onClick={alterarSenha}>Enviar</button>
                 )}
             </div>
             <Footer />
         </>
-    )
+    );
 }
