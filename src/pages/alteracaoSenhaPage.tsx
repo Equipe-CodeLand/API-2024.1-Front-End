@@ -25,8 +25,9 @@ export default function AlteracaoSenhaPage() {
 
     const verificacaoSenhaIgual = async() => {
         const cpfFormatado = cpf.replace(/\D/g, ''); 
+        const cpfUsuario = usuario ? usuario.cpf : cpfFormatado;
         try {
-            const response = await get(`/credencial/${cpfFormatado}/verificar-senha?senha=${novaSenha}`);
+            const response = await get(`/credencial/${cpfUsuario}/verificar-senha?senha=${novaSenha}`);
             if (response.status === 200 && response.data) {
                 Swal.fire({
                     title: 'Nova senha igual à senha antiga!',
@@ -38,6 +39,7 @@ export default function AlteracaoSenhaPage() {
                 return true;
             } else {
                 await enviarEmailVerificacao();
+                console.log(response)
                 return false;
             }
         } catch (error) {
@@ -47,17 +49,13 @@ export default function AlteracaoSenhaPage() {
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
+            console.log(error)
             return true;
         }
     };
 
     const alterarSenha = async () => {
         const cpfFormatado = cpf.replace(/\D/g, ''); 
-        const senhaIgual = await verificacaoSenhaIgual();
-        if (senhaIgual) {
-            return;
-        }
-
         try {
             const cpfUsuario = usuario ? usuario.cpf : cpfFormatado;
             const response = await put(`/credencial/${cpfUsuario}/senha/${codigoVerificacao}`, { novaSenha });
