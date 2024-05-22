@@ -26,7 +26,7 @@ export default function LoginPage() {
         post(`/login`, {cpf, senha})
             .then(async res => {
                 const data = res.data
-                const decoded = jwtDecode<JwtPayload>(data.token);
+                const decoded = jwtDecode<JwtPayload>(data.token);           
                 const cargo = await axios.get(`http://localhost:8080/usuario/${decoded.sub}/cargo`, {headers: {Authorization: `Bearer ${data.token}`}})	
                 
                 const usuarioData = {

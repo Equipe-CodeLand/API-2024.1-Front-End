@@ -13,6 +13,7 @@ export interface IAtivo {
     status: {id: number, nome_status: string},
     dataAquisicao: Date,
     dataExpiracao: Date,
-    manutencoes: Manutencao[]
-    buscarAtivos: Function
+    manutencoes: Manutencao[],
+    buscarAtivos: Function,
+    isEditable: boolean
 }

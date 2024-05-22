@@ -75,6 +75,8 @@ export default function ModalAtivo(props: IModalAtivo) {
     }, [props.ativo.id]);
 
 
+    const isEditable = getCargo() === "Administrador";
+
     const handleUsuarioSearch = (selectedOption: any) => {
         if (selectedOption) {
             setUsuarioSelecionado(selectedOption);

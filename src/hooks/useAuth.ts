@@ -33,6 +33,10 @@ export const useAuth = () => {
     return usuario?.cargo
   }
 
+  const getSub = () => {
+    return usuario?.sub
+  }
+
 
   useEffect(() => {
     const user = getItem("usuario")
@@ -42,6 +46,6 @@ export const useAuth = () => {
     setLoading(false)
   }, [])
 
-  return { usuario, login, logout, setUsuario, getToken,  getCargo, loading };
+  return { usuario, login, logout, setUsuario, getToken,  getCargo, getSub, loading };
 };
 
