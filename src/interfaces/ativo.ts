@@ -1,4 +1,5 @@
 import { Manutencao } from "../types/manutencao.type";
+import { INotaFiscal } from "./notaFiscal";
 
 export interface IAtivo {
     id: number,
@@ -6,7 +7,8 @@ export interface IAtivo {
     marca: string,
     modelo: string,
     nome: string,
-    notaFiscal: string,
+    notaFiscal: INotaFiscal,
+    codigoNotaFiscal: string,
     preco_aquisicao: string,
     usuario: any,
     setor: {id: number, nome: string},
