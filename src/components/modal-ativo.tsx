@@ -3,7 +3,7 @@ import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
 import Swal from "sweetalert2";
 import Select from 'react-select';
-import { FaRegEdit } from 'react-icons/fa'; 
+import { FaRegEdit } from 'react-icons/fa';
 import { Modal } from 'react-bootstrap';
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
@@ -39,10 +39,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [arquivoBlob, setArquivoBlob] = useState<Blob | null>(null);
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            buscarArquivos();
-        }, 1000);
-        return () => clearInterval(intervalId);
+        buscarArquivos();
     }, []);
 
     const buscarArquivos = async () => {
@@ -50,6 +47,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         try {
             const arquivo = await buscador.buscar();
             setArquivoBlob(arquivo);
+            setNotaFiscal(arquivo);
         } catch (error) {
             console.error('Erro ao buscar arquivos:', error);
         }
@@ -106,7 +104,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
-        setPreco_aquisicao(inputValue); 
+        setPreco_aquisicao(inputValue);
     };
 
     const saveChanges = () => {
@@ -225,7 +223,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const excluirNotaFiscal = () => {
         const idAtivo = props.ativo.id;
-    
+
         Swal.fire({
             title: 'Deseja excluir a nota fiscal?',
             text: 'Esta ação não pode ser desfeita!',
@@ -269,15 +267,15 @@ export default function ModalAtivo(props: IModalAtivo) {
             setNotaFiscal(null);
         }
     };
-    
+
     const handleSaveNotaFiscal = (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
-    
-        const idAtivo = props.ativo.id; 
-        post(`/cadastrar/nota-fiscal/${idAtivo}`, formData, { headers: {"Content-Type": "multipart/form-data"} })
+
+        const idAtivo = props.ativo.id;
+        post(`/cadastrar/nota-fiscal/${idAtivo}`, formData, { headers: { "Content-Type": "multipart/form-data" } })
             .then(response => {
-                setNotaFiscal(response.data); 
+                setNotaFiscal(response.data);
             })
             .catch(error => {
                 console.error('Erro ao salvar nota fiscal:', error);
@@ -287,8 +285,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                     text: 'Ocorreu um erro ao tentar salvar a nota fiscal. Por favor, tente novamente.'
                 });
             });
-    };    
-    
+    };
+
     const handleDisponivel = () => {
         setDisponivel(true);
         setOcupado(false);
@@ -330,7 +328,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             <ul>
                 {manutencoesFuturas.map((manutencao, index) => {
                     return (
-                        <li key={index}> 
+                        <li key={index}>
                             ID: {manutencao.id} <br />
                             {new Date(manutencao.data_inicio).toLocaleDateString()} - {new Date(manutencao.data_final).toLocaleDateString()}
                         </li>
@@ -367,27 +365,27 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 onClick={toggleEditing}
                             /> : ''}
                     </div>
-                    { isEditing && props.ativo.status.id !== 2 ? <>
-                            <div className={styles.status}>
-                                <ul>
-                                    <li>
-                                        <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
-                                    </li>
-                                </ul>
-                            </div>
-                        </> : !isEditing ? <div className={styles.informacoes}>
-                            <div>
-                                <strong>Status: </strong> {props.ativo.status.nome_status}
-                            </div>
-                        </div> : ''
+                    {isEditing && props.ativo.status.id !== 2 ? <>
+                        <div className={styles.status}>
+                            <ul>
+                                <li>
+                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
+                                </li>
+                                <li>
+                                    <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
+                                </li>
+                            </ul>
+                        </div>
+                    </> : !isEditing ? <div className={styles.informacoes}>
+                        <div>
+                            <strong>Status: </strong> {props.ativo.status.nome_status}
+                        </div>
+                    </div> : ''
                     }
 
                     <div>
                         <strong>Nota Fiscal:</strong>
-                        {!props.ativo.notaFiscal ? (
+                        {!notaFiscal ? (
                             <div className={styles.notaFiscal}>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
