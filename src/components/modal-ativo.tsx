@@ -10,7 +10,8 @@ import Select from 'react-select';
 
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
-
+import BuscadorArquivos from "../buscadores/buscadorArquivo";
+import { URI } from "../enumeracoes/uri";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [historico, setHistorico] = useState([]);
@@ -22,7 +23,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const [nome, setNome] = useState(props.ativo.nome);
     const [notaFiscal, setNotaFiscal] = useState(props.ativo.notaFiscal.nome);
-    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.notaFiscal.codigo);
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.notaFiscal?.codigo);
     const [descricao, setDescricao] = useState(props.ativo.descricao);
     const [modelo, setModelo] = useState(props.ativo.modelo);
     const [marca, setMarca] = useState(props.ativo.marca);
@@ -34,8 +35,29 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
-    const { get, post, put, deletar } =  useAxios()
+    const { get, post, put, deletar } = useAxios()
     const { getCargo } = useAuth()
+
+
+    const [arquivo, setArquivo] = useState([]);
+    const [arquivoBlob, setArquivoBlob] = useState<Blob | null>(null);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            buscarArquivos();
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const buscarArquivos = async () => {
+        let buscador = new BuscadorArquivos();
+        try {
+            const arquivo = await buscador.buscar();
+            setArquivoBlob(arquivo);
+        } catch (error) {
+            console.error('Erro ao buscar arquivos:', error);
+        }
+    };
 
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
@@ -285,11 +307,11 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 nome
                             )}
                         </h3>
-                        { getCargo() === "Administrador" ? 
+                        {getCargo() === "Administrador" ?
                             <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            onClick={toggleEditing}
-                        /> : '' }
+                                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                                onClick={toggleEditing}
+                            /> : ''}
                     </div>
                     {
                         isEditing && props.ativo.status.id !== 2 ? <>
@@ -309,15 +331,17 @@ export default function ModalAtivo(props: IModalAtivo) {
                             </div>
                         </div> : ''
                     }
-                    
+
                     <div className={styles.informacoes}>
-                        <div>
+                    <div>
                             <strong>Nota Fiscal: </strong>
-                            {isEditing ? (
-                                <input type="text" value={notaFiscal} onChange={(e) => setNotaFiscal(e.target.value)} />
-                            ) : (
-                                props.ativo.notaFiscal.nome
-                            )}
+                            <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={`http://localhost:8080/ativos/nota-fiscal/${props.ativo.notaFiscal.id}`}
+                            >
+                                {props.ativo.notaFiscal?.nome}
+                            </a>
                         </div>
                     </div>
                     <div className={styles.informacoes}>
@@ -326,7 +350,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={codigoNotaFiscal} onChange={(e) => setCodigoNotaFiscal(e.target.value)} />
                             ) : (
-                                props.ativo.notaFiscal.codigo
+                                props.ativo.notaFiscal?.codigo
                             )}
                         </div>
                     </div>
@@ -437,7 +461,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    { getCargo() === "Administrador" ?
+                    {getCargo() === "Administrador" ?
                         <div className={styles.botoes}>
                             <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
                             {isEditing ? (
