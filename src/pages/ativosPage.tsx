@@ -67,7 +67,7 @@ export default function AtivosPage() {
                         id={ativo.id}
                         nome={ativo.nome}
                         notaFiscal={ativo.notaFiscal}
-                        codigoNotaFiscal={ativo.notaFiscal.codigo}
+                        codigoNotaFiscal={ativo.notaFiscal?.codigo}
                         descricao={ativo.descricao}
                         marca={ativo.marca}
                         modelo={ativo.modelo}
