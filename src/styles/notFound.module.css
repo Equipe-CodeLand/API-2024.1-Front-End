@@ -1,8 +1,22 @@
 .main {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-content: center;
     align-items: center;
-    height: 85dvh;
-    padding-top: 3em;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.main h2 {
+    height: 40px;
+}
+
+.main a {
+    font-size: 1.3rem;
+    color: #202020;
+    text-decoration: none;
+}
+
+.main a:hover {
+    text-decoration: underline;
 }

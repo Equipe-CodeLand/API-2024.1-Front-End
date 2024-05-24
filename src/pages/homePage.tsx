@@ -14,8 +14,8 @@ export default function HomePage() {
   return (
     <div>
       <Navbar local="home" />
-      <div className={styles.div}>
-        <div className={styles.container}>
+      <main className={styles.main}>
+        <div className={styles.texto}>
           <h1 className={styles.tituloHome}>Bem-vindo à nossa Plataforma de Gestão de Ativos!</h1>
           <div className={styles.sobreHome}>
             <p>
@@ -26,7 +26,7 @@ export default function HomePage() {
             </p>
           </div>
         </div>
-        <div className={styles.content}>
+        <div className={styles.menu}>
           <div className={styles.button}>
             <Link to="/ativos" className={styles.ativos} style={{ flexDirection: 'column' }}>
               <TbZoomMoney size="38" strokeWidth="1.5" />
@@ -48,7 +48,7 @@ export default function HomePage() {
             </Link> 
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

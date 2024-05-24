@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import Navbar from '../components/navbar'; 
+import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import styles from '../styles/formularioUsuario.module.css';
 
@@ -16,7 +16,7 @@ const UsuariosCadastroPage: React.FC = () => {
     { value: { id: 1, nome_cargo: "Administrador" }, label: 'Administrador' },
     { value: { id: 2, nome_cargo: "Funcionário" }, label: 'Funcionário' },
   ];
- 
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -61,7 +61,11 @@ const UsuariosCadastroPage: React.FC = () => {
         text: 'O usuário foi cadastrado com sucesso!',
         icon: 'success',
         confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.href = '/usuarios';
       });
+
+      
 
     } catch (error: any) {
       console.error('Erro ao cadastrar usuário:', error);
@@ -81,22 +85,22 @@ const UsuariosCadastroPage: React.FC = () => {
         <h1>Cadastro de Usuário</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>
-            Nome: *
+            <span className='input_required'>Nome:</span>
             <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
           <br />
           <label>
-            CPF: *
+            <span className="input_required">CPF:</span>
             <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
           </label>
           <br />
           <label>
-            Email: *
-            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <span className="input_required">Email:</span>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <br />
           <label>
-            Cargo: *
+            <span className='input_required'>Cargo:</span>
             <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
               <option value="">Selecione o cargo</option>
               {cargos.map((cargo, index) => (
@@ -106,7 +110,7 @@ const UsuariosCadastroPage: React.FC = () => {
           </label>
           <br />
           <label>
-            Senha: *
+            <span className='input_required'>Senha:</span>
             <input className={styles.senha} type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
           </label>
           <br />

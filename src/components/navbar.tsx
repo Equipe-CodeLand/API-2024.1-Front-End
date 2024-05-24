@@ -43,6 +43,7 @@ export default function Navbar(props: Props) {
                                     <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuarios</Link></li>
                                 </>
                             )}
+                            <div className={styles.separacao}></div>
                             <li className={styles.logout} onClick={handleLogout}>Sair</li> {/* Utiliza handleLogout */}
                         </ul>
                     </div>
@@ -60,6 +61,7 @@ export default function Navbar(props: Props) {
                                         <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuarios</Link></li>
                                     </>
                                 )}
+                                <div className={styles.separacao_horizontal}></div>
                                 <li className={styles.logout} onClick={handleLogout}>Sair</li> {/* Utiliza handleLogout */}
                             </ul>
                         </div>

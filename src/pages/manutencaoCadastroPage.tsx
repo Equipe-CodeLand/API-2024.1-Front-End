@@ -38,7 +38,7 @@ export default function ManutencaoCadastroPage() {
             })
     }, []);
 
-    
+
     const handleSearch = (selectedOption: AtivoType, _: any) => {
         if (selectedOption) {
             setAtivoSelecionado(selectedOption);
@@ -71,12 +71,12 @@ export default function ManutencaoCadastroPage() {
         }
 
         post(`/manutencao/cadastrar/${ativoSelecionado?.id}`, {
-                ativos: ativoSelecionado?.value,
-                responsavel,
-                data_inicio: formattedDataInicio,
-                data_final: formattedDataFinal,
-                localizacao,
-            })
+            ativos: ativoSelecionado?.value,
+            responsavel,
+            data_inicio: formattedDataInicio,
+            data_final: formattedDataFinal,
+            localizacao,
+        })
             .then(() => {
                 Swal.fire({
                     title: 'Manutenção cadastrada!',
@@ -84,12 +84,14 @@ export default function ManutencaoCadastroPage() {
                     icon: 'success',
                     confirmButtonText: 'OK!'
                 })
-    
+
                 setAtivos([]);
                 setResponsavel('');
                 setData_inicio('');
                 setData_final('');
                 setLocalizacao('');
+
+                window.location.href = '/manutencao';
             })
             .catch(() => {
                 Swal.fire({
@@ -97,52 +99,54 @@ export default function ManutencaoCadastroPage() {
                     text: `Ocorreu um erro ao cadastrar a manutenção!`,
                     icon: 'error',
                     confirmButtonText: 'OK!'
-                })
+                }).then(() => {
+                    window.location.href = '/manutencao';
+                  });
             })
     };
 
     return (
         <>
-        <Navbar local='manutencaoPage' />
-        <div className={styles['form-container']}>
-            <br />
-            <h1>Cadastro de Manutenções</h1>
-            <br />
-            <form onSubmit={handleSubmit}>
-                <label>
-                <Select options={ativos} onChange={handleSearch} placeholder="Pesquisar ativo" styles={{control: (provided) => ({...provided,borderRadius: '20px'})}}/>
-                </label>
-                <br/>
-                {ativos && (
-                    <>
-                        <label>
-                            ID do Ativo: <span className={styles.required}>*</span>
-                            <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id: ''} readOnly />
-                        </label>
-                        <label>
-                            Responsável: <span className={styles.required}>*</span>
-                            <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
-                        </label>
-                        <label>
-                            Data de Início: <span className={styles.required}>*</span>
-                            <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
-                        </label>
-                        <label>
-                            Data Final: <span className={styles.required}>*</span>
-                            <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
-                        </label>
-                        <label>
-                            Localização: <span className={styles.required}>*</span>
-                            <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
-                        </label>
+            <Navbar local='manutencaoPage' />
+            <div className={styles['form-container']}>
+                <br />
+                <h1>Cadastro de Manutenções</h1>
+                <br />
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <Select options={ativos} onChange={handleSearch} placeholder="Pesquisar ativo" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
+                    </label>
+                    <br />
+                    {ativos && (
+                        <>
+                            <label>
+                                <span className='input_required'>ID do Ativo:</span> 
+                                <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id : ''} readOnly />
+                            </label>
+                            <label>
+                                <span className='input_required'>Responsável:</span>
+                                <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
+                            </label>
+                            <label>
+                                <span className='input_required'>Data de Início:</span>
+                                <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
+                            </label>
+                            <label>
+                                <span className="input_required">Data Final:</span>
+                                <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
+                            </label>
+                            <label>
+                                <span className="input_required">Localização:</span>
+                                <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
+                            </label>
 
-                        <input type="submit" value="Cadastrar Manutenção" />
-                        <br/>
-                    </>
-                )}
-            </form>
-        </div>
-        <Footer />
+                            <input type="submit" value="Cadastrar Manutenção" />
+                            <br />
+                        </>
+                    )}
+                </form>
+            </div>
+            <Footer />
         </>
     );
 }
