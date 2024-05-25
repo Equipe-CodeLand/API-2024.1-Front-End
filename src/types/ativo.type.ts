@@ -8,7 +8,7 @@ export type AtivoType = {
     marca: string,
     modelo: string,
     nome: string,
-    codigoNotaFiscal: string,
+    codigo_nota_fiscal: string,
     preco_aquisicao: number,
     usuario: { nome: string },
     usuario_id: number,

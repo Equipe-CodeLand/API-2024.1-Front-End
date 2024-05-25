@@ -21,7 +21,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const [nome, setNome] = useState(props.ativo.nome || '');
     const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
-    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.notaFiscal?.codigo || '');
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.codigo_nota_fiscal|| '');
     const [descricao, setDescricao] = useState(props.ativo.descricao || '');
     const [modelo, setModelo] = useState(props.ativo.modelo || '');
     const [marca, setMarca] = useState(props.ativo.marca || '');
@@ -424,7 +424,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={codigoNotaFiscal} onChange={(e) => setCodigoNotaFiscal(e.target.value)} />
                             ) : (
-                                props.ativo.notaFiscal?.codigo
+                                props.ativo.codigo_nota_fiscal
                             )}
                         </div>
                     </div>

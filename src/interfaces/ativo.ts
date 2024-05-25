@@ -8,7 +8,7 @@ export interface IAtivo {
     modelo: string,
     nome: string,
     notaFiscal: INotaFiscal,
-    codigoNotaFiscal: string,
+    codigo_nota_fiscal: string,
     preco_aquisicao: string,
     usuario: any,
     setor: {id: number, nome: string},

@@ -14,7 +14,7 @@ export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
     const [notaFiscal, setNotaFiscal] = useState<File>();
-    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState('');
+    const [codigo_nota_fiscal, setCodigo_nota_fiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
@@ -88,7 +88,7 @@ export default function CadastroAtivos() {
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
-                codigoNotaFiscal,
+                codigo_nota_fiscal,
                 usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
@@ -115,7 +115,7 @@ export default function CadastroAtivos() {
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
-            setCodigoNotaFiscal('');
+            setCodigo_nota_fiscal('');
             setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
@@ -153,7 +153,7 @@ export default function CadastroAtivos() {
                     </label>
                     <label>
                         Código da Nota Fiscal:
-                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={codigoNotaFiscal} onChange={e => setCodigoNotaFiscal(e.target.value)} />
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={codigo_nota_fiscal} onChange={e => setCodigo_nota_fiscal(e.target.value)} />
                     </label>
                     <label>
                         Descrição:
