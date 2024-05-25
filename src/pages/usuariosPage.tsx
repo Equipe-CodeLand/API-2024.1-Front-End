@@ -99,6 +99,7 @@ export default function UsuariosPage() {
                                 nome={usuario.nome}
                                 cargo={usuario.cargo.nome}
                                 cpf={usuario.credencial.cpf}
+                                email={usuario.email}
                                 key={usuario.id}
                                 buscarUsuarios={usuarios}
                                 estaAtivo={usuario.estaAtivo}

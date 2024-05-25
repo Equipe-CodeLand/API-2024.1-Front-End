@@ -10,6 +10,7 @@ import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
 export default function ModalUsuario(props: IModalUsuario) {
     const [nome, setNome] = useState(props.usuario.nome);
     const [cpf, setCpf] = useState(props.usuario.cpf);
+    const [email, setEmail] = useState(props.usuario.email);
     const [cargo, setCargo] = useState(props.usuario.cargo);
     const [ativos, setAtivos] = useState(props.usuario.ativos);
     const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +22,10 @@ export default function ModalUsuario(props: IModalUsuario) {
 
     const handleChangeCpf = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCpf(event.target.value);
+    };
+
+    const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
     };
 
     const handleChangeCargo = (selectedOption: any) => {
@@ -61,7 +66,8 @@ export default function ModalUsuario(props: IModalUsuario) {
         const usuarioAtualizado = {
             nome: nome,
             cpf: cpf,
-            cargo: cargoUsuario
+            cargo: cargoUsuario,
+            email: email
         };
 
         put(`/usuario/atualizar/usuario/${props.usuario.id}`, usuarioAtualizado)
@@ -102,6 +108,10 @@ export default function ModalUsuario(props: IModalUsuario) {
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
+                    </div>
+                    <div className={styles.informacoes}>
+                        <strong>Email: </strong>
+                        {isEditing ? <input type="text" value={email} onChange={handleChangeEmail} /> : email}
                     </div>
                     <div className={styles.informacoes}>
                         {isEditing && ( // Renderizar o dropdown apenas se estiver editando
