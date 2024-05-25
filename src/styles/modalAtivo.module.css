@@ -34,9 +34,19 @@
     padding-right: 20px;
 }
 
+.informacoesNotaFiscal {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .notaFiscal{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
 }
 
@@ -142,4 +152,11 @@
 
 .semHistorico {
     font-weight: 300;
+}
+
+.notaFiscal button{
+    padding: 0;
+    padding-bottom: 10px;
+    background-color: white;
+    border: 0px;
 }

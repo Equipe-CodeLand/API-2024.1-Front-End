@@ -391,7 +391,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div> : ''
                     }
 
-                    <div>
+                    <div className={styles.informacoesNotaFiscal}>
                         <strong>Nota Fiscal:</strong>
                         {arquivoBlob === null ? (
                             <div>
@@ -410,7 +410,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                     {props.ativo.notaFiscal?.nome}
                                 </a>
                                 {isEditing && (
-                                    <button onClick={excluirNotaFiscal}><TbTrash />Excluir</button>
+                                    <button onClick={excluirNotaFiscal}><TbTrash size={25} /></button>                                
                                 )}
                                 {isEditing && !props.ativo.notaFiscal && (
                                     <input type="file" onChange={handleFileChange} />

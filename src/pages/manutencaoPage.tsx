@@ -152,6 +152,7 @@ export default function ManutencaoPage() {
                   onChange={(e) => setNomeInput(e.target.value)}
                 />
               )}
+              <hr />
               <div>
                 <label>Data Início</label>
                 <input
@@ -170,7 +171,6 @@ export default function ManutencaoPage() {
                   onChange={(e) => setDataFinal(e.target.value)}
                 />
               </div>
-              <div className={styles.espaco}></div>
             </div>
             <div className={styles.filtrar}>
               <button onClick={limpar}>Limpar</button>

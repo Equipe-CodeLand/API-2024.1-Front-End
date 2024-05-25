@@ -3,16 +3,14 @@
     height: max-content;
     justify-content: space-between;
 }
-
 .filtro {
-    padding: 100px 20px;
+    padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
+    height: calc(100vh - 64px);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    flex-grow: 1; 
-    min-height: 100vh; 
 }
 
 .filtro h2 {
@@ -22,40 +20,43 @@
 }
 
 .inputs {
+    height: 600px;
     display: flex;
     flex-direction: column;
-    align-items: center; 
     gap: 30px;
-    width: 100%;
-    height: 80%;
-    padding: 20px 0px;
+    padding: 0px 0px 50px 0px;
+    margin-top: 0px;
 }
 
 .inputs > input, select {
-    margin: 0px !important;
-    padding: 10px !important;
-    border-radius: 10px !important;
-    height: 90px !important;
-    width: 80% !important; 
+    margin: 0 auto !important;
+    padding: 0px 10px !important;
+    border-radius: 20px;
+    height: 40px !important;
+    width: 180px !important;
     font-family: var(--inter);
     font-weight: 500 !important;
 }
 
-.espaco{
-    height: 30%;
-}
-
-.inputs > select{
-    height: 100% !important;
+input[type="Date"] {
+    border-radius: 30px !important;
 }
 
 .inputs > select > .sem_filtro {
     color: #ddd;
 }
 
+label{
+    margin-bottom: 0 !important;
+}
+
 .filtrar {
     display: flex;
     justify-content: space-between;
+}
+
+.filtrarPor {
+    color: #757575;
 }
 
 .filtrar button {
@@ -68,13 +69,18 @@
     background-color: transparent;
     transition: all ease-in-out 0.2s;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    justify-content: flex-end;
 }
 
 .filtrar button:hover {
     background-color: white !important;
     border: 2px solid var(--corPrimaria);
     color: var(--corPrimaria);
+}
+
+hr{
+    width: 100%;
+    border: 1px solid #000;
+
 }
 
 .conteudo {
@@ -121,7 +127,7 @@
     box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
 
     font-family: var(--inter);
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: 400;
     text-decoration: none;
     text-align: center;
@@ -265,6 +271,7 @@
     .botoes{
         display: flex;
         width: 50%;
+        font-size: 13px;
     }
 
     .botao{
