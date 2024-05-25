@@ -31,13 +31,30 @@ export default function ModalUsuario(props: IModalUsuario) {
         }
     };
 
+    const mudarStatusUsuário = (opcao: string) => {
+        put(`usuario/${props.usuario.id}/${opcao}`, {})
+            .then(() => {
+                Swal.fire({
+                    title: 'Usuário Atualizado!',
+                    text: `O usuário foi atualizado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                });
+                props.handleClose();
+                props.buscarUsuarios();
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     const handleSave = () => {
 
         let cargoUsuario;
 
-        if (cargo === 'Funcionário'){
+        if (cargo === 'Funcionário') {
             cargoUsuario = 2
-        } else if (cargo === "Administrador"){
+        } else if (cargo === "Administrador") {
             cargoUsuario = 1
         }
 
@@ -48,21 +65,21 @@ export default function ModalUsuario(props: IModalUsuario) {
         };
 
         put(`/usuario/atualizar/usuario/${props.usuario.id}`, usuarioAtualizado)
-        .then(response => {
-          Swal.fire({
-            title: 'Usuário Atualizado!',
-            text: `O usuário foi atualizado com sucesso!`,
-            icon: 'success',
-            confirmButtonText: 'OK!'
-          });
-          console.log('Dados atualizados com sucesso:', response.data);
-          console.log(usuarioAtualizado);
-          props.handleClose();
-          props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
-        })
-        .catch(error => {
-          console.error('Erro ao atualizar os dados:', error);
-        });
+            .then(response => {
+                Swal.fire({
+                    title: 'Usuário Atualizado!',
+                    text: `O usuário foi atualizado com sucesso!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK!'
+                });
+                console.log('Dados atualizados com sucesso:', response.data);
+                console.log(usuarioAtualizado);
+                props.handleClose();
+                props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar os dados:', error);
+            });
     };
 
     return (
@@ -79,6 +96,9 @@ export default function ModalUsuario(props: IModalUsuario) {
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
                         <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
                     </div>
+                    <div className={styles.informacoes}><strong>Status: </strong>{
+                        props.usuario.estaAtivo ? "Ativo" : "Inativo"
+                    }</div>
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
@@ -123,14 +143,18 @@ export default function ModalUsuario(props: IModalUsuario) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.botoes}>
+                        {
+                            props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
+                                <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
+                        }
+                        {/* Botão de salvar e fechar */}
                         {isEditing && (
                             <button onClick={handleSave}>SALVAR</button>
                         )}
-                        <button onClick={props.handleClose}>FECHAR</button>
                     </div>
                 </Modal.Footer>
             </Modal>
         </>
     )
-    
+
 }
