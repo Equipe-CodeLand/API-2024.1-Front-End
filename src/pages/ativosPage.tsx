@@ -130,7 +130,7 @@ export default function AtivosPage() {
                     dataExpiracao={ativo.dataExpiracao}
                     manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
                     buscarAtivos={ativos}
-                    codigoNotaFiscal={ativo.notaFiscal.codigo}
+                    codigoNotaFiscal={ativo.notaFiscal?.codigo}
                     isEditable={!isFuncionario}
                 />
             ))}
