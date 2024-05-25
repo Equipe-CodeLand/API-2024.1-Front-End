@@ -1,28 +1,32 @@
-.login{
+.login {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 100%;
-    margin: 5% auto;
+    height: 100vh;
+    padding-bottom: 3%;
 }
 
-.logo{
+.logo {
     width: 50vh;
     margin: 0 auto;
     display: flex;
     justify-content: center;
 }
 
-.username, .password {
+.username,
+.password {
     display: block;
     width: 400px;
     padding: 10px;
     margin-bottom: 5%;
     border: 1px solid black;
-    border-radius: 15px; /* Aumenta o raio da borda para torná-la mais redonda */
-    resize: vertical; /* Permite que o usuário redimensione a textarea verticalmente */
+    border-radius: 15px;
+    /* Aumenta o raio da borda para torná-la mais redonda */
+    resize: vertical;
+    /* Permite que o usuário redimensione a textarea verticalmente */
 }
 
 .erro {
@@ -38,5 +42,14 @@
     background-color: var(--corPrimaria);
     color: white;
     cursor: pointer;
-    border-radius: 30px; 
+    border-radius: 30px;
+}
+
+.esqueciMinhaSenha {
+    display: flex;
+    margin-top: 5%;
+    justify-content: center;
+    align-items: center;
+    font-style: normal;
+    color: var(--corPrimaria);
 }

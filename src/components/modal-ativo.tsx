@@ -1,16 +1,15 @@
-import { useState, useEffect } from "react";
-import { Modal } from "react-bootstrap";
+import { useState, useEffect, ChangeEvent } from "react";
 import { IModalAtivo } from "../interfaces/modalAtivo";
 import styles from "../styles/modalAtivo.module.css";
-import { FaRegEdit } from "react-icons/fa";
-import ButtonMain from "./botao";
-import axios from "axios";
 import Swal from "sweetalert2";
 import Select from 'react-select';
-
+import { FaRegEdit } from 'react-icons/fa';
+import { Modal } from 'react-bootstrap';
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
-
+import BuscadorArquivos from "../buscadores/buscadorArquivo";
+import { TbTrash } from "react-icons/tb";
+import ButtonMain from "./botao";
 
 export default function ModalAtivo(props: IModalAtivo) {
     const [historico, setHistorico] = useState([]);
@@ -20,27 +19,46 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [ocupado, setOcupado] = useState(false);
     const [emManutencao, setEmManutencao] = useState(false);
 
-    const [nome, setNome] = useState(props.ativo.nome);
-    const [notaFiscal, setNotaFiscal] = useState(props.ativo.notaFiscal);
-    const [descricao, setDescricao] = useState(props.ativo.descricao);
-    const [modelo, setModelo] = useState(props.ativo.modelo);
-    const [marca, setMarca] = useState(props.ativo.marca);
-    const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao);
-    const [usuario, setUsuario] = useState(props.ativo.usuario);
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario);
-    const [usuarioPreenchido, setUsuarioPreenchido] = useState(false);
-    const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao).toLocaleDateString('pt-BR'));
-
+    const [nome, setNome] = useState(props.ativo.nome || '');
+    const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.codigo_nota_fiscal|| '');
+    const [descricao, setDescricao] = useState(props.ativo.descricao || '');
+    const [modelo, setModelo] = useState(props.ativo.modelo || '');
+    const [marca, setMarca] = useState(props.ativo.marca || '');
+    const [preco_aquisicao, setPreco_aquisicao] = useState(props.ativo.preco_aquisicao || '');
+    const [usuario, setUsuario] = useState(props.ativo.usuario || null);
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState(props.ativo.usuario || null);
+    const [dataAquisicao, setDataAquisicao] = useState(new Date(props.ativo.dataAquisicao || '').toLocaleDateString('pt-BR'));
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
-    const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR'));
-    const { get, post, put, deletar } =  useAxios()
-    const { getCargo } = useAuth()
+    const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao || '').toLocaleDateString('pt-BR'));
+    const [showAddFileButton, setShowAddFileButton] = useState(true);
 
+    const { get, post, put, deletar } = useAxios();
+    const { getCargo } = useAuth();
+
+    const [arquivoBlob, setArquivoBlob] = useState<Blob | null>(null);
+
+    useEffect(() => {
+        buscarArquivos();
+    }, []);
+
+    const buscarArquivos = async () => {
+        let buscador = new BuscadorArquivos();
+        try {
+            if(props.ativo.notaFiscal != null){
+                const arquivo = await buscador.buscar();
+                setArquivoBlob(arquivo);
+                setNotaFiscal(arquivo);
+            }
+            console.log(arquivoBlob);
+        } catch (error) {
+            console.error('Erro ao buscar arquivos:', error);
+        }
+    };
 
     const manutencoesFuturas = props.ativo.manutencoes.filter(
         (manutencao) => new Date(manutencao.data_inicio) > new Date()
     );
-
 
     useEffect(() => {
         get('/usuario/listar')
@@ -56,7 +74,6 @@ export default function ModalAtivo(props: IModalAtivo) {
     }, []);
 
     useEffect(() => {
-        // Função para buscar o histórico do usuário ao abrir o modal
         const fetchHistorico = async () => {
             try {
                 const response = await get(`/listar/historico/${props.ativo.id}`);
@@ -75,15 +92,15 @@ export default function ModalAtivo(props: IModalAtivo) {
     }, [props.ativo.id]);
 
 
+    const isEditable = getCargo() === "Administrador";
+
     const handleUsuarioSearch = (selectedOption: any) => {
         if (selectedOption) {
             setUsuarioSelecionado(selectedOption);
-            console.log(selectedOption)
         } else {
             setUsuarioSelecionado(null);
         }
     };
-
 
     const toggleEditing = () => {
         setIsEditing(!isEditing);
@@ -92,7 +109,7 @@ export default function ModalAtivo(props: IModalAtivo) {
 
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
-        setPreco_aquisicao(inputValue); // Corrigido: converter para float
+        setPreco_aquisicao(inputValue);
     };
 
     const saveChanges = () => {
@@ -129,14 +146,13 @@ export default function ModalAtivo(props: IModalAtivo) {
             usuario: usuarioSelecionado,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
-            status: { id: statusId }
+            status: { id: statusId },
+            codigoNotaFiscal: codigoNotaFiscal
         };
 
         put(`/atualizar/ativos/${props.ativo.id}`, ativosDto)
             .then(response => {
-                // Verifica se o status foi alterado para "Ocupado"
                 if (statusId === 3 && props.ativo.usuario?.id !== usuarioSelecionado?.id) {
-                    // Se sim, adiciona um novo histórico
                     post(`/adicionar/historico/${props.ativo.id}`, {})
                         .then(() => {
                             Swal.fire({
@@ -188,8 +204,11 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const formatDateForBackend = (dateString: string) => {
-        const parts = dateString.split('/');
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        if (dateString !== "") {
+            const parts = dateString.split('/');
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+        return null
     };
 
     const formatDate = (dateString: string) => {
@@ -210,6 +229,71 @@ export default function ModalAtivo(props: IModalAtivo) {
         }).catch()
     }
 
+    const excluirNotaFiscal = () => {
+        const idAtivo = props.ativo.id;
+
+        Swal.fire({
+            title: 'Deseja excluir a nota fiscal?',
+            text: 'Esta ação não pode ser desfeita!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deletar(`/ativos/excluir/nota-fiscal/${idAtivo}`).then(() => {
+                    setNotaFiscal(null);
+                    setCodigoNotaFiscal('');
+                    setArquivoBlob(null);
+                    setShowAddFileButton(true);
+                    Swal.fire(
+                        'Excluída!',
+                        'A nota fiscal foi excluída.',
+                        'success'
+                    );
+                }).catch((error) => {
+                    console.error('Erro ao excluir nota fiscal:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro ao excluir nota fiscal',
+                        text: 'Ocorreu um erro ao tentar excluir a nota fiscal. Por favor, tente novamente.'
+                    });
+                });
+            }
+        });
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setNotaFiscal(file);
+            handleSaveNotaFiscal(file);
+            setShowAddFileButton(false);
+        } else {
+            setNotaFiscal(null);
+        }
+    };
+
+    const handleSaveNotaFiscal = (file: File) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const idAtivo = props.ativo.id;
+        post(`/cadastrar/nota-fiscal/${idAtivo}`, formData, { headers: { "Content-Type": "multipart/form-data" } })
+            .then(response => {
+                setNotaFiscal(response.data);
+            })
+            .catch(error => {
+                console.error('Erro ao salvar nota fiscal:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao salvar nota fiscal',
+                    text: 'Ocorreu um erro ao tentar salvar a nota fiscal. Por favor, tente novamente.'
+                });
+            });
+    };
 
     const handleDisponivel = () => {
         setDisponivel(true);
@@ -252,7 +336,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             <ul>
                 {manutencoesFuturas.map((manutencao, index) => {
                     return (
-                        <li key={index}> {/* Adicionado: key prop */}
+                        <li key={index}>
                             ID: {manutencao.id} <br />
                             {new Date(manutencao.data_inicio).toLocaleDateString()} - {new Date(manutencao.data_final).toLocaleDateString()}
                         </li>
@@ -283,38 +367,64 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 nome
                             )}
                         </h3>
-                        { getCargo() === "Administrador" ? 
+                        {getCargo() === "Administrador" ?
                             <ButtonMain
-                            icon={<FaRegEdit style={{ fontSize: 30 }} />}
-                            onClick={toggleEditing}
-                        /> : '' }
+                                icon={<FaRegEdit style={{ fontSize: 30 }} />}
+                                onClick={toggleEditing}
+                            /> : ''}
                     </div>
-                    {
-                        isEditing && props.ativo.status.id !== 2 ? <>
-                            <div className={styles.status}>
-                                <ul>
-                                    <li>
-                                        <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
-                                    </li>
-                                </ul>
-                            </div>
-                        </> : !isEditing ? <div className={styles.informacoes}>
-                            <div>
-                                <strong>Status: </strong> {props.ativo.status.nome_status}
-                            </div>
-                        </div> : ''
+                    {isEditing && props.ativo.status.id !== 2 ? <>
+                        <div className={styles.status}>
+                            <ul>
+                                <li>
+                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
+                                </li>
+                                <li>
+                                    <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
+                                </li>
+                            </ul>
+                        </div>
+                    </> : !isEditing ? <div className={styles.informacoes}>
+                        <div>
+                            <strong>Status: </strong> {props.ativo.status.nome_status}
+                        </div>
+                    </div> : ''
                     }
-                    
+
+                    <div className={styles.informacoesNotaFiscal}>
+                        <strong>Nota Fiscal:</strong>
+                        {arquivoBlob === null ? (
+                            <div>
+                                {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
+                                {isEditing && (
+                                    <input type="file" onChange={handleFileChange} />
+                                )}
+                            </div>
+                        ) : (
+                            <div className={styles.notaFiscal}>
+                                <a
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href={`http://localhost:8080/ativos/nota-fiscal/${props.ativo.notaFiscal?.id}`}
+                                >
+                                    {props.ativo.notaFiscal?.nome}
+                                </a>
+                                {isEditing && (
+                                    <button onClick={excluirNotaFiscal}><TbTrash size={25} /></button>                                
+                                )}
+                                {isEditing && !props.ativo.notaFiscal && (
+                                    <input type="file" onChange={handleFileChange} />
+                                )}
+                            </div>
+                        )}
+                    </div>
                     <div className={styles.informacoes}>
                         <div>
-                            <strong>Código da Nota Fiscal: </strong>
+                            <strong>Código Nota Fiscal: </strong>
                             {isEditing ? (
-                                <input type="text" value={notaFiscal} onChange={(e) => setNotaFiscal(e.target.value)} />
+                                <input type="text" value={codigoNotaFiscal} onChange={(e) => setCodigoNotaFiscal(e.target.value)} />
                             ) : (
-                                props.ativo.notaFiscal
+                                props.ativo.codigo_nota_fiscal
                             )}
                         </div>
                     </div>
@@ -413,7 +523,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 {historico.map((historico: any, index: number) => (
                                     <li key={index}>
                                         <p>Usuário: {historico.usuario?.nome}</p>
-                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p> <br />
+                                        <p>Data de cadastro: {formatDate(historico.data_cadastro)}</p>
                                     </li>
                                 ))}
                             </ul>
@@ -425,7 +535,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    { getCargo() === "Administrador" ?
+                    {getCargo() === "Administrador" ?
                         <div className={styles.botoes}>
                             <button className={styles.excluir} onClick={excluirAtivo}>EXCLUIR ATIVO</button>
                             {isEditing ? (

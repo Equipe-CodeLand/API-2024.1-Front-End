@@ -1,0 +1,51 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.camposInput{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+    width: 50%;
+    height: 100%;
+}
+
+.camposInput input{
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    border-radius: 20px; 
+    resize: vertical;
+}
+
+.camposInput label{
+    margin-top: 3%;
+    width: 80%;
+}
+
+.submit{
+    display: flex;
+    margin-top: 15%;
+    padding: 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 20px; 
+}
+
+.submit:hover {
+    background-color: #45a049;
+}
+
+.erro {
+    margin-bottom: 1em;
+    color: red;
+}

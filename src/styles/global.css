@@ -11,3 +11,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+main {
+    min-height: calc(100vh - 129px);
+}
+
+.input_required::after {
+    content: "*";
+    margin-left: 5px;
+    margin-right: 5px;
+    color: red;
+}

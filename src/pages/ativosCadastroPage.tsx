@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, ChangeEvent } from 'react';
 import Select from 'react-select';
 import styles from '../styles/formulario.module.css';
 import Swal from 'sweetalert2';
@@ -13,7 +13,8 @@ type UsuarioType = { value: number, id: number, nome: string } | null;
 export default function CadastroAtivos() {
     const [status, setStatus] = useState<StatusType>(null);
     const [nome, setNomeAtivo] = useState('');
-    const [notaFiscal, setNotaFiscal] = useState('');
+    const [notaFiscal, setNotaFiscal] = useState<File>();
+    const [codigo_nota_fiscal, setCodigo_nota_fiscal] = useState('');
     const [descricao, setDescricao] = useState('');
     const [precoAquisicao, setPrecoAquisicao] = useState('');
     const [modelo, setModelo] = useState('');
@@ -43,6 +44,10 @@ export default function CadastroAtivos() {
             })
             .catch(error => console.error('Erro ao buscar usuários:', error));
     }, []);
+
+    const handleNotaFiscal = (e: any) => {
+        e.target.files[0] ? setNotaFiscal(e.target.files[0]) : setNotaFiscal(undefined)
+    }
 
 
     const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
@@ -75,18 +80,25 @@ export default function CadastroAtivos() {
 
         try {
             console.log(parseFloat(precoAquisicao))
-            const response = await post('http://localhost:8080/cadastrar/ativos', {
+            let form = new FormData();
+            let ativosDto = {
                 nome,
                 descricao,
-                notaFiscal,
                 status: status.value,
                 preco_aquisicao: parseFloat(precoAquisicao),
                 modelo,
                 marca,
+                codigo_nota_fiscal,
                 usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
-            });
+            }
+            let json = JSON.stringify(ativosDto)
+            form.append("ativosDto", new Blob([json], { type: 'application/json' }))
+            if (notaFiscal) {
+                form.append("file", notaFiscal)
+            }
+            const response = await post('http://localhost:8080/cadastrar/ativos', form, { headers: { "Content-Type": "multipart/form-data" } });
 
             console.log(response.data);
 
@@ -98,12 +110,12 @@ export default function CadastroAtivos() {
             })
 
             setNomeAtivo('');
-            setNotaFiscal('');
             setDescricao('');
             setStatus(null);
             setPrecoAquisicao('');
             setModelo('');
             setMarca('');
+            setCodigo_nota_fiscal('');
             setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
@@ -116,7 +128,9 @@ export default function CadastroAtivos() {
                 text: `Ocorreu um erro ao cadastrar o ativo ${nome}. Por favor, tente novamente!`,
                 icon: 'warning',
                 confirmButtonText: 'OK!'
-            })
+            }).then(() => {
+                window.location.href = '/ativos';
+            });
         }
     }
 
@@ -130,29 +144,33 @@ export default function CadastroAtivos() {
                 <br />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Nome do Ativo: <span className={styles.required}>*</span>
+                        <span className="input_required">Nome do Ativo:</span>
                         <input type="text" name="Nome do Ativo" placeholder="Nome do Ativo" value={nome} onChange={e => setNomeAtivo(e.target.value)} />
                     </label>
                     <label>
+                        Nota Fiscal:
+                        <input type="file" name="Nota fiscal" onChange={e => handleNotaFiscal(e)} accept="application/pdf,application/xml,text/xml" />
+                    </label>
+                    <label>
                         Código da Nota Fiscal:
-                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={notaFiscal} onChange={e => setNotaFiscal(e.target.value)} />
+                        <input type="text" name="Código da Nota Fiscal" placeholder="Código da Nota Fiscal" value={codigo_nota_fiscal} onChange={e => setCodigo_nota_fiscal(e.target.value)} />
                     </label>
                     <label>
                         Descrição:
                         <input type="text" name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
                     </label>
                     <label>
-                        Status: <span className={styles.required}>*</span>
+                        <span className='input_required'>Status:</span>
                         <Select options={statusAtivo} onChange={handleSearch} placeholder="Status" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                     </label>
                     {status && status.label === 'Ocupado' && (
                         <label>
-                            Funcionário Responsável: <span className={styles.required}>*</span>
+                            <span className="input_required">Funcionário Responsável:</span>
                             <Select options={usuario} onChange={handleUsuarioSearch} placeholder="Pesquisar Usuário" styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }} />
                         </label>
                     )}
                     <label>
-                        Preço de aquisição (R$): <span className={styles.required}>*</span>
+                        <span className='input_required'>Preço de aquisição (R$):</span>
                         <input type="text" name="Preço de aquisição" placeholder="Preço de aquisição" value={precoAquisicao} onChange={e => setPrecoAquisicao(e.target.value)} />
                     </label>
                     <label>
@@ -164,7 +182,7 @@ export default function CadastroAtivos() {
                         <input type="text" name="Marca" placeholder="Marca" value={marca} onChange={e => setMarca(e.target.value)} />
                     </label>
                     <label>
-                        Data de aquisição: <span className={styles.required}>*</span>
+                        <span className="input_required">Data de aquisição:</span>
                         <input type="date" name="Data de aquisição" value={dataAquisicao} onChange={e => setDataAquisicao(e.target.value)} />
                     </label>
                     <label>

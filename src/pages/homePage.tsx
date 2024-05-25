@@ -1,5 +1,7 @@
 import Footer from "../components/footer";
 import { TbZoomMoney } from "react-icons/tb";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { GoPeople } from "react-icons/go";
 import { VscTools } from "react-icons/vsc";
 import styles from "../styles/home.module.css";
 import { Link } from "react-router-dom";
@@ -12,8 +14,8 @@ export default function HomePage() {
   return (
     <div>
       <Navbar local="home" />
-      <div className={styles.div}>
-        <div className={styles.container}>
+      <main className={styles.main}>
+        <div className={styles.texto}>
           <h1 className={styles.tituloHome}>Bem-vindo à nossa Plataforma de Gestão de Ativos!</h1>
           <div className={styles.sobreHome}>
             <p>
@@ -24,7 +26,7 @@ export default function HomePage() {
             </p>
           </div>
         </div>
-        <div className={styles.content}>
+        <div className={styles.menu}>
           <div className={styles.button}>
             <Link to="/ativos" className={styles.ativos} style={{ flexDirection: 'column' }}>
               <TbZoomMoney size="38" strokeWidth="1.5" />
@@ -36,13 +38,17 @@ export default function HomePage() {
                 <span>Manutenções</span>
               </Link>
               <Link to="/usuarios" className={styles.usuarios} style={{ flexDirection: 'column' }}>
-                <VscTools size="38" />
+                <GoPeople size="38" />
                 <span>Usuários</span>
               </Link> </> : ''
             }
+            <Link to="/alteracao/senha" className={styles.usuarios} style={{ flexDirection: 'column' }}>
+              <RiUserSettingsLine size="38" />
+              <span>Alterar Minha Senha</span>
+            </Link> 
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
