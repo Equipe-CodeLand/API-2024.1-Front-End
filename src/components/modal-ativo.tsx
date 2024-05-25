@@ -45,9 +45,12 @@ export default function ModalAtivo(props: IModalAtivo) {
     const buscarArquivos = async () => {
         let buscador = new BuscadorArquivos();
         try {
-            const arquivo = await buscador.buscar();
-            setArquivoBlob(arquivo);
-            setNotaFiscal(arquivo);
+            if(props.ativo.notaFiscal != null){
+                const arquivo = await buscador.buscar();
+                setArquivoBlob(arquivo);
+                setNotaFiscal(arquivo);
+            }
+            console.log(arquivoBlob);
         } catch (error) {
             console.error('Erro ao buscar arquivos:', error);
         }
@@ -385,8 +388,8 @@ export default function ModalAtivo(props: IModalAtivo) {
 
                     <div>
                         <strong>Nota Fiscal:</strong>
-                        {!notaFiscal ? (
-                            <div className={styles.notaFiscal}>
+                        {arquivoBlob === null ? (
+                            <div>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
                                     <input type="file" onChange={handleFileChange} />
@@ -397,7 +400,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                 <a
                                     target="_blank"
                                     rel="noreferrer"
-                                    href={`http://localhost:8080/ativos/nota-fiscal/${props.ativo.notaFiscal.id}`}
+                                    href={`http://localhost:8080/ativos/nota-fiscal/${props.ativo.notaFiscal?.id}`}
                                 >
                                     {props.ativo.notaFiscal?.nome}
                                 </a>
