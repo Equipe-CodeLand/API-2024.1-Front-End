@@ -143,7 +143,6 @@ export default function AtivosPage() {
             </span>
         </div>
     );
-
     return (
         <div>
             <Navbar local="ativos" />
