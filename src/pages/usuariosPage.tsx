@@ -55,7 +55,7 @@ export default function UsuariosPage() {
 
         if (nome !== "") {
             usuarios = usuarios.filter((usuario) => 
-                toTitleCase(usuario.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) == 
+                toTitleCase(usuario.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(" ")[0]) == 
                 toTitleCase(nome.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
             )
         }
