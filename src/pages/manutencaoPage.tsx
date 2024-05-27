@@ -11,6 +11,7 @@ import { Manutencao } from "../types/manutencao.type";
 export default function ManutencaoPage() {
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
   const [error, setError] = useState<Error | unknown>(null);
+  const [filteredData, setFilteredData] = useState<Array<Manutencao>>([]);
   const { get, loading, setLoading } = useAxios();
   const [idInput, setIdInput] = useState("");
   const [nomeInput, setNomeInput] = useState("");
@@ -46,16 +47,12 @@ export default function ManutencaoPage() {
         responsavel: manutencao.responsavel,
       }));
       setManutencoes(manutencoesData);
+      setFilteredData(response.data);
       setLoading(false);
     } catch (err) {
       setError(err);
       setLoading(false);
     }
-  };
-
-  const limpar = () => {
-    limparFiltros();
-    window.location.reload();
   };
 
   const limparFiltros = () => {
@@ -64,7 +61,15 @@ export default function ManutencaoPage() {
     setDataInicio("");
     setDataFinal("");
     setFiltro("");
+    setFilteredData(manutencoes); 
+    buscarManutencoes();
   };
+  
+  const toTitleCase = (str: string) =>
+    str
+      .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+      ?.map((x) => x.charAt(0).toUpperCase() + x.slice(1))
+      .join(" ");
 
   const filtrar = async () => {
     setLoading(true);
@@ -75,7 +80,7 @@ export default function ManutencaoPage() {
       if (idInput) {
         response = await get(`/manutencao/${idInput}`);
       } else if (nomeInput) {
-        response = await get(`/manutencao/filtrar/${nomeInput}`);
+        response = await get(`/manutencao/filtrar/${toTitleCase(nomeInput)}`);
       } else if (dataInicio && dataFinal) {
         const dataInicioFormatada = formatarData(dataInicio);
         const dataFinalFormatada = formatarData(dataFinal);
@@ -103,6 +108,7 @@ export default function ManutencaoPage() {
       console.log(manutencoesFiltradas);
       setManutencoes(manutencoesFiltradas);
       setLoading(false);
+      setFilteredData(manutencoesFiltradas);
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro ao filtrar manutenções:", error);
@@ -173,7 +179,7 @@ export default function ManutencaoPage() {
               </div>
             </div>
             <div className={styles.filtrar}>
-              <button onClick={limpar}>Limpar</button>
+              <button onClick={limparFiltros}>Limpar</button>
               <button onClick={filtrar}>Aplicar</button>
             </div>
           </div>
@@ -274,7 +280,7 @@ export default function ManutencaoPage() {
               </div>
             </div>
             <div className={styles.filtrar}>
-              <Button className={styles.botaoModal} onClick={limpar}>
+              <Button className={styles.botaoModal} onClick={limparFiltros}>
                 Limpar
               </Button>
               <Button className={styles.botaoModal} onClick={filtrar}>
