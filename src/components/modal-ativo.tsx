@@ -107,6 +107,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
+    
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setPreco_aquisicao(inputValue);

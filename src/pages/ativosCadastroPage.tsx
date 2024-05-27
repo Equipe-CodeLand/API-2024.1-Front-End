@@ -145,6 +145,7 @@ export default function CadastroAtivos() {
         }
     }
 
+    
     return (
         <div>
             <Navbar local="cadastro/ativos" />
