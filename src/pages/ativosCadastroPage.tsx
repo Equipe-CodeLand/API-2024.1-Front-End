@@ -74,7 +74,7 @@ export default function CadastroAtivos() {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-
+        
         // Validação das datas
         if (new Date(dataExpiracao) < new Date(dataAquisicao)) {
             setDataError('A data de expiração não pode ser antes da data de aquisição.');
@@ -145,7 +145,6 @@ export default function CadastroAtivos() {
         }
     }
 
-    
     return (
         <div>
             <Navbar local="cadastro/ativos" />
