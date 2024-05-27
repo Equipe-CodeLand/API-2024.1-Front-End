@@ -7,6 +7,7 @@ import styles from "../styles/home.module.css";
 import { Link } from "react-router-dom";
 import Navbar from "../components/navbar";
 import { useAuth } from "../hooks/useAuth";
+import Dashboard from "../components/dashboard";
 
 export default function HomePage() {
   const { getCargo } = useAuth()
@@ -47,6 +48,13 @@ export default function HomePage() {
               <span>Alterar Minha Senha</span>
             </Link> 
           </div>
+          { getCargo() === "Administrador" ? <> 
+          <div className={styles.texto}>
+            <h2 className={styles.tituloHome}> Dashboard e relatórios </h2>
+            <Dashboard/>
+          </div>
+          </> : <> </>
+          }
         </div>
       </main>
       <Footer />

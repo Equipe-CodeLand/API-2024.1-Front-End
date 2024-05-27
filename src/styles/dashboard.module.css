@@ -1,0 +1,90 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    border-radius: 20px;
+    border: 3px, solid, var(--corPrimaria);
+    text-decoration: none;
+    margin: 2%;
+    width: 500px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 75%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.botao {
+    display: flex;
+    align-items: end;
+    padding: 3%;
+}
+
+.botao button{
+    display: flex;
+    margin: 2%;
+    padding: 5px 20px;
+    border: 2px solid transparent;
+    color: white;
+    background-color: var(--corPrimaria) !important;
+    border-radius: 10px;
+    font-weight: 600;
+    background-color: transparent;
+    transition: all ease-in-out 0.2s;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.botao button:hover {
+    background-color: white !important;
+    border: 2px solid var(--corPrimaria);
+    color: var(--corPrimaria);
+}
+
+@media screen and (max-width: 650px) {
+
+    .container{
+        flex-direction: column;
+    }
+
+    .card{
+        width: 90% !important;
+        margin: 2%;
+    }
+}
+
+.containerTitulo{
+    color: #00A0B9;
+    text-align: center;
+    font-size: 200%;
+    margin: 1%;
+}
+.containerDados{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.containerDadosTexto{
+    font-size: 125%;
+    color: black;
+    padding: 1%;
+    text-align: center;
+}
+
+
+.containerDadosAtivos{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
