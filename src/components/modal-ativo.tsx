@@ -113,6 +113,15 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const saveChanges = () => {
+        // Verificar se a data de expiração é menor que a data de aquisição
+        if ((dataExpiracao) < (dataAquisicao)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro de data',
+                text: 'A data de expiração não pode ser anterior à data de aquisição.',
+            });
+            return;
+        }
 
         if (ocupado && !usuarioSelecionado) {
             Swal.fire({
