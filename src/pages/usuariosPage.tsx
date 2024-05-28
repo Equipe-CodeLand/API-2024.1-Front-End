@@ -48,7 +48,11 @@ export default function UsuariosPage() {
         }
 
         if (nome !== "") {
-            usuarios = usuarios.filter((usuario) => usuario.nome.toLowerCase() == nome.toLowerCase())
+            usuarios = usuarios.filter((usuario) => 
+                usuario.nome?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(
+                    nome?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+                )
+            )
         }
 
         if (tipoUsuario !== "") {

@@ -7,7 +7,6 @@ import Navbar from '../components/navbar';
 import { useAxios } from '../hooks/useAxios';
 
 type StatusType = { value: { id: number, nome_status: string }, label: string } | null;
-
 type UsuarioType = { value: number, id: number, nome: string } | null;
 
 export default function CadastroAtivos() {
@@ -23,6 +22,7 @@ export default function CadastroAtivos() {
     const [usuarioSelecionado, setUsuarioSelecionado] = useState<UsuarioType | null>(null);
     const [dataAquisicao, setDataAquisicao] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState('');
+    const [dataError, setDataError] = useState('');
     const { get } = useAxios()
     const { post } = useAxios()
 
@@ -49,7 +49,6 @@ export default function CadastroAtivos() {
         e.target.files[0] ? setNotaFiscal(e.target.files[0]) : setNotaFiscal(undefined)
     }
 
-
     const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
         if (selectedOption) {
             setUsuarioSelecionado(selectedOption);
@@ -63,9 +62,26 @@ export default function CadastroAtivos() {
         setStatus(selectedOption);
     }
 
+    useEffect(() => {
+        if (dataAquisicao && dataExpiracao) {
+            if (new Date(dataExpiracao) < new Date(dataAquisicao)) {
+                setDataError('A data de expiração não pode ser antes da data de aquisição.');
+            } else {
+                setDataError('');
+            }
+        }
+    }, [dataAquisicao, dataExpiracao]);
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-
+        
+        // Validação das datas
+        if (new Date(dataExpiracao) < new Date(dataAquisicao)) {
+            setDataError('A data de expiração não pode ser antes da data de aquisição.');
+            return;
+        } else {
+            setDataError('');
+        }
 
         if (!nome || !status || !precoAquisicao || (status.value.id === 3 && !usuarioSelecionado) || !dataAquisicao) {
             Swal.fire({
@@ -73,13 +89,11 @@ export default function CadastroAtivos() {
                 text: `Por favor, preencha todos os campos do formulário!`,
                 icon: 'warning',
                 confirmButtonText: 'OK!'
-            })
+            });
             return;
         }
 
-
         try {
-            console.log(parseFloat(precoAquisicao))
             let form = new FormData();
             let ativosDto = {
                 nome,
@@ -92,22 +106,20 @@ export default function CadastroAtivos() {
                 usuario: usuarioSelecionado?.value,
                 dataAquisicao,
                 dataExpiracao
-            }
-            let json = JSON.stringify(ativosDto)
-            form.append("ativosDto", new Blob([json], { type: 'application/json' }))
+            };
+            let json = JSON.stringify(ativosDto);
+            form.append("ativosDto", new Blob([json], { type: 'application/json' }));
             if (notaFiscal) {
-                form.append("file", notaFiscal)
+                form.append("file", notaFiscal);
             }
             const response = await post('http://localhost:8080/cadastrar/ativos', form, { headers: { "Content-Type": "multipart/form-data" } });
-
-            console.log(response.data);
 
             Swal.fire({
                 title: 'Ativo cadastrado!',
                 text: `O ativo ${nome} foi cadastrado com sucesso!`,
                 icon: 'success',
                 confirmButtonText: 'OK!'
-            })
+            });
 
             setNomeAtivo('');
             setDescricao('');
@@ -119,7 +131,6 @@ export default function CadastroAtivos() {
             setUsuarioSelecionado(null);
             setDataAquisicao('');
             setDataExpiracao('');
-
         } catch (error) {
             console.error('Erro ao cadastrar o ativo:', error);
 
@@ -189,13 +200,13 @@ export default function CadastroAtivos() {
                         Data de expiração:
                         <input type="date" name="Data de expiração" value={dataExpiracao} onChange={e => setDataExpiracao(e.target.value)} />
                     </label>
+                    {dataError && <p style={{ color: 'red' }}>{dataError}</p>}
                     <input type="submit" value="Cadastrar ativo" />
                     <br />
                 </form>
             </div>
 
             <Footer />
-
         </div>
     );
 }
