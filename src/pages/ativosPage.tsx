@@ -8,7 +8,8 @@ import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import Ativo from "../components/ativo";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, ToastContainer } from "react-bootstrap";
+import Notificacao from "../components/notificacao";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([]);
@@ -140,6 +141,7 @@ export default function AtivosPage() {
             </span>
         </div>
     );
+
     return (
         <div>
             <Navbar local="ativos" />
@@ -312,6 +314,11 @@ export default function AtivosPage() {
                     </div>
                 </Modal.Body>
             </Modal>
+            <ToastContainer className={styles.notificacoes}>
+                <Notificacao titulo="Pedro augusto" texto="Esse é o texto do pedro augusto" />
+                <Notificacao titulo="Rafael nihil" texto="Rafael melo" />
+                <Notificacao titulo="Ativo perto de expiração" texto="O ativo com id está perto de expirar!"  />
+            </ToastContainer>
         </div>
     );
 }

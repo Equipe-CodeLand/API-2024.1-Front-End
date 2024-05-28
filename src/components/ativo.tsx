@@ -18,7 +18,7 @@ export default function Ativo(props: IAtivo) {
         } else {
             setAtivoExpirado(false)
         }
-    }, [])
+    }, [props.dataExpiracao])
 
     const handleClose = () => {
         setState((prevState) => ({
