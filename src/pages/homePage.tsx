@@ -50,6 +50,7 @@ export default function HomePage() {
           </div>
           { getCargo() === "Administrador" ? <> 
           <div className={styles.texto}>
+            <br/>
             <h2 className={styles.tituloHome}> Dashboard e relatórios </h2>
             <Dashboard/>
           </div>
