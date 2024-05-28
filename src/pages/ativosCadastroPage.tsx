@@ -32,7 +32,7 @@ export default function CadastroAtivos() {
     ];
 
     useEffect(() => {
-        get('http://localhost:8080/usuario/listar')
+        get('http://localhost:8080/usuario/listar/ativados')
             .then(response => {
                 const usuarios = response.data.map((usuario: any) => ({
                     value: usuario,
