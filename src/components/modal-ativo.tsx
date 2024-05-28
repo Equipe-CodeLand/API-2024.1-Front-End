@@ -124,7 +124,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-        if ((dataExpiracao) < (dataAquisicao)) {
+        if (new Date(dataExpiracaoEdit.split('/').reverse().join('-')) < new Date(dataAquisicao.split('/').reverse().join('-'))) {
             Swal.fire({
                 icon: 'error',
                 title: 'Erro de data',
