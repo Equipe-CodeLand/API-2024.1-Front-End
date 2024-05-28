@@ -114,3 +114,35 @@
         margin-right: 10px;
     }
 }
+
+.ativoExpirado {
+    border: 2px solid #ddd;
+    border-bottom: 3px solid #ddd;
+    color: #ddd !important;
+}
+
+.ativoExpirado .id {
+    color: rgba(32, 32, 32, 0.7);
+}
+
+.ativoExpirado .nome {
+    color: rgba(32, 32, 32, 0.7);
+}
+
+.ativoExpirado .disponibilidade {
+    color: rgba(32, 32, 32, 0.7);
+}
+
+.ativoExpirado .verde {
+    
+    background-color: rgba(0, 255, 0, 0.5);
+    border: 1.5px solid rgb(0, 225, 0. 0.5);
+}
+
+.faltam3diasParaExpiracao {
+    background-color: blue;
+}
+
+.faltam15diasParaExpiracao {
+    background-color: green;
+}

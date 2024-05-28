@@ -32,7 +32,6 @@ export default function AtivosPage() {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
             const response = await get(rota);
-            console.log('API response:', response.data); // Adicionado log para debug
             setData(response.data);
             setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
             setLoading(false);
@@ -92,8 +91,6 @@ export default function AtivosPage() {
         if (statusFilters.length > 0) {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
         }
-
-        console.log('Filtered data:', filtered); // Adicionado log para debug
         setFilteredData(filtered);
         setIsModalOpen(false);
     };
