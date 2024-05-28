@@ -17,6 +17,7 @@ export default function ManutencaoCadastroPage() {
     const [data_inicio, setData_inicio] = useState('');
     const [data_final, setData_final] = useState('');
     const [localizacao, setLocalizacao] = useState('');
+    const [dataError, setDataError] = useState('');
     const { get, post } = useAxios()
 
     useEffect(() => {
@@ -53,12 +54,31 @@ export default function ManutencaoCadastroPage() {
         return `${parts[2]}-${parts[1]}-${parts[0]}`; // Formato "yyyy-MM-dd"
     };
 
+    useEffect(() => {
+        if (data_inicio && data_final) {
+            if (new Date(data_final) < new Date(data_inicio)) {
+                setDataError('A data de expiração não pode ser antes da data de aquisição.');
+            } else {
+                setDataError('');
+            }
+        }
+    }, [data_inicio, data_final]);
+
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
         // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
         const formattedDataInicio = formatDateForBackend(data_inicio);
         const formattedDataFinal = formatDateForBackend(data_final);
+
+        // Validação das datas
+        if (new Date(data_final) < new Date(data_inicio)) {
+            setDataError('A data de expiração não pode ser antes da data de aquisição.');
+            return;
+        } else {
+            setDataError('');
+        }
 
         if (!ativoSelecionado || !responsavel || !data_inicio || !data_final || !localizacao) {
             Swal.fire({
@@ -139,7 +159,7 @@ export default function ManutencaoCadastroPage() {
                                 <span className="input_required">Localização:</span>
                                 <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
                             </label>
-
+                            {dataError && <p style={{ color: 'red' }}>{dataError}</p>}
                             <input type="submit" value="Cadastrar Manutenção" />
                             <br />
                         </>
