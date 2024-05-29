@@ -83,15 +83,15 @@ export default function ManutencaoCadastroPage() {
                     text: `A Manutenção foi cadastrada com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
-                })
+                }).then(() => {
+                    window.location.href = '/manutencao';
+                });
 
                 setAtivos([]);
                 setResponsavel('');
                 setData_inicio('');
                 setData_final('');
                 setLocalizacao('');
-
-                window.location.href = '/manutencao';
             })
             .catch(() => {
                 Swal.fire({
@@ -101,8 +101,8 @@ export default function ManutencaoCadastroPage() {
                     confirmButtonText: 'OK!'
                 }).then(() => {
                     window.location.href = '/manutencao';
-                  });
-            })
+                });
+            });
     };
 
     return (

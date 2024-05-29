@@ -15,10 +15,10 @@ form {
 
 label {
     margin-bottom: 10px;
-    width: 80%; /* Ajusta a largura do label e, consequentemente, dos campos de entrada */
+    width: 80%; 
 }
 
-input[type="text"], input[type="email"], textarea, input[type="date"] {
+input[type="text"], input[type="email"], textarea, input[type="date"], .senha, select{
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -28,7 +28,7 @@ input[type="text"], input[type="email"], textarea, input[type="date"] {
 
 input[type="file"] {
     width: 100%;
-    padding: 5px 0px;
+    padding: 10px 0px;
 }
 
 .date-inputs {
@@ -36,7 +36,7 @@ input[type="file"] {
     justify-content: space-between;
 }
 
-input[type="submit"] {
+input[type="submit"], button[type="submit"] {
     margin-top: 15px;
     padding: 10px;
     border: none;
@@ -46,13 +46,18 @@ input[type="submit"] {
     border-radius: 20px; 
 }
 
-input[type="submit"]:hover {
+input[type="submit"], button[type="submit"]:hover {
     background-color: #45a049;
 }
 
 input[list="ativos"] {
     border-radius: 20px;
     padding: 10px;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
 }
 
 h1 {
