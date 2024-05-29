@@ -98,6 +98,41 @@
     margin-right: 10px;
 }
 
+hr{
+    margin: 0px !important;
+}
+
+.status {
+    padding: 10px 5px;
+    margin-top: 5%;
+}
+
+.status h4, .cargoCheck h4{
+    margin-top: 0px !important;
+    margin-bottom: 10%;
+}
+
+.status ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1.1em;
+}
+
+.status ul li {
+    display: flex;
+    align-items: center;
+}
+
+.status ul li input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
 /* -------------------- */
 
 .conteudo {

@@ -31,9 +31,9 @@ export default function AtivosPage() {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
             const response = await get(rota);
-            console.log('API response:', response.data); // Adicionado log para debug
+            console.log('API response:', response.data); 
             setData(response.data);
-            setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
+            setFilteredData(response.data); 
             setLoading(false);
         } catch (error) {
             setError(error);

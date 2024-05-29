@@ -32,10 +32,11 @@ export default function Usuario(props: IUsuario) {
                     <ModalUsuario usuario={state.usuarioSelecionado} handleClose={handleClose} 
                     buscarUsuarios={props.buscarUsuarios} />
                 )}
-                <div className={styles.usuario} onClick={() => handleShow(props)}>
+                <div className={props.estaAtivo ? styles.usuario : styles.estaInativo} onClick={() => handleShow(props)}>
                     <div className={styles.id}>ID: {props.id}</div>
                     <div className={styles.nome}>{props.nome}</div>
                     <div className={styles.cargo}>{props.cargo}</div>
+                    <div className={styles.estaAtivo}>{props.estaAtivo ? 'Ativo' : 'Inativo'}</div>
                 </div>
             </>
         )

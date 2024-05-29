@@ -196,8 +196,9 @@ export default function UsuariosPage() {
                                 />
                             )}
                         <hr />
-                        <div className={styles.cargoCheck}>
-                            <h4>Cargo:</h4>
+                        <div>
+                            <div className={styles.cargoCheck}>
+                                <h4>Cargo:</h4>
                                 <ul>
                                     <li>
                                         <input
@@ -215,6 +216,11 @@ export default function UsuariosPage() {
                                         />
                                         Funcionário
                                     </li>
+                                </ul>
+                            </div>
+                            <div className={styles.status}>
+                                <h4>Status:</h4>
+                                <ul>
                                     <li>
                                         <input
                                             type="checkbox"
@@ -232,6 +238,7 @@ export default function UsuariosPage() {
                                         Inativo
                                     </li>
                                 </ul>
+                            </div>
                         </div>
                     </div>
 
