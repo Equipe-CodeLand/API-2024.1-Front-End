@@ -407,7 +407,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <div>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
-                                    <input type="file" onChange={handleFileChange} />
+                                    <input type="file" onChange={handleFileChange} required accept="application/pdf, application/xml" />
                                 )}
                             </div>
                         ) : (
