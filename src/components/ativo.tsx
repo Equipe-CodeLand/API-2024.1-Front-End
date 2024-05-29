@@ -4,21 +4,13 @@ import styles from '../styles/ativo.module.css'
 import ModalAtivo from './modal-ativo'
 
 export default function Ativo(props: IAtivo) {
-    const [ativoExpirado, setAtivoExpirado] = useState<boolean>(false)
+    const [ativoExpirado] = useState<boolean>(props.expirado)
     const faltam3diasParaExpiracao: boolean = false
     const faltam15diasParaExpiracao: boolean = false
     const [state, setState] = useState({
         show: false,
         ativoSelecionado: null as IAtivo | null
     })
-
-    useEffect(() => {
-        if (new Date(props.dataExpiracao) < new Date()) {
-            setAtivoExpirado(true)
-        } else {
-            setAtivoExpirado(false)
-        }
-    }, [props.dataExpiracao])
 
     const handleClose = () => {
         setState((prevState) => ({

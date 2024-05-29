@@ -27,7 +27,9 @@ export default function Notificacao(props: notificacaoProps) {
                 <strong className="me-auto">
                     {titulo}
                 </strong>
-                <small>{minutos} {minutos === 1 ? "minuto" : "minutos"} atrás</small>
+                <small>{
+                    minutos === 0 ? `Agora mesmo` : `${minutos} ${minutos === 1 ? "minuto" : "minutos"} atrás`
+                }</small>
             </Toast.Header>
             <Toast.Body>
                 {texto}

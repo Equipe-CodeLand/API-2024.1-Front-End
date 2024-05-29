@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
-import { IAtivo } from "../interfaces/ativo";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import Ativo from "../components/ativo";
 import { Button, Modal, ToastContainer } from "react-bootstrap";
 import Notificacao from "../components/notificacao";
+import { notificacaoProps } from "../types/notificacaoProps.type";
 
 export default function AtivosPage() {
+    const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false)
     const [data, setData] = useState<Array<AtivoType>>([]);
     const [filteredData, setFilteredData] = useState<Array<AtivoType>>([]);
     const [manutencoes, setManutencoes] = useState<Array<any>>([]);
@@ -28,6 +29,7 @@ export default function AtivosPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
     const isFuncionario = getCargo() === "Funcionário";
+    const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([])
 
     const ativos = async () => {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
@@ -42,12 +44,28 @@ export default function AtivosPage() {
         }
     };
 
+    const verificarAtivoExpirado = () => {
+        const listaDeNotificacoes: notificacaoProps[] = []
+        filteredData.forEach(ativo => {
+            if (ativo.dataExpiracao !== null) {
+                if (new Date(ativo.dataExpiracao) <= new Date()) {
+                    let notificacao = {
+                        titulo: "Ativo Expirado",
+                        texto: `O usuário com ID ${ativo.id} está inativo!`
+                    }
+                    listaDeNotificacoes.push(notificacao)
+                }
+            }
+        })
+        setNotificacoes(listaDeNotificacoes)
+    }
+
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 700);
         };
-
         window.addEventListener("resize", handleResize);
+
         ativos();
         chamarManutencoes();
 
@@ -111,27 +129,42 @@ export default function AtivosPage() {
         </div>
     ) : filteredData.length > 0 ? (
         <div className={styles.listarAtivo}>
-            {filteredData.map((ativo) => (
-                <Ativo
-                    key={ativo.id}
-                    id={ativo.id}
-                    nome={ativo.nome}
-                    notaFiscal={ativo.notaFiscal}
-                    descricao={ativo.descricao}
-                    marca={ativo.marca}
-                    modelo={ativo.modelo}
-                    preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
-                    usuario={ativo.usuario}
-                    setor={ativo.setor}
-                    status={ativo.status}
-                    dataAquisicao={ativo.dataAquisicao}
-                    dataExpiracao={ativo.dataExpiracao}
-                    manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
-                    buscarAtivos={ativos}
-                    codigo_nota_fiscal={ativo.codigo_nota_fiscal}
-                    isEditable={!isFuncionario}
-                />
-            ))}
+            {filteredData.map((ativo) => {
+                let expirado = false
+                
+                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date()) {
+                    expirado = true
+                }
+
+                if (!notificaoMostrada) {
+                    setNotificacaoMostrada(true)
+                    verificarAtivoExpirado()
+                }
+
+                return (
+                    <Ativo
+                        key={ativo.id}
+                        id={ativo.id}
+                        nome={ativo.nome}
+                        notaFiscal={ativo.notaFiscal}
+                        descricao={ativo.descricao}
+                        marca={ativo.marca}
+                        modelo={ativo.modelo}
+                        preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                        usuario={ativo.usuario}
+                        setor={ativo.setor}
+                        status={ativo.status}
+                        dataAquisicao={ativo.dataAquisicao}
+                        dataExpiracao={ativo.dataExpiracao}
+                        manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
+                        buscarAtivos={ativos}
+                        codigo_nota_fiscal={ativo.codigo_nota_fiscal}
+                        isEditable={!isFuncionario}
+                        expirado={expirado}
+                    />
+                )
+            }
+            )}
         </div>
     ) : (
         <div className={styles.listarAtivo}>
@@ -218,7 +251,7 @@ export default function AtivosPage() {
                             </div>
                         </div>
                         <div className={styles.filtrar}>
-                            <button onClick={limparFiltros}>Limpar</button>
+                            <button onClick={verificarAtivoExpirado}>Limpar</button>
                             <button onClick={filtrar}>Aplicar</button>
                         </div>
                     </div>
@@ -315,9 +348,13 @@ export default function AtivosPage() {
                 </Modal.Body>
             </Modal>
             <ToastContainer className={styles.notificacoes}>
-                <Notificacao titulo="Pedro augusto" texto="Esse é o texto do pedro augusto" />
-                <Notificacao titulo="Rafael nihil" texto="Rafael melo" />
-                <Notificacao titulo="Ativo perto de expiração" texto="O ativo com id está perto de expirar!"  />
+                {notificacoes.map((notificacao, index) => {
+                    return <Notificacao
+                        key={index}
+                        titulo={notificacao.titulo}
+                        texto={notificacao.texto}
+                    />
+                })}
             </ToastContainer>
         </div>
     );
