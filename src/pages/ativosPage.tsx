@@ -50,8 +50,17 @@ export default function AtivosPage() {
             if (ativo.dataExpiracao !== null) {
                 if (new Date(ativo.dataExpiracao) <= new Date()) {
                     let notificacao = {
-                        titulo: "Ativo Expirado",
-                        texto: `O usuário com ID ${ativo.id} está inativo!`
+                        titulo: `Ativo Expirado - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} está expirado!`,
+                        repetirNotificacao: false
+                    }
+                    listaDeNotificacoes.push(notificacao)
+                } else if (new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 15))) {
+                    let diasFaltantesParaExpirar = Math.ceil((new Date(ativo.dataExpiracao).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                    let notificacao = {
+                        titulo: `Ativo Expirando - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} expirará em ${diasFaltantesParaExpirar} dias!`,
+                        repetirNotificacao: true
                     }
                     listaDeNotificacoes.push(notificacao)
                 }
@@ -91,6 +100,8 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); // Reseta filteredData com todos os dados
+        
+        localStorage.clear()
     };
 
     const filtrar = () => {
@@ -131,9 +142,17 @@ export default function AtivosPage() {
         <div className={styles.listarAtivo}>
             {filteredData.map((ativo) => {
                 let expirado = false
-                
+                let expiracaoEm3dias = false
+                let expiracaoEm15dias = false
+
                 if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date()) {
                     expirado = true
+                }
+                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 3))) {
+                    expiracaoEm3dias = true
+                }
+                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 15))) {
+                    expiracaoEm15dias = true
                 }
 
                 if (!notificaoMostrada) {
@@ -251,7 +270,7 @@ export default function AtivosPage() {
                             </div>
                         </div>
                         <div className={styles.filtrar}>
-                            <button onClick={verificarAtivoExpirado}>Limpar</button>
+                            <button onClick={limparFiltros}>Limpar</button>
                             <button onClick={filtrar}>Aplicar</button>
                         </div>
                     </div>
@@ -350,9 +369,11 @@ export default function AtivosPage() {
             <ToastContainer className={styles.notificacoes}>
                 {notificacoes.map((notificacao, index) => {
                     return <Notificacao
+                        id={index.toString()}
                         key={index}
                         titulo={notificacao.titulo}
                         texto={notificacao.texto}
+                        repetirNotificacao={notificacao.repetirNotificacao}
                     />
                 })}
             </ToastContainer>
