@@ -82,37 +82,42 @@ const UsuariosCadastroPage: React.FC = () => {
     <div>
       <Navbar local="usuarios" />
       <div className={styles['form-container']}>
+        <br />
         <h1>Cadastro de Usuário</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>
             <span className='input_required'>Nome:</span>
+            <br />
             <input placeholder= "Nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
           <label>
             <span className="input_required">CPF:</span>
+            <br />
             <input placeholder= "CPF" type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
           </label>
           <label>
             <span className="input_required">E-mail:</span>
+            <br />
             <input placeholder= "E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <label>
             <span className='input_required'>Cargo:</span>
             <br />
             <select value={cargo} onChange={(e) => setCargo(e.target.value)} >
-              <option value="">Selecione o cargo</option>
+              <option value="">Selecionar cargo</option>
               {cargos.map((cargo, index) => (
-                <option key={index} value={cargo.value.id}>{cargo.label} </option>
+                <option key={index} value={cargo.value.id}>{cargo.label}</option>
               ))}
             </select>
           </label>
           <label>
             <span className='input_required'>Senha:</span>
+            <br />
             <input placeholder= "Senha" className={styles.senha} type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
           </label>
-          <br />
-          <input type="submit" value="Cadastrar Manutenção" />
+          <input type="submit" value="Cadastrar Usuário" />
           {error && <p className={styles.error}>{error}</p>}
+          <br />
         </form>
       </div>
       <Footer />
