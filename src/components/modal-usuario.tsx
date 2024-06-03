@@ -6,8 +6,10 @@ import { useAxios } from "../hooks/useAxios";
 import Swal from 'sweetalert2';
 import Select from 'react-select';
 import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
+import { useAuth } from "../hooks/useAuth";
 
 export default function ModalUsuario(props: IModalUsuario) {
+    const { usuario, logout } = useAuth(); 
     const [nome, setNome] = useState(props.usuario.nome);
     const [cpf, setCpf] = useState(props.usuario.cpf);
     const [email, setEmail] = useState(props.usuario.email);
@@ -15,6 +17,7 @@ export default function ModalUsuario(props: IModalUsuario) {
     const [ativos, setAtivos] = useState(props.usuario.ativos);
     const [isEditing, setIsEditing] = useState(false);
     const { put, deletar } = useAxios();
+    const cpfAntigo = props.usuario.cpf;
 
     const handleChangeNome = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNome(event.target.value);
@@ -71,17 +74,20 @@ export default function ModalUsuario(props: IModalUsuario) {
         };
 
         put(`/usuario/atualizar/usuario/${props.usuario.id}`, usuarioAtualizado)
-            .then(response => {
+            .then(() => {
                 Swal.fire({
                     title: 'Usuário Atualizado!',
                     text: `O usuário foi atualizado com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
+                }).then(() => {
+                    if (cpfAntigo === usuario?.cpf) {
+                        logout()
+                    } else {
+                        props.handleClose();
+                        props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
+                    }
                 });
-                console.log('Dados atualizados com sucesso:', response.data);
-                console.log(usuarioAtualizado);
-                props.handleClose();
-                props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
             })
             .catch(error => {
                 console.error('Erro ao atualizar os dados:', error);
@@ -114,7 +120,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                         {isEditing ? <input type="text" value={email} onChange={handleChangeEmail} /> : email}
                     </div>
                     <div className={styles.informacoes}>
-                        {isEditing && ( // Renderizar o dropdown apenas se estiver editando
+                        {(isEditing && usuario?.cpf !== cpfAntigo) && ( // Renderizar o dropdown apenas se estiver editando
                             <label>
                                 <strong>Cargo: </strong>
                                 <Select
@@ -129,7 +135,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                                 />
                             </label>
                         )}
-                        {!isEditing && ( // Se não estiver editando, mostrar apenas o cargo
+                        {(!isEditing || usuario?.cpf === cpfAntigo) && ( // Se não estiver editando, mostrar apenas o cargo
                             <div>
                                 <strong>Cargo: </strong>
                                 {cargo}
@@ -153,13 +159,13 @@ export default function ModalUsuario(props: IModalUsuario) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.botoes}>
-                        {
+                        { usuario?.cpf !== cpfAntigo && (
                             props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
                                 <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
-                        }
+                        )}                        
                         {/* Botão de salvar e fechar */}
                         {isEditing && (
-                            <button onClick={handleSave}>SALVAR</button>
+                            <button onClick={handleSave} className={styles.salvar}>SALVAR</button>
                         )}
                     </div>
                 </Modal.Footer>
