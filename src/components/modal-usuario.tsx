@@ -16,6 +16,23 @@ export default function ModalUsuario(props: IModalUsuario) {
     const [isEditing, setIsEditing] = useState(false);
     const { put, deletar } = useAxios();
 
+    const [errors, setErrors] = useState({
+        nome: '',
+        cpf: '',
+        email: ''
+    });
+
+    const validateFields = () => {
+        const newErrors: any = {};
+        if (!nome) newErrors.nome = "Preencha o campo obrigatório acima";
+        if (!cpf) newErrors.cpf = "Preencha o campo obrigatório acima";
+        if (!email) newErrors.email = "Preencha o campo obrigatório acima";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+
     const handleChangeNome = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNome(event.target.value);
     };
@@ -54,6 +71,7 @@ export default function ModalUsuario(props: IModalUsuario) {
     }
 
     const handleSave = () => {
+        if (!validateFields()) return;
 
         let cargoUsuario;
 
@@ -100,6 +118,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                     {/* Campos editáveis */}
                     <div className={styles.titulo}>
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
+                        {errors.nome && <span className={styles.error}>{errors.nome}</span>}
                         <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
                     </div>
                     <div className={styles.informacoes}><strong>Status: </strong>{
@@ -108,10 +127,12 @@ export default function ModalUsuario(props: IModalUsuario) {
                     <div className={styles.informacoes}>
                         <strong>CPF: </strong>
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
+                        {errors.cpf && <span className={styles.error}>{errors.cpf}</span>}
                     </div>
                     <div className={styles.informacoes}>
                         <strong>Email: </strong>
                         {isEditing ? <input type="text" value={email} onChange={handleChangeEmail} /> : email}
+                        {errors.email && <span className={styles.error}>{errors.email}</span>}
                     </div>
                     <div className={styles.informacoes}>
                         {isEditing && ( // Renderizar o dropdown apenas se estiver editando
