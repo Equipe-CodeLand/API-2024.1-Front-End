@@ -31,6 +31,66 @@ export default function AtivosPage() {
     const isFuncionario = getCargo() === "Funcionário";
     const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([])
 
+    const verificarExpiracao = (ativo: AtivoType): number => {
+        if (ativo.dataExpiracao === null) return 1
+
+        console.log(`\n${ativo.nome}`)
+        let ativoDia = new Date(ativo.dataExpiracao).getDate()
+        let ativoMes = new Date(ativo.dataExpiracao).getMonth() + 1
+        let ativoAno = new Date(ativo.dataExpiracao).getFullYear()
+        let ativoTotal = ativoDia + "/" + ativoMes + "/" + ativoAno
+        let dataAtualDia = new Date().getDate()
+        let dataAtualMes = new Date().getMonth() + 1
+        let dataAtualAno = new Date().getFullYear()
+        let dataAtualTotal = dataAtualDia + "/" + dataAtualMes + "/" + dataAtualAno
+        if (ativoTotal === dataAtualTotal) return 2
+
+        let data15diasAtras = new Date(new Date().setDate(new Date().getDate() + 15))
+        if (new Date(ativo.dataExpiracao) <= data15diasAtras && new Date(ativo.dataExpiracao) >= new Date()) return 3
+
+        return 0
+    }
+
+    const mostrarNotificacoes = () => {
+        const listaDeNotificacoes: notificacaoProps[] = []
+        filteredData.forEach(ativo => {
+            let notificacao: notificacaoProps | undefined = undefined
+            switch (verificarExpiracao(ativo)) {
+                case 1: // data expiração esta nulo
+                    break
+                case 2: // data de expiração menor que a data atual
+                    notificacao = {
+                        titulo: `Ativo Expirado - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} está expirado!`,
+                        repetirNotificacao: false
+                    }
+                    break
+                case 3: // data de expiração menor que 15 dias
+                    let diasFaltantesParaExpirar = Math.ceil((new Date(ativo.dataExpiracao).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                    notificacao = {
+                        titulo: `Ativo Expirando - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} vai expirar em ${diasFaltantesParaExpirar} dias!`,
+                        repetirNotificacao: true
+                    }
+                    break
+                case 0:
+                    console.log("sem notificacao")
+                    break
+                default:
+                    break
+            }
+            if (notificacao !== undefined) listaDeNotificacoes.push(notificacao)
+        })
+        setNotificacoes(listaDeNotificacoes)
+    }
+
+    useEffect(() => {
+        if (filteredData.length > 0 && !notificaoMostrada) {
+            mostrarNotificacoes()
+            setNotificacaoMostrada(true)
+        }
+    })
+
     const ativos = async () => {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
@@ -43,31 +103,6 @@ export default function AtivosPage() {
             setLoading(false);
         }
     };
-
-    const verificarAtivoExpirado = () => {
-        const listaDeNotificacoes: notificacaoProps[] = []
-        filteredData.forEach(ativo => {
-            if (ativo.dataExpiracao !== null) {
-                if (new Date(ativo.dataExpiracao) <= new Date()) {
-                    let notificacao = {
-                        titulo: `Ativo Expirado - #${ativo.id}`,
-                        texto: `O ativo ${ativo.nome} está expirado!`,
-                        repetirNotificacao: false
-                    }
-                    listaDeNotificacoes.push(notificacao)
-                } else if (new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 15))) {
-                    let diasFaltantesParaExpirar = Math.ceil((new Date(ativo.dataExpiracao).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-                    let notificacao = {
-                        titulo: `Ativo Expirando - #${ativo.id}`,
-                        texto: `O ativo ${ativo.nome} expirará em ${diasFaltantesParaExpirar} dias!`,
-                        repetirNotificacao: true
-                    }
-                    listaDeNotificacoes.push(notificacao)
-                }
-            }
-        })
-        setNotificacoes(listaDeNotificacoes)
-    }
 
     useEffect(() => {
         const handleResize = () => {
@@ -100,7 +135,7 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); // Reseta filteredData com todos os dados
-        
+
         localStorage.clear()
     };
 
@@ -142,24 +177,9 @@ export default function AtivosPage() {
         <div className={styles.listarAtivo}>
             {filteredData.map((ativo) => {
                 let expirado = false
-                let expiracaoEm3dias = false
-                let expiracaoEm15dias = false
-
-                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date()) {
+                if (ativo.dataExpiracao !== null && new Date(ativo.dataExpiracao) <= new Date()) {
                     expirado = true
                 }
-                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 3))) {
-                    expiracaoEm3dias = true
-                }
-                if (ativo.dataExpiracao != null && new Date(ativo.dataExpiracao) <= new Date(new Date().setDate(new Date().getDate() + 15))) {
-                    expiracaoEm15dias = true
-                }
-
-                if (!notificaoMostrada) {
-                    setNotificacaoMostrada(true)
-                    verificarAtivoExpirado()
-                }
-
                 return (
                     <Ativo
                         key={ativo.id}
