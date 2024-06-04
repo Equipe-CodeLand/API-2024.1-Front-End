@@ -6,6 +6,7 @@ import styles from "../styles/usuariosPage.module.css"
 import { useAxios } from "../hooks/useAxios"
 import { Link } from "react-router-dom"
 import { Modal } from "react-bootstrap"
+import { useAuth } from "../hooks/useAuth"
 
 
 export default function UsuariosPage() {
@@ -14,11 +15,31 @@ export default function UsuariosPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | unknown>(null)
     const [ativos, setAtivos] = useState<Array<any>>([])
+    const [filtro, setFiltro] = useState("");
     const [id, setId] = useState("")
     const [nome, setNome] = useState("")
+    const [isAdministrador, setIsAdministrador] = useState(false);
+    const [isFuncionario, setIsFuncionario] = useState(false);
+    const [isInativo, setIsInativo] = useState(false);
+    const [isAtivo, setIsAtivo] = useState(false);
     const [tipoUsuario, setTipoUsuario] = useState("")
-    const { get } = useAxios()
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { get } = useAxios()
+    const { getCargo, getSub } = useAuth();
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 700);
+        };
+
+        window.addEventListener("resize", handleResize);
+        usuarios();
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     const chamarAtivos = async () => {
         get("/listar/ativos")
@@ -55,8 +76,22 @@ export default function UsuariosPage() {
             )
         }
 
-        if (tipoUsuario !== "") {
-            usuarios = usuarios.filter((usuario) => usuario.cargo.id == tipoUsuario)
+        if (isAdministrador || isFuncionario) {
+            const cargoFilters: number[] = [];
+            if (isAdministrador) cargoFilters.push(1);
+            if (isFuncionario) cargoFilters.push(2);
+    
+            usuarios = usuarios.filter((usuario) => cargoFilters.includes(usuario.cargo.id));
+        }
+    
+        if (isInativo || isAtivo) {
+            const statusFilters: number[] = [];
+            if (isInativo) statusFilters.push(0);
+            if (isAtivo) statusFilters.push(1);
+    
+            usuarios = usuarios.filter((usuario) => 
+                (isAtivo && usuario.estaAtivo) || (isInativo && !usuario.estaAtivo)
+            );
         }
 
         setUsuariosFiltrados(usuarios)
@@ -67,6 +102,11 @@ export default function UsuariosPage() {
         setId("")
         setNome("")
         setTipoUsuario("")
+        setFiltro("")
+        setIsAdministrador(false)
+        setIsFuncionario(false)
+        setIsInativo(false)
+        setIsAtivo(false)
         setIsModalOpen(false)
     }
 
@@ -130,28 +170,78 @@ export default function UsuariosPage() {
                 <div className={styles.filtro}>
                     <h2>Filtro</h2>
                     <div className={styles.inputs}>
-                        <input
-                            type="text"
-                            placeholder="ID"
-                            onChange={(e) => setId(e.target.value)}
-                            value={id}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Nome"
-                            onChange={(e) => setNome(e.target.value)}
-                            value={nome}
-                        />
+                            <select
+                                id="filtrarPor"
+                                className={styles.filtrarPor}
+                                onChange={(e) => setFiltro(e.target.value)}
+                            >
+                                <option value="">Filtrar por</option>
+                                <option value="ID">ID</option>
+                                <option value="Nome">Nome</option>
+                            </select>
+                            {filtro === "ID" && (
+                                <input
+                                    type="number"
+                                    placeholder="ID"
+                                    value={id}
+                                    onChange={(e) => setId(e.target.value)}
+                                />
+                            )}
+                            {filtro === "Nome" && (
+                                <input
+                                    type="text"
+                                    placeholder="Nome"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                />
+                            )}
                         <hr />
-                        <select
-                            onChange={(e) => setTipoUsuario(e.target.value)}
-                            value={tipoUsuario}
-                        >
-                            <option value="">Filtrar por</option>
-                            <option value="1">Administrador</option>
-                            <option value="2">Funcionário</option>
-                        </select>
+                        <div>
+                            <div className={styles.cargoCheck}>
+                                <h4>Cargo:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isAdministrador}
+                                            onChange={(e) => setIsAdministrador(e.target.checked)}
+                                        />
+                                        Administrador
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isFuncionario}
+                                            onChange={(e) => setIsFuncionario(e.target.checked)}
+                                        />
+                                        Funcionário
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className={styles.status}>
+                                <h4>Status:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isAtivo}
+                                            onChange={(e) => setIsAtivo(e.target.checked)}
+                                        />
+                                        Ativo
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isInativo}
+                                            onChange={(e) => setIsInativo(e.target.checked)}
+                                        />
+                                        Inativo
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
                     <div className={styles.filtrar}>
                         <button onClick={() => {
                             setUsuariosFiltrados(data)
@@ -190,26 +280,69 @@ export default function UsuariosPage() {
                 </Modal.Header>
                 <Modal.Body>
                     <div className={styles.inputs}>
-                        <input
-                            type="text"
-                            placeholder="ID"
-                            onChange={(e) => setId(e.target.value)}
-                            value={id}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Nome"
-                            onChange={(e) => setNome(e.target.value)}
-                            value={nome}
-                        />
-                        <select
-                            onChange={(e) => setTipoUsuario(e.target.value)}
-                            value={tipoUsuario}
-                        >
-                            <option value="">Filtrar por</option>
-                            <option value="1">Administrador</option>
-                            <option value="2">Funcionário</option>
-                        </select>
+                            <select
+                                id="filtrarPor"
+                                className={styles.filtrarPor}
+                                onChange={(e) => setFiltro(e.target.value)}
+                            >
+                                <option value="">Filtrar por</option>
+                                <option value="ID">ID</option>
+                                <option value="Nome">Nome</option>
+                            </select>
+                            {filtro === "ID" && (
+                                <input
+                                    type="number"
+                                    placeholder="ID"
+                                    value={id}
+                                    onChange={(e) => setId(e.target.value)}
+                                />
+                            )}
+                            {filtro === "Nome" && (
+                                <input
+                                    type="text"
+                                    placeholder="Nome"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                />
+                            )}
+                        <hr />
+                        <div className={styles.cargoCheck}>
+                            <h4>Cargo:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isAdministrador}
+                                            onChange={(e) => setIsAdministrador(e.target.checked)}
+                                        />
+                                        Administrador
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isFuncionario}
+                                            onChange={(e) => setIsFuncionario(e.target.checked)}
+                                        />
+                                        Funcionário
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isAtivo}
+                                            onChange={(e) => setIsAtivo(e.target.checked)}
+                                        />
+                                        Ativo
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={isInativo}
+                                            onChange={(e) => setIsInativo(e.target.checked)}
+                                        />
+                                        Inativo
+                                    </li>
+                                </ul>
+                        </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

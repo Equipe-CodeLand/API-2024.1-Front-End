@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
-import { IAtivo } from "../interfaces/ativo";
+import Ativo from "../components/ativo";
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
-import Ativo from "../components/ativo";
 import { Button, Modal } from "react-bootstrap";
 
 export default function AtivosPage() {
@@ -32,9 +31,9 @@ export default function AtivosPage() {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
             const response = await get(rota);
-            console.log('API response:', response.data); // Adicionado log para debug
+            console.log('API response:', response.data); 
             setData(response.data);
-            setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
+            setFilteredData(response.data); 
             setLoading(false);
         } catch (error) {
             setError(error);
@@ -72,7 +71,7 @@ export default function AtivosPage() {
         setStatusDisponivel(false);
         setStatusEmManutencao(false);
         setStatusOcupado(false);
-        setFilteredData(data); // Reseta filteredData com todos os dados
+        setFilteredData(data); 
     };
 
     const filtrar = () => {
@@ -166,7 +165,7 @@ export default function AtivosPage() {
                                 id="filtrarPor"
                                 className={styles.filtrarPor}
                                 onChange={(e) => setFiltro(e.target.value)}
-                            >
+                                >
                                 <option value="">Filtrar por</option>
                                 <option value="ID">ID</option>
                                 <option value="Nome">Nome</option>
