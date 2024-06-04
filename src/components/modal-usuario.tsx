@@ -81,7 +81,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                     icon: 'success',
                     confirmButtonText: 'OK!'
                 }).then(() => {
-                    if (cpfAntigo === usuario?.cpf) {
+                    if (cpfAntigo === usuario?.cpf && cpf !== cpfAntigo) {
                         logout()
                     } else {
                         props.handleClose();
@@ -90,7 +90,12 @@ export default function ModalUsuario(props: IModalUsuario) {
                 });
             })
             .catch(error => {
-                console.error('Erro ao atualizar os dados:', error);
+                Swal.fire({
+                    title: 'Erro!',
+                    text: `${error.response.data}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
             });
     };
 
