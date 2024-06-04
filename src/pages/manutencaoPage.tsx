@@ -10,6 +10,7 @@ import { Manutencao } from "../types/manutencao.type";
 
 export default function ManutencaoPage() {
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
+  const [filteredManutencoes, setFilteredManutencoes] = useState<Manutencao[]>([]);
   const [error, setError] = useState<Error | unknown>(null);
   const { get, loading, setLoading } = useAxios();
   const [idInput, setIdInput] = useState("");
@@ -19,6 +20,8 @@ export default function ManutencaoPage() {
   const [filtro, setFiltro] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,6 +35,10 @@ export default function ManutencaoPage() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+  }, [manutencoes, currentPage]);
 
   const buscarManutencoes = async () => {
     try {
@@ -116,6 +123,8 @@ export default function ManutencaoPage() {
     return `${ano}-${mes}-${dia}`;
   };
 
+  const totalPages = Math.ceil(manutencoes.length / itemsPerPage);
+
   return (
     <div>
       <Navbar local="manutencao" />
@@ -198,8 +207,8 @@ export default function ManutencaoPage() {
                   <span className={styles.semManutencao}>Carregando manutenções...</span>
                 ) : error ? (
                   <span className={styles.semManutencao}>Erro ao carregar manutenções! :(</span>
-                ) : manutencoes.length > 0 ? (
-                  manutencoes.map((manutencao) => (
+                ) : filteredManutencoes.length > 0 ? (
+                  filteredManutencoes.map((manutencao) => (
                     <ManutencaoComponent
                       id={manutencao.id}
                       nome={manutencao.nome}
@@ -216,6 +225,27 @@ export default function ManutencaoPage() {
                   <span className={styles.semManutencao}>Sem manutenções cadastradas</span>
                 )}
               </div>
+              {filteredManutencoes.length > 0 && (
+                <div className={styles.paginacao}>
+                  <button
+                    className={styles.botaoPaginacao}
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    &lt; Anterior
+                  </button>
+                  <span>
+                    Página {currentPage} de {totalPages}
+                  </span>
+                  <button
+                    className={styles.botaoPaginacao}
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Próxima &gt;
+                  </button>
+                </div>
+              )}
             </main>
           </div>
         </div>
@@ -288,3 +318,4 @@ export default function ManutencaoPage() {
     </div>
   );
 }
+
