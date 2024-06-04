@@ -81,6 +81,7 @@ const UsuariosCadastroPage: React.FC = () => {
   return (
     <div>
       <Navbar local="usuarios" />
+      <main>
       <div className={styles['form-container']}>
         <br />
         <h1>Cadastro de Usuário</h1>
@@ -120,6 +121,7 @@ const UsuariosCadastroPage: React.FC = () => {
           <br />
         </form>
       </div>
+      </main>
       <Footer />
     </div>
   );

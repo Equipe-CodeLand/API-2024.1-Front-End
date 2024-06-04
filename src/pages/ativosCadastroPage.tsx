@@ -138,7 +138,7 @@ export default function CadastroAtivos() {
     return (
         <div>
             <Navbar local="cadastro/ativos" />
-
+            <main>
             <div className={styles['form-container']}>
                 <br />
                 <h1>Cadastro de Ativos</h1>
@@ -232,7 +232,7 @@ export default function CadastroAtivos() {
                     <br />
                 </form>
             </div>
-
+            </main>
             <Footer />
 
         </div>

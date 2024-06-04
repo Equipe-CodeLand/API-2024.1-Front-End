@@ -111,6 +111,7 @@ export default function ManutencaoCadastroPage() {
     return (
         <>
             <Navbar local='manutencaoPage' />
+            <main>
             <div className={styles['form-container']}>
                 <br />
                 <h1>Cadastro de Manutenções</h1>
@@ -162,6 +163,7 @@ export default function ManutencaoCadastroPage() {
                     )}
                 </form>
             </div>
+            </main>
             <Footer />
         </>
     );
