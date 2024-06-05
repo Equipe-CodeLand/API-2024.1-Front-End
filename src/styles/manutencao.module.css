@@ -61,9 +61,15 @@
 }
 
 .manutencaoExpirada {
-    border: 2px solid #ddd;
-    border-bottom: 3px solid #ddd;
-    color: #ddd !important;
+    border: 2px solid #b0a6a6;
+    border-bottom: 3px solid #b0a6a6;
+    font-weight: 800;
+}
+
+.manutencaoExpirada .id,
+.manutencaoExpirada .nome,
+.manutencaoExpirada .datas {
+    color: #666262 !important;
 }
 
 @media screen and (max-width: 600px) {
