@@ -9,12 +9,34 @@
 }
 
   
-  .botoes-modal {
+  .botoesModal {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
+
+  .botoes {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.excluir {
+    background-color: #DB5050;
+    padding: 5px 20px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+}
+
+.editar {
+    background-color: var(--corPrimaria);
+    padding: 10px 20px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+}
   
   .titulo-id {
     display: flex;

@@ -33,9 +33,9 @@ export default function AtivosPage() {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
             const response = await get(rota);
-            console.log('API response:', response.data); // Adicionado log para debug
+            console.log('API response:', response.data); 
             setData(response.data);
-            setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
+            setFilteredData(response.data); 
             setLoading(false);
         } catch (error) {
             setError(error);
@@ -73,8 +73,8 @@ export default function AtivosPage() {
         setStatusDisponivel(false);
         setStatusEmManutencao(false);
         setStatusOcupado(false);
-        setFilteredData(data); // Reseta filteredData com todos os dados
-        setCurrentPage(1); // Reset page to 1 when filters are cleared
+        setFilteredData(data); 
+        setCurrentPage(1); 
     };
 
     const filtrar = () => {
@@ -95,10 +95,10 @@ export default function AtivosPage() {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
         }
 
-        console.log('Filtered data:', filtered); // Adicionado log para debug
+        console.log('Filtered data:', filtered); 
         setFilteredData(filtered);
         setIsModalOpen(false);
-        setCurrentPage(1); // Reset page to 1 when filters are applied
+        setCurrentPage(1);
     };
 
     const indexOfLastItem = currentPage * itemsPerPage;

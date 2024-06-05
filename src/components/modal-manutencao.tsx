@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Select from 'react-select';
 import ButtonMain from './botao';
-import '../styles/modal.css'
+import styles from '../styles/modal.module.css'
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
 import Swal from 'sweetalert2';
 import { useAxios } from '../hooks/useAxios';
+import { useAuth } from '../hooks/useAuth';
 
-// Define o tipo para os ativos
 type AtivoType = { value: number, id: number, label: string };
 
 export default function ModalManutencao(props: IModalManutencao) {
@@ -22,6 +22,7 @@ export default function ModalManutencao(props: IModalManutencao) {
   const [ativos, setAtivos] = useState<AtivoType[]>([]);
   const [ativoSelecionado, setAtivoSelecionado] = useState<AtivoType | null>(null);
   const { get, put, deletar } = useAxios();
+  const { getCargo } = useAuth();
 
   const [errors, setErrors] = useState({
     responsavel: '',
@@ -56,7 +57,6 @@ export default function ModalManutencao(props: IModalManutencao) {
   const handleUpdate = () => {
     if (!validateFields()) return;
 
-    // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
     const formattedDataInicio = formatDateForBackend(dataInicio);
     const formattedDataFinal = formatDateForBackend(dataFinal);
 
@@ -97,7 +97,6 @@ export default function ModalManutencao(props: IModalManutencao) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // formatando a data para enviar para o back-end
   const formatDateForBackend = (dateString: any) => {
     const parts = dateString.split('/');
     return `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -122,6 +121,10 @@ export default function ModalManutencao(props: IModalManutencao) {
       });
   }
 
+  const toggleEditing = () => {
+    setIsEditing(!isEditing);
+  };
+
   return (
     <>
       <Modal show={show} onHide={props.handleClose}>
@@ -140,7 +143,6 @@ export default function ModalManutencao(props: IModalManutencao) {
                   icon={<FaRegEdit style={{ fontSize: 30 }} />}
                   onClick={() => {
                     setIsEditing(!isEditing);
-                    // Definir ativo selecionado quando entrar no modo de edição
                     if (!isEditing) {
                       const ativoInicial = ativos.find((ativo) => ativo.id === props.manutencao.ativos_id);
                       setAtivoSelecionado(ativoInicial || null);
@@ -224,26 +226,16 @@ export default function ModalManutencao(props: IModalManutencao) {
         </Modal.Body>
 
         <Modal.Footer>
-          <div className='botoes-modal'>
-            <div>
-              <ButtonMain
-                title={'Excluir manutenção'}
-                bg='#DB5050'
-                width='180px'
-                height='40px'
-                onClick={handleDelete}
-              />
-            </div>
-            <div className='btn-atualizar-modal'>
-              <ButtonMain
-                title={'Atualizar manutenção'}
-                bg={'var(--corPrimaria)'}
-                width='200px'
-                height='40px'
-                onClick={handleUpdate}
-              />
-            </div>
-          </div>
+          {getCargo() === "Administrador" ?
+            <div className={styles.botoes}>
+                <button className={styles.excluir} onClick={handleDelete}>EXCLUIR ATIVO</button>
+                  {isEditing ? (
+                    <button className={styles.editar} onClick={handleUpdate}>SALVAR ALTERAÇÕES</button>
+                  ) : (
+                    <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
+                  )}
+            </div> : ''
+          }
         </Modal.Footer>
       </Modal>
     </>

@@ -98,8 +98,9 @@ select {
 
 .botoes {
     display: flex;
-    justify-content: space-between;
-    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 20px;
 }
 
 .adicionarUsuario {
@@ -119,13 +120,10 @@ select {
 
 .botao {
     background-color: var(--corPrimaria);
-
     width: 200px;
-
     border: 2px solid var(--corPrimaria);
     border-radius: 10px;
     box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
-
     font-family: var(--inter);
     font-size: 1em;
     font-weight: 400;
@@ -133,9 +131,7 @@ select {
     text-align: center;
     line-height: 50px;
     color: white;
-
     cursor: pointer;
-
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -168,39 +164,6 @@ select {
     text-justify: center;
     line-height: 1.5em;
     color: black;
-}
-
-@media screen and (max-width: 800px) {
-    .conteudo main {
-        padding: 32px;
-    }
-
-    .filtro {
-        display: none;
-    }
-
-    .botaoFiltro {
-        display: block;
-        padding: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .botoes {
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-    }
-
-    .botoes div {
-        width: 50%;
-        font-size: 0.9em;
-    }
-
-    .botoes div .botao {
-        margin: auto;
-    }
 }
 
 .botaoPaginacao {
@@ -249,4 +212,48 @@ select {
 .botaoPaginacao:hover:not(:disabled) {
     background-color: white;
     color: var(--corPrimaria);
+}
+
+@media screen and (max-width: 700px) {
+    .conteudo main {
+        padding: 32px;
+        width: 100%;
+    }
+
+    .filtro {
+        display: none;
+    }
+
+    .botaoFiltro {
+        display: block;
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .botoes{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        padding-right: 0px;
+        font-size: 13px;
+    }
+
+    .botao{
+        height: 55px;
+        font-size: 1.1em;
+        margin-top: 50px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .botoes div {
+        width: 50%;
+        font-size: 0.9em;
+    }
+
+    .botoes div .botao {
+        margin: auto;
+    }
 }
