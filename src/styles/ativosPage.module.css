@@ -19,6 +19,15 @@
     text-align: center;
 }
 
+hr{
+    margin: 0px !important;
+}
+
+.status h4 {
+    margin-top: 0px !important;
+    margin-bottom: 10%;
+}
+
 .inputs {
     height: 600px;
     display: flex;

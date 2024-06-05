@@ -97,7 +97,7 @@ export default function AtivosPage() {
         try {
             const response = await get(rota);
             setData(response.data);
-            setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
+            setFilteredData(response.data); 
             setLoading(false);
         } catch (error) {
             setError(error);
@@ -135,9 +135,7 @@ export default function AtivosPage() {
         setStatusDisponivel(false);
         setStatusEmManutencao(false);
         setStatusOcupado(false);
-        setFilteredData(data); // Reseta filteredData com todos os dados
-
-        localStorage.clear()
+        setFilteredData(data); 
     };
 
     const filtrar = () => {
@@ -238,7 +236,7 @@ export default function AtivosPage() {
                                 id="filtrarPor"
                                 className={styles.filtrarPor}
                                 onChange={(e) => setFiltro(e.target.value)}
-                            >
+                                >
                                 <option value="">Filtrar por</option>
                                 <option value="ID">ID</option>
                                 <option value="Nome">Nome</option>

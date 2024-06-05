@@ -106,6 +106,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
+    
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setPreco_aquisicao(inputValue);
@@ -118,6 +119,15 @@ export default function ModalAtivo(props: IModalAtivo) {
                 icon: 'error',
                 title: 'Campo obrigatório',
                 text: 'Por favor, preencha o campo do funcionário responsável.',
+            });
+            return;
+        }
+
+        if (new Date(dataExpiracaoEdit.split('/').reverse().join('-')) < new Date(dataAquisicao.split('/').reverse().join('-'))) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro de data',
+                text: 'A data de expiração não pode ser anterior à data de aquisição.',
             });
             return;
         }
@@ -396,7 +406,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <div>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
-                                    <input type="file" onChange={handleFileChange} />
+                                    <input type="file" onChange={handleFileChange} required accept="application/pdf, application/xml" />
                                 )}
                             </div>
                         ) : (

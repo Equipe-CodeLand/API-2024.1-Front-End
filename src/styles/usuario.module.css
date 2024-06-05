@@ -17,7 +17,7 @@
     cursor: pointer;
 }
 
-.usuario:hover {
+.usuario:hover, .estaInativo:hover {
     background-color: #f2f2f2;
 }
 
@@ -58,6 +58,49 @@
     color: #000000;
     font-size: 1em;
     font-weight: 800;
+}
+
+.estaAtivo{
+    height: 100%;
+    width: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000000;
+    font-size: 1em;
+    font-weight: 800;
+}
+
+.estaInativo{
+    width: 100%;
+    height: 60px;
+
+    border: 2px solid #b0a6a6;
+    border-bottom: 3px solid #b0a6a6;
+    border-radius: 10px;
+
+    color: #666262 !important;
+    font-size: 1em;
+    font-weight: 800;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    font-family: var(--inter);
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.estaInativo .id,
+.estaInativo .nome,
+.estaInativo .cargo,
+.estaInativo .estaAtivo {
+    color: #666262 !important;
 }
 
 @media (max-width: 800px) {

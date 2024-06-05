@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import ButtonMain from './botao';
-import '../styles/modal.css'
+import '../styles/modal.css';
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
 import Swal from 'sweetalert2';
@@ -26,6 +26,17 @@ export default function ModalManutencao(props: IModalManutencao) {
     // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
     const formattedDataInicio = formatDateForBackend(dataInicio);
     const formattedDataFinal = formatDateForBackend(dataFinal);
+
+    // Verificando se a data final é menor que a data de início
+    if (new Date(formattedDataFinal) < new Date(formattedDataInicio)) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'A data final não pode ser menor que a data de início.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
   
     const dadosAtualizados = {
       data_inicio: formattedDataInicio,
@@ -42,9 +53,7 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi atualizada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-        })
-        console.log('Dados atualizados com sucesso:', response.data);
-        console.log(dadosAtualizados);
+        });
         props.handleClose();
         props.buscarManutencao();
       })
@@ -67,20 +76,17 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi deletada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-      })
-        console.log('Manutenção excluída com sucesso:', response.data);
-        console.log(props.manutencao.id);
+      });
         props.handleClose();
         props.buscarManutencao();
       })
       .catch(error => {
         console.error('Erro ao excluir a manutenção:', error);
       });
-  }
+  };
 
   return (
     <>
-
       <Modal show={show} onHide={props.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>ID : {props.manutencao.id}</Modal.Title>
