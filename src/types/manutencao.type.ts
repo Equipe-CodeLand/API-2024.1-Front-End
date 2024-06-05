@@ -7,5 +7,6 @@ export type Manutencao = {
     localizacao: string,
     responsavel: string,
     data_inicio?: any,
-    data_final?: any
+    data_final?: any,
+    ativos?: any
 }

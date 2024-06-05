@@ -60,6 +60,12 @@
     font-weight: 500;
 }
 
+.manutencaoExpirada {
+    border: 2px solid #ddd;
+    border-bottom: 3px solid #ddd;
+    color: #ddd !important;
+}
+
 @media screen and (max-width: 600px) {
     .manutencao {
         flex-direction: column;

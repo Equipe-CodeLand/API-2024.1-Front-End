@@ -4,6 +4,8 @@ import ModalManutencao from "./modal-manutencao";
 import { IManutencao } from "../interfaces/manutencao";
 
 export default function ManutencaoComponent(props: IManutencao) {
+  const [manutencaoExpirada] = useState<boolean>(props.expirado);
+
   const [state, setState] = useState({
     show: false,
     manutencaoSelecionada: null as IManutencao | null,
@@ -24,6 +26,15 @@ export default function ManutencaoComponent(props: IManutencao) {
       manutencaoSelecionada: manutencao,
     }));
   };
+
+  function classExpirado(): string {
+    if (manutencaoExpirada) {
+      return styles.manutencao + " " + styles.manutencaoExpirada;
+    }
+
+    return styles.manutencao;
+  }
+
   return (
     <div>
       {state.show && state.manutencaoSelecionada && (
@@ -34,7 +45,7 @@ export default function ManutencaoComponent(props: IManutencao) {
           buscarManutencao={props.buscarManutencao ? props.buscarManutencao : () => {}}
         />
       )}
-      <div className={styles.manutencao} onClick={() => handleShow(props)}>
+      <div className={classExpirado()} onClick={() => handleShow(props)}>
         <div className={styles.id}>ID: {props.id}</div>
         <div className={styles.nome}>{props.nome}</div>
         <div className={styles.datas}>

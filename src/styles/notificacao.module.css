@@ -1,0 +1,7 @@
+.notificacoes {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    padding-bottom: 20px;
+}

@@ -5,8 +5,6 @@ import ModalAtivo from './modal-ativo'
 
 export default function Ativo(props: IAtivo) {
     const [ativoExpirado] = useState<boolean>(props.expirado)
-    const faltam3diasParaExpiracao: boolean = false
-    const faltam15diasParaExpiracao: boolean = false
     const [state, setState] = useState({
         show: false,
         ativoSelecionado: null as IAtivo | null
@@ -48,17 +46,9 @@ export default function Ativo(props: IAtivo) {
             disponibilidade = "Erro"
     }
 
-    function classDisponibilidade(): string {
+    function classExpirado(): string {
         if (ativoExpirado) {
             return styles.ativo + " " + styles.ativoExpirado
-        }
-
-        if (faltam3diasParaExpiracao) {
-            return styles.ativo + " " + styles.faltam3diasParaExpiracao
-        }
-
-        if (faltam15diasParaExpiracao) {
-            return styles.ativo + " " + styles.faltam15diasParaExpiracao
         }
 
         return styles.ativo
@@ -70,7 +60,7 @@ export default function Ativo(props: IAtivo) {
                 <ModalAtivo ativo={state.ativoSelecionado} handleClose={handleClose}
                     buscarAtivos={props.buscarAtivos} />
             )}
-            <div className={classDisponibilidade()} onClick={() => handleShow(props)}>
+            <div className={classExpirado()} onClick={() => handleShow(props)}>
                 <div className={styles.id}>ID: {props.id} </div>
                 <div className={styles.nome}> {props.nome} </div>
                 <div className={styles.disponibilidade}>

@@ -7,4 +7,5 @@ export interface IManutencao {
     dataFinal: string;
     ativos_id: number;
     buscarManutencao?: Function;
+    expirado: boolean;
 }

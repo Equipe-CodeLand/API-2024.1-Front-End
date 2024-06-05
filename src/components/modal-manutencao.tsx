@@ -21,7 +21,6 @@ export default function ModalManutencao(props: IModalManutencao) {
   useEffect(() => {
     setAtivosId(ativosId);
   }, [ativosId]);
-  console.log(ativosId)
 
   const handleUpdate = () => {
     // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio

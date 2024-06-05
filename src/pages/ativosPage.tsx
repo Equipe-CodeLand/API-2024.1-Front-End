@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
+import stylesNotificacao from "../styles/notificacao.module.css"
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
@@ -12,7 +13,6 @@ import Notificacao from "../components/notificacao";
 import { notificacaoProps } from "../types/notificacaoProps.type";
 
 export default function AtivosPage() {
-    const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false)
     const [data, setData] = useState<Array<AtivoType>>([]);
     const [filteredData, setFilteredData] = useState<Array<AtivoType>>([]);
     const [manutencoes, setManutencoes] = useState<Array<any>>([]);
@@ -29,6 +29,7 @@ export default function AtivosPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
     const isFuncionario = getCargo() === "Funcionário";
+    const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false)
     const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([])
 
     const verificarExpiracao = (ativo: AtivoType): number => {
@@ -386,7 +387,7 @@ export default function AtivosPage() {
                     </div>
                 </Modal.Body>
             </Modal>
-            <ToastContainer className={styles.notificacoes}>
+            <ToastContainer className={stylesNotificacao.notificacoes}>
                 {notificacoes.map((notificacao, index) => {
                     return <Notificacao
                         id={index.toString()}
