@@ -7,7 +7,7 @@
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
-    height: calc(100vh - 50px);
+    height: 100vh !important;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -20,42 +20,36 @@
 }
 
 .inputs {
-    height: 600px;
+    height: auto;  
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    padding: 20px 0px;
+    gap: 20px;  
+    padding: 20px 0;
 }
 
-.inputs > input, select {
+.inputs>input,
+select {
     margin: 0 auto !important;
     padding: 0px 10px !important;
-    border-radius: 20px;
+    border-radius: 10px !important;
     height: 40px !important;
     width: 180px !important;
     font-family: var(--inter);
     font-weight: 500 !important;
 }
 
-input[type="Date"] {
-    border-radius: 30px !important;
+.inputs>select {
+    color: #757575;
 }
 
-.inputs > select > .sem_filtro {
-    color: #ddd;
-}
-
-label{
-    margin-bottom: 0 !important;
+.escolhida {
+    color: red;
 }
 
 .filtrar {
     display: flex;
     justify-content: space-between;
-}
-
-.filtrarPor {
-    color: #757575;
+    margin-top: 260px; 
 }
 
 .filtrar button {
@@ -74,6 +68,14 @@ label{
     background-color: white !important;
     border: 2px solid var(--corPrimaria);
     color: var(--corPrimaria);
+}
+
+.modal .inputs {
+    height: auto;
+}
+
+.modal .filtrar {
+    width: 100%;
 }
 
 .conteudo {

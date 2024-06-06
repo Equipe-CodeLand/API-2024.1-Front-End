@@ -9,7 +9,7 @@
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
-    height: calc(100vh - 50px);
+    height: 100vh !important;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -22,11 +22,11 @@
 }
 
 .inputs {
-    height: 600px;
+    height: auto;  
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    padding: 20px 0px;
+    gap: 20px;  
+    padding: 20px 0;
 }
 
 .inputs>input,
@@ -51,6 +51,7 @@ select {
 .filtrar {
     display: flex;
     justify-content: space-between;
+    margin-top: 340px; 
 }
 
 .filtrar button {
