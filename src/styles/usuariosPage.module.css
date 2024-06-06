@@ -22,11 +22,11 @@
 }
 
 .inputs {
-    height: auto;  
+    height: 600px;
     display: flex;
     flex-direction: column;
-    gap: 20px;  
-    padding: 20px 0;
+    gap: 30px;
+    padding: 20px 0px;
 }
 
 .inputs>input,
@@ -51,7 +51,6 @@ select {
 .filtrar {
     display: flex;
     justify-content: space-between;
-    margin-top: 340px; 
 }
 
 .filtrar button {
