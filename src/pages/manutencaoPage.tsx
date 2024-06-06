@@ -19,7 +19,7 @@ export default function ManutencaoPage() {
   const [dataFinal, setDataFinal] = useState("");
   const [filtro, setFiltro] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1000);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -37,8 +37,12 @@ export default function ManutencaoPage() {
   }, []);
 
   useEffect(() => {
-    setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-  }, [manutencoes, currentPage]);
+    if (isMobile) {
+      setFilteredManutencoes(manutencoes); // Exibir todas as manutenções em modo mobile
+    } else {
+      setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+    }
+  }, [manutencoes, currentPage, isMobile]);
 
   const buscarManutencoes = async () => {
     try {
@@ -225,7 +229,7 @@ export default function ManutencaoPage() {
                   <span className={styles.semManutencao}>Sem manutenções cadastradas</span>
                 )}
               </div>
-              {filteredManutencoes.length > 0 && (
+              {!isMobile && filteredManutencoes.length > 0 && (
                 <div className={styles.paginacao}>
                   <button
                     className={styles.botaoPaginacao}
@@ -318,4 +322,3 @@ export default function ManutencaoPage() {
     </div>
   );
 }
-
