@@ -7,7 +7,7 @@
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
-    height: 100vh !important;
+    height: 100% !important;
     display: flex;
     flex-direction: column;
     gap: 20px;
