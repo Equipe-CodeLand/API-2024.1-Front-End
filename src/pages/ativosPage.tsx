@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
-import { AtivoType } from "../types/ativo.type";
 import Ativo from "../components/ativo";
+import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
+import { AtivoType } from "../types/ativo.type";
 import { Button, Modal } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
 import { useAxios } from "../hooks/useAxios";
@@ -198,7 +200,7 @@ export default function AtivosPage() {
                                 id="filtrarPor"
                                 className={styles.filtrarPor}
                                 onChange={(e) => setFiltro(e.target.value)}
-                            >
+                                >
                                 <option value="">Filtrar por</option>
                                 <option value="ID">ID</option>
                                 <option value="Nome">Nome</option>

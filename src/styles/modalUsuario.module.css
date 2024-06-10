@@ -69,6 +69,11 @@
     background-color: transparent;
     transition: all 0.3s;
 }
+.botoes .salvar {
+    background-color: var(--corPrimaria);
+    border: none;
+    margin-left: auto;
+}
 
 .botoes button:hover {
     background-color: #d9d9d9;

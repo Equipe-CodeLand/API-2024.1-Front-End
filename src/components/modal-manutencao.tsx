@@ -60,6 +60,17 @@ export default function ModalManutencao(props: IModalManutencao) {
     const formattedDataInicio = formatDateForBackend(dataInicio);
     const formattedDataFinal = formatDateForBackend(dataFinal);
 
+    // Verificando se a data final é menor que a data de início
+    if (new Date(formattedDataFinal) < new Date(formattedDataInicio)) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'A data final não pode ser menor que a data de início.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
     const dadosAtualizados = {
       data_inicio: formattedDataInicio,
       data_final: formattedDataFinal,
@@ -75,9 +86,7 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi atualizada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-        })
-        console.log('Dados atualizados com sucesso:', response.data);
-        console.log(dadosAtualizados);
+        });
         props.handleClose();
         props.buscarManutencao();
       })
@@ -110,16 +119,14 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi deletada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-        })
-        console.log('Manutenção excluída com sucesso:', response.data);
-        console.log(props.manutencao.id);
+      });
         props.handleClose();
         props.buscarManutencao();
       })
       .catch(error => {
         console.error('Erro ao excluir a manutenção:', error);
       });
-  }
+  };
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);

@@ -124,13 +124,40 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
+    
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setPreco_aquisicao(inputValue);
     };
 
     const saveChanges = () => {
-        if (!validateFields()) return;
+
+        if (ocupado && !usuarioSelecionado) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campo obrigatório',
+                text: 'Por favor, preencha o campo do funcionário responsável.',
+            });
+            return;
+        }
+
+        if (new Date(dataExpiracaoEdit.split('/').reverse().join('-')) < new Date(dataAquisicao.split('/').reverse().join('-'))) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro de data',
+                text: 'A data de expiração não pode ser anterior à data de aquisição.',
+            });
+            return;
+        }
+
+        if (!nome || !preco_aquisicao || !dataAquisicao) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos obrigatórios',
+                html: 'Por favor, preencha todos os campos obrigatórios:<br>(Nome, Preço de Aquisição e Data de Aquisição)',
+            });
+            return;
+        }
 
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
@@ -399,7 +426,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <div>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
-                                    <input type="file" onChange={handleFileChange} />
+                                    <input type="file" onChange={handleFileChange} required accept="application/pdf, application/xml" />
                                 )}
                             </div>
                         ) : (
