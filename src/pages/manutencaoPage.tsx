@@ -206,7 +206,7 @@ export default function ManutencaoPage() {
                 </div>
               </div>
               <div className={styles.filtrar}>
-                <button onClick={limpar}>Limpar</button>
+                <button onClick={limparFiltros}>Limpar</button>
                 <button onClick={filtrar}>Aplicar</button>
               </div>
             </div>
@@ -336,4 +336,3 @@ export default function ManutencaoPage() {
     </div>
   );
 }
-

@@ -4,12 +4,10 @@ import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
 import Ativo from "../components/ativo";
-import { useAxios } from "../hooks/useAxios";
-import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import { Button, Modal } from "react-bootstrap";
-import { useAuth } from "../hooks/useAuth";
 import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([]);
