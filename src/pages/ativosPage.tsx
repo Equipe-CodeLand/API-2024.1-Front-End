@@ -4,10 +4,10 @@ import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
 import Ativo from "../components/ativo";
-import { useAxios } from "../hooks/useAxios";
-import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import { Button, Modal } from "react-bootstrap";
+import { useAxios } from "../hooks/useAxios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([]);
@@ -27,6 +27,8 @@ export default function AtivosPage() {
     const [statusOcupado, setStatusOcupado] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5; 
     const isFuncionario = getCargo() === "Funcionário";
 
     const ativos = async () => {
@@ -74,6 +76,7 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); 
+        setCurrentPage(1); 
         setMostrarExpirados(true);
         setMostrarNaoExpirados(true);
     };
@@ -127,7 +130,12 @@ export default function AtivosPage() {
 
         setFilteredData(filtered);
         setIsModalOpen(false);
+        setCurrentPage(1);
     };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
     const render = loading ? (
         <div className={styles.listarAtivo}>
@@ -142,9 +150,31 @@ export default function AtivosPage() {
                 :(
             </span>
         </div>
-    ) : filteredData.length > 0 ? (
+    ) : isMobile ? (
+        filteredData.map((ativo) => (
+            <Ativo
+                key={ativo.id}
+                id={ativo.id}
+                nome={ativo.nome}
+                notaFiscal={ativo.notaFiscal}
+                descricao={ativo.descricao}
+                marca={ativo.marca}
+                modelo={ativo.modelo}
+                preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                usuario={ativo.usuario}
+                setor={ativo.setor}
+                status={ativo.status}
+                dataAquisicao={ativo.dataAquisicao}
+                dataExpiracao={ativo.dataExpiracao}
+                manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
+                buscarAtivos={ativos}
+                codigo_nota_fiscal={ativo.codigo_nota_fiscal}
+                isEditable={!isFuncionario}
+            />
+        ))
+    ) : currentItems.length > 0 ? (
         <div className={styles.listarAtivo}>
-            {filteredData.map((ativo) => (
+            {currentItems.map((ativo) => (
                 <Ativo
                     key={ativo.id}
                     id={ativo.id}
@@ -174,6 +204,9 @@ export default function AtivosPage() {
             </span>
         </div>
     );
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
     return (
         <div>
             <Navbar local="ativos" />
@@ -290,6 +323,25 @@ export default function AtivosPage() {
                         <div className={styles.listarAtivo}>
                             {render}
                         </div>
+                        {!isMobile && filteredData.length > itemsPerPage && (
+                            <div className={styles.paginacao}>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                >
+                                    &lt; Anterior
+                                </button>
+                                <span>{`Página ${currentPage} de ${totalPages}`}</span>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    Próxima &gt;
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
             </div>

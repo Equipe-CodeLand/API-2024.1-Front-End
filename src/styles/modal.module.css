@@ -7,13 +7,36 @@
     width: 100%;
     justify-content: space-between;
 }
+
   
-  .botoes-modal {
+  .botoesModal {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
+
+  .botoes {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.excluir {
+    background-color: #DB5050;
+    padding: 5px 20px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+}
+
+.editar {
+    background-color: var(--corPrimaria);
+    padding: 10px 20px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+}
   
   .titulo-id {
     display: flex;
@@ -60,7 +83,34 @@
   }
   
   .p-icon {
-    display: flex;
     justify-content: space-between;
     align-items: center;
   }
+
+  .error {
+    color: red;
+    font-size: 17.6px;
+}
+
+.informacoes {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  display: flex;
+}
+
+.informacoes strong {
+  margin-right: 5px;
+}
+
+.informacoes div {
+  padding-right: 20px;
+}
+
+.informacoes button {
+  padding: 0;
+  padding-bottom: 10px;
+}
+
+p {
+  margin: 0.5em !important;
+}

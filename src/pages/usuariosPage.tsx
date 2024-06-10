@@ -8,7 +8,6 @@ import { Link } from "react-router-dom"
 import { Modal } from "react-bootstrap"
 import { useAuth } from "../hooks/useAuth"
 
-
 export default function UsuariosPage() {
     const [data, setData] = useState<Array<any>>([])
     const [usuariosFiltrados, setUsuariosFiltrados] = useState<Array<any>>([])
@@ -27,6 +26,8 @@ export default function UsuariosPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { get } = useAxios()
     const { getCargo, getSub } = useAuth();
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 5
 
     useEffect(() => {
         const handleResize = () => {
@@ -114,28 +115,34 @@ export default function UsuariosPage() {
         usuarios()
         chamarAtivos()
     }, [])
-    
+
+    const totalPages = Math.ceil(usuariosFiltrados.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const paginatedUsuarios = usuariosFiltrados.slice(startIndex, endIndex)
 
     var render
     if (loading) {
-        render = 
-        <div className={styles.listarUsuario}>
-            <div className={styles.semUsuarios}>
-                Carregando usuários...
+        render = (
+            <div className={styles.listarUsuario}>
+                <div className={styles.semUsuarios}>
+                    Carregando usuários...
+                </div>
             </div>
-        </div>
+        )
     } else if (error) {
-        render =
+        render = (
             <div className={styles.listarUsuario}>
                 <div className={styles.semUsuarios}>
                     Erro ao carregar usuários! <br />
                     :(
                 </div>
             </div>
-    } else if (usuariosFiltrados.length > 0) {
-        render =
+        )
+    } else if (paginatedUsuarios.length > 0) {
+        render = (
             <div className={styles.listarUsuario}>
-                {usuariosFiltrados.map((usuario) => {
+                {paginatedUsuarios.map((usuario) => {
                     if (usuario !== undefined) {
                         return (
                             <Usuario
@@ -153,19 +160,21 @@ export default function UsuariosPage() {
                     }
                 })}
             </div>
+        )
     } else {
-        render =
-        <div className={styles.listarUsuario}>
-            <div className={styles.semUsuarios}>
-                Nenhum usuário encontrado! <br />
-                :/
+        render = (
+            <div className={styles.listarUsuario}>
+                <div className={styles.semUsuarios}>
+                    Nenhum usuário encontrado! <br />
+                    :/
+                </div>
             </div>
-        </div>
+        )
     }
 
-    return(
+    return (
         <>
-            <Navbar local="usuarios"/>
+            <Navbar local="usuarios" />
             <div className={styles.body}>
                 <div className={styles.filtro}>
                     <h2>Filtro</h2>
@@ -265,8 +274,29 @@ export default function UsuariosPage() {
                             </div>
                         </div>
                         <div className={styles.listarUsuario}>
-                            { render }
+                            {render}
                         </div>
+                        {usuariosFiltrados.length > 0 && (
+                            <div className={styles.paginacao}>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                >
+                                    &lt; Anterior
+                                </button>
+                                <span>
+                                    Página {currentPage} de {totalPages}
+                                </span>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Próxima &gt;
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
             </div>
