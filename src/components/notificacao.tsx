@@ -27,6 +27,22 @@ export default function Notificacao(props: notificacaoProps) {
         const notificacao = localStorage.getItem(`notificacao_${key}`)
         if (notificacao === null) {
             setShow(true)
+            const listaJsonRecuperada = localStorage.getItem("notificacoes");
+            const listaRecuperada = JSON.parse(listaJsonRecuperada || "[]");
+            if (listaRecuperada.length === 0) {
+                listaRecuperada.push({
+                    id: key,
+                    mensagem: texto,
+                    titulo: titulo
+                })
+            } else {
+                listaRecuperada.unshift({
+                    id: key,
+                    mensagem: texto,
+                    titulo: titulo
+                })
+            }
+            localStorage.setItem("notificacoes", JSON.stringify(listaRecuperada))
         }
     }, [])
 

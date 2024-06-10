@@ -35,7 +35,6 @@ export default function AtivosPage() {
     const verificarExpiracao = (ativo: AtivoType): number => {
         if (ativo.dataExpiracao === null) return 1
 
-        console.log(`\n${ativo.nome}`)
         let ativoDia = new Date(ativo.dataExpiracao).getDate()
         let ativoMes = new Date(ativo.dataExpiracao).getMonth() + 1
         let ativoAno = new Date(ativo.dataExpiracao).getFullYear()
@@ -75,7 +74,6 @@ export default function AtivosPage() {
                     }
                     break
                 case 0:
-                    console.log("sem notificacao")
                     break
                 default:
                     break
@@ -136,7 +134,10 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); 
-    };
+
+        console.log(notificaoMostrada);
+        console.log(notificacoes);
+    };  
 
     const filtrar = () => {
         let filtered = data;
@@ -387,6 +388,7 @@ export default function AtivosPage() {
             </Modal>
             <ToastContainer className={stylesNotificacao.notificacoes}>
                 {notificacoes.map((notificacao, index) => {
+                    console.log(notificacao)
                     return <Notificacao
                         id={index.toString()}
                         key={index}
