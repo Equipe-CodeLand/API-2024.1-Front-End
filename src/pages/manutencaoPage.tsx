@@ -29,18 +29,23 @@ export default function ManutencaoPage() {
   const verificarDataFinal = (manutencao: Manutencao): number => {
     let dataAtual = new Date()
 
-    let manutencaoDia = new Date(manutencao.data_final).getDate()
-    let manutencaoMes = new Date(manutencao.data_final).getMonth() + 1
-    let manutencaoAno = new Date(manutencao.data_final).getFullYear()
-    let manutencaoTotal = manutencaoDia + "/" + manutencaoMes + "/" + manutencaoAno
+    let I_manutencaoDia = new Date(manutencao.data_inicio).getDate()
+    let I_manutencaoMes = new Date(manutencao.data_inicio).getMonth()
+    let I_manutencaoAno = new Date(manutencao.data_inicio).getFullYear()
+    let I_manutencaoTotal = I_manutencaoDia + "/" + I_manutencaoMes + "/" + I_manutencaoAno
+    let F_manutencaoDia = new Date(manutencao.data_final).getDate()
+    let F_manutencaoMes = new Date(manutencao.data_final).getMonth() + 1
+    let F_manutencaoAno = new Date(manutencao.data_final).getFullYear()
+    let F_manutencaoTotal = F_manutencaoDia + "/" + F_manutencaoMes + "/" + F_manutencaoAno
     let diaAtualDia = dataAtual.getDate()
     let diaAtualMes = dataAtual.getMonth() + 1
     let diaAtualAno = dataAtual.getFullYear()
     let diaAtualTotal = diaAtualDia + "/" + diaAtualMes + "/" + diaAtualAno
 
-    if (manutencaoTotal === diaAtualTotal) return 1
+    if (F_manutencaoTotal === diaAtualTotal) return 1
 
-    let data3diasAtras = new Date(dataAtual.setDate(dataAtual.getDate() - 3))
+    if (I_manutencaoTotal === diaAtualTotal) return 4
+
     let daqui3dias = new Date(dataAtual.setDate(dataAtual.getDate() + 6))
     dataAtual.setDate(dataAtual.getDate() - 3)
 
@@ -80,6 +85,13 @@ export default function ManutencaoPage() {
           notificacao = {
             titulo: `Manutenção em andamento - #${manutencao.id}`,
             texto: `A manutenção do ativo ${manutencao.ativos.nome} #${manutencao.ativos.id} está em andamento e irá terminar em ${diasParaFimDaManutencao} ${diasParaFimDaManutencao === 1 ? "dia" : "dias"}!`,
+            repetirNotificacao: false
+          }
+          break
+        case 4:
+          notificacao = {
+            titulo: `Manutenção Iniciada!`,
+            texto: `A manutenção do ativo ${manutencao.ativos.nome} #${manutencao.ativos.id} foi iniciada!`,
             repetirNotificacao: false
           }
           break

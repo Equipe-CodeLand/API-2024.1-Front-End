@@ -9,9 +9,9 @@ export default function Notificacao(props: notificacaoProps) {
     const titulo = props.titulo
     const texto = props.texto
     const repetirNotificacao = props.repetirNotificacao
-    const key = props.id
+    const key = props.titulo
     const toggleShow = () => {
-        setShow(!show)
+        setShow(false)
         if (repetirNotificacao === false) {
             localStorage.setItem(`notificacao_${key}`, "false")
         }
@@ -25,6 +25,8 @@ export default function Notificacao(props: notificacaoProps) {
 
     useEffect(() => {
         const notificacao = localStorage.getItem(`notificacao_${key}`)
+        console.log(notificacao)
+        console.log(show)
         if (notificacao === null) {
             setShow(true)
             const listaJsonRecuperada = localStorage.getItem("notificacoes");

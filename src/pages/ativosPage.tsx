@@ -135,8 +135,7 @@ export default function AtivosPage() {
         setStatusOcupado(false);
         setFilteredData(data); 
 
-        console.log(notificaoMostrada);
-        console.log(notificacoes);
+        localStorage.clear()
     };  
 
     const filtrar = () => {
@@ -388,7 +387,6 @@ export default function AtivosPage() {
             </Modal>
             <ToastContainer className={stylesNotificacao.notificacoes}>
                 {notificacoes.map((notificacao, index) => {
-                    console.log(notificacao)
                     return <Notificacao
                         id={index.toString()}
                         key={index}
