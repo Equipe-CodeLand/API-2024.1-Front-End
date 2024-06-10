@@ -20,6 +20,8 @@ export default function AtivosPage() {
     const [filtro, setFiltro] = useState("");
     const [idInput, setIdInput] = useState("");
     const [nomeInput, setNomeInput] = useState("");
+    const [mostrarExpirados, setMostrarExpirados] = useState(true);
+    const [mostrarNaoExpirados, setMostrarNaoExpirados] = useState(true);
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
@@ -72,6 +74,8 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); 
+        setMostrarExpirados(true);
+        setMostrarNaoExpirados(true);
     };
 
     const filtrar = () => {
@@ -92,7 +96,35 @@ export default function AtivosPage() {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
         }
 
-        console.log('Filtered data:', filtered); // Adicionado log para debug
+        const hoje = new Date();
+        if (mostrarExpirados === false) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data > hoje){
+                        ativos.push(ativo);
+                    }
+                } else {
+                    ativos.push(ativo);
+                }
+            });
+            filtered = ativos
+        }        
+
+        if (mostrarNaoExpirados === false) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data < hoje){
+                        ativos.push(ativo);
+                    }
+                }
+            });
+            filtered = ativos
+        } 
+
         setFilteredData(filtered);
         setIsModalOpen(false);
     };
@@ -216,6 +248,27 @@ export default function AtivosPage() {
                                     </li>
                                 </ul>
                             </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div className={styles.filtrar}>
                             <button onClick={limparFiltros}>Limpar</button>
@@ -299,6 +352,27 @@ export default function AtivosPage() {
                                             onChange={(e) => setStatusOcupado(e.target.checked)}
                                         />
                                         Ocupado
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
                                     </li>
                                 </ul>
                             </div>
