@@ -186,6 +186,54 @@ label{
     padding-right: 20px;
 }
 
+.botaoPaginacao {
+    padding: 10px 20px;
+    background-color: var(--corPrimaria);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.botaoPaginacao:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.botaoPaginacao:not(:disabled) {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: var(--corPrimaria);
+    border: 2px solid var(--corPrimaria);
+    border-radius: 10px;
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
+    font-family: var(--inter);
+    font-size: 1em;
+    font-weight: 400;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.paginacao span {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.botaoPaginacao:hover:not(:disabled) {
+    background-color: white;
+    color: var(--corPrimaria);
+}
+
 @media only screen and (max-width: 700px) {
     .conteudo main {
         padding: 32px;

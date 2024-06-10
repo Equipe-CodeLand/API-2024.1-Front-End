@@ -160,3 +160,8 @@
     background-color: white;
     border: 0px;
 }
+
+.error {
+    color: red;
+    font-size: 17.6px; 
+}
