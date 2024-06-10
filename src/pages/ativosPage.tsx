@@ -134,8 +134,6 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); 
-
-        localStorage.clear()
     };  
 
     const filtrar = () => {

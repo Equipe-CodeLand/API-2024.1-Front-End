@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { IModalNotificacao } from "../interfaces/modalNotificacao";
 import { Modal } from "react-bootstrap";
+import styles from "../styles/modalNotificacao.module.css";
 
 export default function ModalNotificacao(props: IModalNotificacao) {
     const [show, setShow] = useState(true)
@@ -18,17 +19,22 @@ export default function ModalNotificacao(props: IModalNotificacao) {
                 <Modal.Title>Histórico de Notificações</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {notificacoes.length > 0 ? (
-                    notificacoes.map((notificacao: any) => {
-                        return (
-                            <div key={notificacao.id}>
-                                <p>{notificacao.mensagem}</p>
-                            </div>
-                        )
-                    })
-                ) : (
-                    <p>Não há notificações</p>
-                )}
+                <ul className={styles.listaDeNotificacoes}>
+                    {notificacoes.length > 0 ? (
+                        notificacoes.map((notificacao: any) => {
+                            return (
+                                <li
+                                    key={notificacao.id}
+                                    className={styles.itemDaNotificacao}
+                                >
+                                    <p>{notificacao.mensagem}</p>
+                                </li>
+                            )
+                        })
+                    ) : (
+                        <p>Não há notificações</p>
+                    )}
+                </ul>
             </Modal.Body>
         </Modal>
     )
