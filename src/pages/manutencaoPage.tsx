@@ -148,8 +148,8 @@ export default function ManutencaoPage() {
                 Filtro
               </button>
               {getCargo() === "Administrador" && (
-                  <Link className={styles.botao} to="/cadastrar/ativos">
-                      Adicionar Ativo
+                  <Link className={styles.botao} to="/cadastrar/manutencoes">
+                      Adicionar Manutenção
                   </Link>
               )}
             </div>

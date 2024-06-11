@@ -131,6 +131,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     };
 
     const saveChanges = () => {
+        if (!validateFields()) return;
 
         if (ocupado && !usuarioSelecionado) {
             Swal.fire({
@@ -150,14 +151,6 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-        if (!nome || !preco_aquisicao || !dataAquisicao) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Campos obrigatórios',
-                html: 'Por favor, preencha todos os campos obrigatórios:<br>(Nome, Preço de Aquisição e Data de Aquisição)',
-            });
-            return;
-        }
 
         const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);

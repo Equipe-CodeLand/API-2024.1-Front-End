@@ -192,7 +192,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   ) : (
                     props.manutencao.responsavel
                   )}
-                  {errors.responsavel && <span className='error'>{errors.responsavel}</span>}
+                  {errors.responsavel && <span className={styles.error}>{errors.responsavel}</span>}
                 </p>
               </div>
 
@@ -203,7 +203,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   ) : (
                     props.manutencao.localizacao
                   )}
-                  {errors.localizacao && <span className='error'>{errors.localizacao}</span>}
+                  {errors.localizacao && <span className={styles.error}>{errors.localizacao}</span>}
                 </p>
               </div>
 
@@ -214,7 +214,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   ) : (
                     dataInicio
                   )}
-                  {errors.dataInicio && <span className='error'>{errors.dataInicio}</span>}
+                  {errors.dataInicio && <span className={styles.error}>{errors.dataInicio}</span>}
                 </p>
               </div>
 
@@ -225,7 +225,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                   ) : (
                     dataFinal
                   )}
-                  {errors.dataFinal && <span className='error'>{errors.dataFinal}</span>}
+                  {errors.dataFinal && <span className={styles.error}>{errors.dataFinal}</span>}
                 </p>
               </div>
             </div>

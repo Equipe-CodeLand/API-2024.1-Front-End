@@ -114,3 +114,8 @@
 p {
   margin: 0.5em !important;
 }
+
+.error {
+  color: red;
+  font-size: 17.6px;
+}
