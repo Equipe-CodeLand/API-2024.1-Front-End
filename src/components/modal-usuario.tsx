@@ -97,19 +97,18 @@ export default function ModalUsuario(props: IModalUsuario) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
-                    {/* Campos editáveis */}
                     <div className={styles.titulo}>
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
-                        <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
+                        <FaRegEdit className="icone-edicao" onClick={() => setIsEditing(!isEditing)} style={{ width: 'auto', height: '30px', marginLeft: '10px' }} />
                     </div>
                     <div className={styles.informacoes}><strong>Status: </strong>{
                         props.usuario.estaAtivo ? "Ativo" : "Inativo"
                     }</div>
-                    <div className={styles.informacoes}>
-                        <strong>CPF: </strong>
+                    <div className={isEditing ? styles.informacoesEdicao : styles.informacoes}>
+                        <strong>CPF: </strong> 
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
                     </div>
-                    <div className={styles.informacoes}>
+                    <div className={isEditing ? styles.informacoesEdicao : styles.informacoes}>
                         <strong>Email: </strong>
                         {isEditing ? <input type="text" value={email} onChange={handleChangeEmail} /> : email}
                     </div>
@@ -125,7 +124,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                                     value={{ value: cargo, label: cargo }} // Definir valor e rótulo do dropdown
                                     onChange={handleChangeCargo}
                                     placeholder="Selecione um cargo"
-                                    styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
+                                    styles={{ control: (provided) => ({ ...provided, borderRadius: '30px' })}}
                                 />
                             </label>
                         )}
@@ -154,17 +153,16 @@ export default function ModalUsuario(props: IModalUsuario) {
                 <Modal.Footer>
                     <div className={styles.botoes}>
                         {
-                            props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
-                                <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
+                            props.usuario.estaAtivo ? <button className={`${styles['btn-inativar']}`} onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
+                                <button className={`${styles['btn-ativar']}`} onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
                         }
                         {/* Botão de salvar e fechar */}
                         {isEditing && (
-                            <button onClick={handleSave}>SALVAR</button>
+                            <button className={`${styles['btn-salvar']}`} onClick={handleSave}>SALVAR ALTERAÇÕES</button>
                         )}
                     </div>
                 </Modal.Footer>
             </Modal>
         </>
     )
-
 }

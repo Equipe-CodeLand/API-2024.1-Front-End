@@ -156,7 +156,7 @@ export default function CadastroAtivos() {
                     />
                     </label>
                     <label>
-                    <span className='input_required'>Arquivo da Nota Fiscal ou Código da Nota Fiscal:</span>
+                    <span>Arquivo da Nota Fiscal ou Código da Nota Fiscal:</span>
                     <br />
                     <select value={notaFiscalOption} onChange={e => setNotaFiscalOption(e.target.value)} >
                         <option value="">Selecionar opção</option>
