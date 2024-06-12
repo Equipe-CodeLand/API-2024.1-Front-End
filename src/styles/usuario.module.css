@@ -132,4 +132,13 @@
         font-weight: 400;
         color: #666262;
     }
+    .estaInativo{
+        position: relative;
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        padding-bottom: 20px;
+    }
 }
+
+

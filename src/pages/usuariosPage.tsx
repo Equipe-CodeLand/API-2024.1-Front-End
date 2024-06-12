@@ -31,7 +31,7 @@ export default function UsuariosPage() {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 700);
+            setIsMobile(window.innerWidth <= 1000);
         };
 
         window.addEventListener("resize", handleResize);
@@ -70,7 +70,7 @@ export default function UsuariosPage() {
         }
 
         if (nome !== "") {
-            usuarios = usuarios.filter((usuario) => 
+            usuarios = usuarios.filter((usuario) =>
                 usuario.nome?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(
                     nome?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
                 )
@@ -81,16 +81,16 @@ export default function UsuariosPage() {
             const cargoFilters: number[] = [];
             if (isAdministrador) cargoFilters.push(1);
             if (isFuncionario) cargoFilters.push(2);
-    
+
             usuarios = usuarios.filter((usuario) => cargoFilters.includes(usuario.cargo.id));
         }
-    
+
         if (isInativo || isAtivo) {
             const statusFilters: number[] = [];
             if (isInativo) statusFilters.push(0);
             if (isAtivo) statusFilters.push(1);
-    
-            usuarios = usuarios.filter((usuario) => 
+
+            usuarios = usuarios.filter((usuario) =>
                 (isAtivo && usuario.estaAtivo) || (isInativo && !usuario.estaAtivo)
             );
         }
@@ -116,10 +116,17 @@ export default function UsuariosPage() {
         chamarAtivos()
     }, [])
 
-    const totalPages = Math.ceil(usuariosFiltrados.length / itemsPerPage)
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    const paginatedUsuarios = usuariosFiltrados.slice(startIndex, endIndex)
+    useEffect(() => {
+        if (isMobile) {
+            setUsuariosFiltrados(data); // Exibir todos os usuários em modo mobile
+        } else {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            setUsuariosFiltrados(data.slice(startIndex, endIndex));
+        }
+    }, [data, currentPage, isMobile]);
+
+    const totalPages = Math.ceil(data.length / itemsPerPage);
 
     var render
     if (loading) {
@@ -139,10 +146,10 @@ export default function UsuariosPage() {
                 </div>
             </div>
         )
-    } else if (paginatedUsuarios.length > 0) {
+    } else if (usuariosFiltrados.length > 0) {
         render = (
             <div className={styles.listarUsuario}>
-                {paginatedUsuarios.map((usuario) => {
+                {usuariosFiltrados.map((usuario) => {
                     if (usuario !== undefined) {
                         return (
                             <Usuario
@@ -179,31 +186,31 @@ export default function UsuariosPage() {
                 <div className={styles.filtro}>
                     <h2>Filtro</h2>
                     <div className={styles.inputs}>
-                            <select
-                                id="filtrarPor"
-                                className={styles.filtrarPor}
-                                onChange={(e) => setFiltro(e.target.value)}
-                            >
-                                <option value="">Filtrar por</option>
-                                <option value="ID">ID</option>
-                                <option value="Nome">Nome</option>
-                            </select>
-                            {filtro === "ID" && (
-                                <input
-                                    type="number"
-                                    placeholder="ID"
-                                    value={id}
-                                    onChange={(e) => setId(e.target.value)}
-                                />
-                            )}
-                            {filtro === "Nome" && (
-                                <input
-                                    type="text"
-                                    placeholder="Nome"
-                                    value={nome}
-                                    onChange={(e) => setNome(e.target.value)}
-                                />
-                            )}
+                        <select
+                            id="filtrarPor"
+                            className={styles.filtrarPor}
+                            onChange={(e) => setFiltro(e.target.value)}
+                        >
+                            <option value="">Filtrar por</option>
+                            <option value="ID">ID</option>
+                            <option value="Nome">Nome</option>
+                        </select>
+                        {filtro === "ID" && (
+                            <input
+                                type="number"
+                                placeholder="ID"
+                                value={id}
+                                onChange={(e) => setId(e.target.value)}
+                            />
+                        )}
+                        {filtro === "Nome" && (
+                            <input
+                                type="text"
+                                placeholder="Nome"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+                        )}
                         <hr />
                         <div>
                             <div className={styles.cargoCheck}>
@@ -276,7 +283,7 @@ export default function UsuariosPage() {
                         <div className={styles.listarUsuario}>
                             {render}
                         </div>
-                        {usuariosFiltrados.length > 0 && (
+                        {!isMobile && usuariosFiltrados.length > 0 && (
                             <div className={styles.paginacao}>
                                 <button
                                     className={styles.botaoPaginacao}
@@ -310,68 +317,68 @@ export default function UsuariosPage() {
                 </Modal.Header>
                 <Modal.Body>
                     <div className={styles.inputs}>
-                            <select
-                                id="filtrarPor"
-                                className={styles.filtrarPor}
-                                onChange={(e) => setFiltro(e.target.value)}
-                            >
-                                <option value="">Filtrar por</option>
-                                <option value="ID">ID</option>
-                                <option value="Nome">Nome</option>
-                            </select>
-                            {filtro === "ID" && (
-                                <input
-                                    type="number"
-                                    placeholder="ID"
-                                    value={id}
-                                    onChange={(e) => setId(e.target.value)}
-                                />
-                            )}
-                            {filtro === "Nome" && (
-                                <input
-                                    type="text"
-                                    placeholder="Nome"
-                                    value={nome}
-                                    onChange={(e) => setNome(e.target.value)}
-                                />
-                            )}
+                        <select
+                            id="filtrarPor"
+                            className={styles.filtrarPor}
+                            onChange={(e) => setFiltro(e.target.value)}
+                        >
+                            <option value="">Filtrar por</option>
+                            <option value="ID">ID</option>
+                            <option value="Nome">Nome</option>
+                        </select>
+                        {filtro === "ID" && (
+                            <input
+                                type="number"
+                                placeholder="ID"
+                                value={id}
+                                onChange={(e) => setId(e.target.value)}
+                            />
+                        )}
+                        {filtro === "Nome" && (
+                            <input
+                                type="text"
+                                placeholder="Nome"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+                        )}
                         <hr />
                         <div className={styles.cargoCheck}>
                             <h4>Cargo:</h4>
-                                <ul>
-                                    <li>
-                                        <input
-                                            type="checkbox"
-                                            checked={isAdministrador}
-                                            onChange={(e) => setIsAdministrador(e.target.checked)}
-                                        />
-                                        Administrador
-                                    </li>
-                                    <li>
-                                        <input
-                                            type="checkbox"
-                                            checked={isFuncionario}
-                                            onChange={(e) => setIsFuncionario(e.target.checked)}
-                                        />
-                                        Funcionário
-                                    </li>
-                                    <li>
-                                        <input
-                                            type="checkbox"
-                                            checked={isAtivo}
-                                            onChange={(e) => setIsAtivo(e.target.checked)}
-                                        />
-                                        Ativo
-                                    </li>
-                                    <li>
-                                        <input
-                                            type="checkbox"
-                                            checked={isInativo}
-                                            onChange={(e) => setIsInativo(e.target.checked)}
-                                        />
-                                        Inativo
-                                    </li>
-                                </ul>
+                            <ul>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAdministrador}
+                                        onChange={(e) => setIsAdministrador(e.target.checked)}
+                                    />
+                                    Administrador
+                                </li>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={isFuncionario}
+                                        onChange={(e) => setIsFuncionario(e.target.checked)}
+                                    />
+                                    Funcionário
+                                </li>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAtivo}
+                                        onChange={(e) => setIsAtivo(e.target.checked)}
+                                    />
+                                    Ativo
+                                </li>
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        checked={isInativo}
+                                        onChange={(e) => setIsInativo(e.target.checked)}
+                                    />
+                                    Inativo
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </Modal.Body>

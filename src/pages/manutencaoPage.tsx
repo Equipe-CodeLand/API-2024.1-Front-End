@@ -40,8 +40,12 @@ export default function ManutencaoPage() {
   }, []);
 
   useEffect(() => {
-    setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-  }, [manutencoes, currentPage]);
+    if (isMobile) {
+      setFilteredManutencoes(manutencoes); // Exibir todas as manutenções em modo mobile
+    } else {
+      setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+    }
+  }, [manutencoes, currentPage, isMobile]);
 
   const buscarManutencoes = async () => {
     try {

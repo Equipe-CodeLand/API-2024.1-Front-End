@@ -1,7 +1,6 @@
 import { Route, BrowserRouter, Routes as Switch } from "react-router-dom";
 import HomePage from "../pages/homePage";
 import AtivosPage from "../pages/ativosPage";
-import ManutencaoPage from "../pages/manutencaoPage";
 import CadastroAtivos from "../pages/ativosCadastroPage";
 import RouteManutecaoCadastro from "../pages/manutencaoCadastroPage";
 import LoginPage from "../pages/loginPage";
@@ -10,6 +9,7 @@ import { PrivateRoute } from "./privateRoute";
 import UsuariosCadastroPage from "../pages/usuariosCadastroPage";
 import NotFoundPage from "../pages/notFoundPage";
 import AlteracaoSenhaPage from "../pages/alteracaoSenhaPage";
+import ManutencaoPage from "../pages/manutencaoPage";
 
 export default function Routes() {
     return (
