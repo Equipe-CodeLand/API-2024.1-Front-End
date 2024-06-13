@@ -85,6 +85,18 @@
     border: 1.5px solid rgb(225, 0, 0);
 }
 
+/* .cinza {
+    background-color: #ddd;
+    border: 1.5px solid #ddd1dd;
+} */
+
+.alerta {
+    height: 20px; /* Define a altura da imagem */
+    width: 20px; /* Define a largura da imagem */
+    margin-right: 10px;
+
+  }
+
 @media (max-width: 700px) {
     .ativo {
         flex-direction: column;

@@ -28,6 +28,7 @@ export default function AtivosPage() {
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
+    const [statusExpirado, setStatusExpirado] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
     const [currentPage, setCurrentPage] = useState(1);
@@ -156,6 +157,7 @@ export default function AtivosPage() {
         if (statusDisponivel) statusFilters.push(1);
         if (statusEmManutencao) statusFilters.push(2);
         if (statusOcupado) statusFilters.push(3);
+        if (statusExpirado) statusFilters.push(4);
 
         if (statusFilters.length > 0) {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
