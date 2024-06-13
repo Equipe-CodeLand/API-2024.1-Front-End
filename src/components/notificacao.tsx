@@ -31,18 +31,20 @@ export default function Notificacao(props: notificacaoProps) {
             setShow(true)
             const listaJsonRecuperada = localStorage.getItem("notificacoes");
             const listaRecuperada = JSON.parse(listaJsonRecuperada || "[]");
+            const mensagem = {
+                id: key,
+                mensagem: texto,
+                titulo: titulo
+            }
             if (listaRecuperada.length === 0) {
-                listaRecuperada.push({
-                    id: key,
-                    mensagem: texto,
-                    titulo: titulo
-                })
+                listaRecuperada.push(mensagem)
             } else {
-                listaRecuperada.unshift({
-                    id: key,
-                    mensagem: texto,
-                    titulo: titulo
-                })
+                for (let i = 0; i < listaRecuperada.length; i++) {
+                    if (listaRecuperada[i].id === key) {
+                        listaRecuperada.splice(i, 1)
+                    }
+                }
+                listaRecuperada.unshift(mensagem)
             }
             localStorage.setItem("notificacoes", JSON.stringify(listaRecuperada))
         }

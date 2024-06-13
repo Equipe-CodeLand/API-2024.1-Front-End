@@ -7,6 +7,11 @@ export default function ModalNotificacao(props: IModalNotificacao) {
     const [show, setShow] = useState(true)
     const [notificacoes, setNotificacoes] = useState([])
 
+    function limparNotificacoes() {
+        localStorage.removeItem("notificacoes");
+        setNotificacoes([])
+    }
+
     useEffect(() => {
         const listaJsonRecuperada = localStorage.getItem("notificacoes");
         const listaRecuperada = JSON.parse(listaJsonRecuperada || "[]");
@@ -32,10 +37,15 @@ export default function ModalNotificacao(props: IModalNotificacao) {
                             )
                         })
                     ) : (
-                        <p>Não há notificações</p>
+                        <p className={styles.semNotificacoes}>- Não há notificações -</p>
                     )}
                 </ul>
             </Modal.Body>
+            <Modal.Footer>
+                <div className={styles.footer}>
+                    <button className={styles.button} onClick={limparNotificacoes}>Limpar</button>
+                </div>
+            </Modal.Footer>
         </Modal>
     )
 }
