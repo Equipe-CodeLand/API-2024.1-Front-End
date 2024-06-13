@@ -67,7 +67,6 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setArquivoBlob(arquivo);
                 setNotaFiscal(arquivo);
             }
-            console.log(arquivoBlob);
         } catch (error) {
             console.error('Erro ao buscar arquivos:', error);
         }

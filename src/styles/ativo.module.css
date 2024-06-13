@@ -114,3 +114,30 @@
         margin-right: 10px;
     }
 }
+
+.ativoExpirado {
+    border: 2px solid #b0a6a6;
+    border-bottom: 3px solid #b0a6a6;
+    font-weight: 800;
+}
+
+.ativoExpirado .id,
+.ativoExpirado .nome,
+.ativoExpirado .disponibilidade {
+    color: #666262 !important;
+}
+
+.ativoExpirado .verde {
+    background-color: rgba(0, 255, 0, 0.5);
+    border: 1.5px solid rgba(0, 225, 0, 0.5);
+}
+
+.ativoExpirado .amarelo {
+    background-color: rgba(255, 165, 0, 0.5);
+    border: 1.5px solid rgba(225, 135, 0, 0.5);
+}
+
+.ativoExpirado .vermelho {
+    background-color: rgba(255, 0, 0, 0.5);
+    border: 1.5px solid rgba(255, 0, 0, 0.5);
+}

@@ -17,5 +17,6 @@ export interface IAtivo {
     dataExpiracao: Date,
     manutencoes: Manutencao[],
     buscarAtivos: Function,
-    isEditable: boolean
+    isEditable: boolean,
+    expirado: boolean
 }

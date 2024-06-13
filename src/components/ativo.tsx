@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IAtivo } from '../interfaces/ativo'
 import styles from '../styles/ativo.module.css'
 import ModalAtivo from './modal-ativo'
 
 export default function Ativo(props: IAtivo) {
+    const [ativoExpirado] = useState<boolean>(props.expirado)
     const [state, setState] = useState({
         show: false,
         ativoSelecionado: null as IAtivo | null
-    })    
+    })
 
     const handleClose = () => {
         setState((prevState) => ({
@@ -45,14 +46,21 @@ export default function Ativo(props: IAtivo) {
             disponibilidade = "Erro"
     }
 
-    return (
+    function classExpirado(): string {
+        if (ativoExpirado) {
+            return styles.ativo + " " + styles.ativoExpirado
+        }
 
+        return styles.ativo
+    }
+
+    return (
         <>
             {state.show && state.ativoSelecionado && (
-                <ModalAtivo ativo={state.ativoSelecionado} handleClose={handleClose} 
-                buscarAtivos={props.buscarAtivos} />
+                <ModalAtivo ativo={state.ativoSelecionado} handleClose={handleClose}
+                    buscarAtivos={props.buscarAtivos} />
             )}
-            <div className={styles.ativo} onClick={() => handleShow(props)}>
+            <div className={classExpirado()} onClick={() => handleShow(props)}>
                 <div className={styles.id}>ID: {props.id} </div>
                 <div className={styles.nome}> {props.nome} </div>
                 <div className={styles.disponibilidade}>
