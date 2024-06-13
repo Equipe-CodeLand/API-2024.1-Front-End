@@ -10,9 +10,11 @@ import { Manutencao } from "../types/manutencao.type";
 import { notificacaoProps } from "../types/notificacaoProps.type";
 import stylesNotificacao from "../styles/notificacao.module.css";
 import Notificacao from "../components/notificacao";
+import { useAuth } from "../hooks/useAuth";
 
 export default function ManutencaoPage() {
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
+  const [filteredManutencoes, setFilteredManutencoes] = useState<Manutencao[]>([]);
   const [error, setError] = useState<Error | unknown>(null);
   const [filteredData, setFilteredData] = useState<Array<Manutencao>>([]);
   const { get, loading, setLoading } = useAxios();
@@ -23,6 +25,9 @@ export default function ManutencaoPage() {
   const [filtro, setFiltro] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { getCargo } = useAuth();
+  const itemsPerPage = 5;
   const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false);
   const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([]);
 
@@ -126,6 +131,14 @@ export default function ManutencaoPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isMobile) {
+      setFilteredManutencoes(manutencoes); // Exibir todas as manutenções em modo mobile
+    } else {
+      setFilteredManutencoes(manutencoes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+    }
+  }, [manutencoes, currentPage, isMobile]);
+
   const buscarManutencoes = async () => {
     try {
       const response = await get("/manutencao");
@@ -218,90 +231,98 @@ export default function ManutencaoPage() {
     return `${ano}-${mes}-${dia}`;
   };
 
+  const totalPages = Math.ceil(manutencoes.length / itemsPerPage);
+
   return (
     <div>
       <Navbar local="manutencao" />
       <div>
         <div className={styles.body}>
-          <div className={styles.filtro}>
-            <h2>Filtro</h2>
-            <div className={styles.inputs}>
-              <select
-                name=""
-                id="filtrarPor"
-                className={`${styles.filtrarPor}`}
-                onChange={(e) => setFiltro(e.target.value)}
-              >
-                <option value="">Filtrar por</option>
-                <option value="ID">ID</option>
-                <option value="Nome">Nome</option>
-              </select>
-              {filtro === "ID" && (
-                <input
-                  type="number"
-                  placeholder="ID"
-                  value={idInput}
-                  className={styles.idInput}
-                  onChange={(e) => setIdInput(e.target.value)}
-                />
+          {isMobile ? (
+            <div className={styles.botoes}>
+              <button className={styles.botao} onClick={() => setIsModalOpen(true)}>
+                Filtro
+              </button>
+              {getCargo() === "Administrador" && (
+                  <Link className={styles.botao} to="/cadastrar/manutencoes">
+                      Adicionar Manutenção
+                  </Link>
               )}
-              {filtro === "Nome" && (
-                <input
-                  type="text"
-                  placeholder="Nome"
-                  value={nomeInput}
-                  className={styles.nomeInput}
-                  onChange={(e) => setNomeInput(e.target.value)}
-                />
-              )}
-              <hr />
-              <div>
-                <label>Data Início</label>
-                <input
-                  type="date"
-                  placeholder="Data Início"
-                  value={dataInicio}
-                  onChange={(e) => setDataInicio(e.target.value)}
-                />
+            </div>
+          ) : (
+            <div className={styles.filtro}>
+              <h2>Filtro</h2>
+              <div className={styles.inputs}>
+                <select
+                  name=""
+                  id="filtrarPor"
+                  className={`${styles.filtrarPor}`}
+                  onChange={(e) => setFiltro(e.target.value)}
+                >
+                  <option value="">Filtrar por</option>
+                  <option value="ID">ID</option>
+                  <option value="Nome">Nome</option>
+                </select>
+                {filtro === "ID" && (
+                  <input
+                    type="number"
+                    placeholder="ID"
+                    value={idInput}
+                    className={styles.idInput}
+                    onChange={(e) => setIdInput(e.target.value)}
+                  />
+                )}
+                {filtro === "Nome" && (
+                  <input
+                    type="text"
+                    placeholder="Nome"
+                    value={nomeInput}
+                    className={styles.nomeInput}
+                    onChange={(e) => setNomeInput(e.target.value)}
+                  />
+                )}
+                <hr />
+                <div>
+                  <label>Data Início</label>
+                  <input
+                    type="date"
+                    placeholder="Data Início"
+                    value={dataInicio}
+                    onChange={(e) => setDataInicio(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label>Data Final</label>
+                  <input
+                    type="date"
+                    placeholder="Data Final"
+                    value={dataFinal}
+                    onChange={(e) => setDataFinal(e.target.value)}
+                  />
+                </div>
               </div>
-              <div>
-                <label>Data Final</label>
-                <input
-                  type="date"
-                  placeholder="Data Final"
-                  value={dataFinal}
-                  onChange={(e) => setDataFinal(e.target.value)}
-                />
+              <div className={styles.filtrar}>
+                <button onClick={limparFiltros}>Limpar</button>
+                <button onClick={filtrar}>Aplicar</button>
               </div>
             </div>
-            <div className={styles.filtrar}>
-              <button onClick={limparFiltros}>Limpar</button>
-              <button onClick={filtrar}>Aplicar</button>
-            </div>
-          </div>
+          )}
           <div className={styles.conteudo}>
             <main>
-              <div className={styles.botoes}>
-                {isMobile && (
-                  <div className={styles.filtroModal}>
-                    <button className={styles.botao} onClick={() => setIsModalOpen(true)}>
-                      Filtro
-                    </button>
-                  </div>
-                )}
-                <div className={styles.adicionarManutencao}>
+              {!isMobile && (
+                <div className={styles.botoes}>
                   <Link className={styles.botao} to="/cadastrar/manutencoes">
                     Adicionar Manutenções
                   </Link>
                 </div>
-              </div>
+              )}
               <div className={styles.listarManutencao}>
                 {loading ? (
                   <span className={styles.semManutencao}>Carregando manutenções...</span>
                 ) : error ? (
                   <span className={styles.semManutencao}>Erro ao carregar manutenções! :(</span>
-                ) : manutencoes.length > 0 ? (
-                  manutencoes.map((manutencao) => {
+                ) : filteredManutencoes.length > 0 ? (
+                  filteredManutencoes.map((manutencao) => {
                     let expirado = false
                     if (manutencao.dataFinal !== null && new Date(manutencao.dataFinal) <= new Date()) {
                       expirado = true
@@ -325,6 +346,27 @@ export default function ManutencaoPage() {
                   <span className={styles.semManutencao}>Sem manutenções cadastradas</span>
                 )}
               </div>
+              {!isMobile && filteredManutencoes.length > 0 && (
+                <div className={styles.paginacao}>
+                  <button
+                    className={styles.botaoPaginacao}
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    &lt; Anterior
+                  </button>
+                  <span>
+                    Página {currentPage} de {totalPages}
+                  </span>
+                  <button
+                    className={styles.botaoPaginacao}
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Próxima &gt;
+                  </button>
+                </div>
+              )}
             </main>
           </div>
         </div>

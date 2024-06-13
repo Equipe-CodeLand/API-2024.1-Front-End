@@ -72,7 +72,7 @@
     color: #666262 !important;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
     .manutencao {
         flex-direction: column;
         height: auto;

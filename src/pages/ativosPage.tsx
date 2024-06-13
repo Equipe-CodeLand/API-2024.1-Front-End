@@ -23,11 +23,15 @@ export default function AtivosPage() {
     const [filtro, setFiltro] = useState("");
     const [idInput, setIdInput] = useState("");
     const [nomeInput, setNomeInput] = useState("");
+    const [mostrarExpirados, setMostrarExpirados] = useState(true);
+    const [mostrarNaoExpirados, setMostrarNaoExpirados] = useState(true);
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5; 
     const isFuncionario = getCargo() === "Funcionário";
     const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false)
     const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([])
@@ -134,7 +138,10 @@ export default function AtivosPage() {
         setStatusEmManutencao(false);
         setStatusOcupado(false);
         setFilteredData(data); 
-    };  
+        setCurrentPage(1); 
+        setMostrarExpirados(true);
+        setMostrarNaoExpirados(true);
+    };
 
     const filtrar = () => {
         let filtered = data;
@@ -153,9 +160,44 @@ export default function AtivosPage() {
         if (statusFilters.length > 0) {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
         }
+
+        const hoje = new Date();
+        if (mostrarExpirados === false) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data > hoje){
+                        ativos.push(ativo);
+                    }
+                } else {
+                    ativos.push(ativo);
+                }
+            });
+            filtered = ativos
+        }        
+
+        if (mostrarNaoExpirados === false) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data < hoje){
+                        ativos.push(ativo);
+                    }
+                }
+            });
+            filtered = ativos
+        } 
+
         setFilteredData(filtered);
         setIsModalOpen(false);
+        setCurrentPage(1);
     };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
     const render = loading ? (
         <div className={styles.listarAtivo}>
@@ -170,9 +212,38 @@ export default function AtivosPage() {
                 :(
             </span>
         </div>
-    ) : filteredData.length > 0 ? (
+    ) : isMobile ? (
+        filteredData.map((ativo) => {
+            let expirado = false
+            if (ativo.dataExpiracao !== null && new Date(ativo.dataExpiracao) <= new Date()) {
+                expirado = true
+            }
+            return (
+                <Ativo
+                    key={ativo.id}
+                    id={ativo.id}
+                    nome={ativo.nome}
+                    notaFiscal={ativo.notaFiscal}
+                    descricao={ativo.descricao}
+                    marca={ativo.marca}
+                    modelo={ativo.modelo}
+                    preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                    usuario={ativo.usuario}
+                    setor={ativo.setor}
+                    status={ativo.status}
+                    dataAquisicao={ativo.dataAquisicao}
+                    dataExpiracao={ativo.dataExpiracao}
+                    manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
+                    buscarAtivos={ativos}
+                    codigo_nota_fiscal={ativo.codigo_nota_fiscal}
+                    isEditable={!isFuncionario}
+                    expirado={expirado}
+                />
+            )
+        })
+    ) : currentItems.length > 0 ? (
         <div className={styles.listarAtivo}>
-            {filteredData.map((ativo) => {
+            {currentItems.map((ativo) => {
                 let expirado = false
                 if (ativo.dataExpiracao !== null && new Date(ativo.dataExpiracao) <= new Date()) {
                     expirado = true
@@ -199,8 +270,7 @@ export default function AtivosPage() {
                         expirado={expirado}
                     />
                 )
-            }
-            )}
+            })}
         </div>
     ) : (
         <div className={styles.listarAtivo}>
@@ -210,6 +280,8 @@ export default function AtivosPage() {
             </span>
         </div>
     );
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
     return (
         <div>
@@ -285,6 +357,27 @@ export default function AtivosPage() {
                                     </li>
                                 </ul>
                             </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div className={styles.filtrar}>
                             <button onClick={limparFiltros}>Limpar</button>
@@ -306,6 +399,25 @@ export default function AtivosPage() {
                         <div className={styles.listarAtivo}>
                             {render}
                         </div>
+                        {!isMobile && filteredData.length > itemsPerPage && (
+                            <div className={styles.paginacao}>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                >
+                                    &lt; Anterior
+                                </button>
+                                <span>{`Página ${currentPage} de ${totalPages}`}</span>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    Próxima &gt;
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
             </div>
@@ -368,6 +480,27 @@ export default function AtivosPage() {
                                             onChange={(e) => setStatusOcupado(e.target.checked)}
                                         />
                                         Ocupado
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
                                     </li>
                                 </ul>
                             </div>

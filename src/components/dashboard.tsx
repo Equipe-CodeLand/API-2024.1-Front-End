@@ -32,7 +32,6 @@ export default function DashboardRelatorios() {
 
             let valorTotal = 0
             const hoje = new Date();
-            console.log(hoje);
 
             dashboardData.ativos.map((ativo: IAtivo) => {
                 if (ativo.preco_aquisicao !== null) {
@@ -42,8 +41,6 @@ export default function DashboardRelatorios() {
 
             dashboardData.valorTotal = valorTotal
             setDados(dashboardData);
-            setLoading(false);
-
             setLoading(false);
         } catch (error) {
             console.error("Erro ao filtrar:", error);
@@ -66,8 +63,6 @@ export default function DashboardRelatorios() {
                 }
 
                 let valorTotal = 0
-                const hoje = new Date();
-                console.log(hoje);
 
                 dashboardData.ativos.map((ativo: IAtivo) => {
                     if (ativo.preco_aquisicao !== null) {

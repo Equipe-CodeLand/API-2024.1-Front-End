@@ -8,7 +8,7 @@
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
-    height: calc(100vh - 64px);
+    height: 100vh !important;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -43,11 +43,11 @@ input[type="Date"] {
     border-radius: 30px !important;
 }
 
-.inputs > select > .sem_filtro {
+.inputs>select>.sem_filtro {
     color: #ddd;
 }
 
-label{
+label {
     margin-bottom: 0 !important;
 }
 
@@ -79,7 +79,7 @@ label{
     color: var(--corPrimaria);
 }
 
-hr{
+hr {
     width: 100%;
     border: 1px solid #000;
     margin: 0px !important;
@@ -97,7 +97,7 @@ hr{
     max-width: 1000px;
     min-height: 80vh;
     max-height: none;
-    
+
     margin: 0 auto;
     padding: 64px;
 }
@@ -122,13 +122,10 @@ hr{
 
 .botao {
     background-color: var(--corPrimaria);
-
-    width: 260px;
-
+    width: 200px;
     border: 2px solid var(--corPrimaria);
     border-radius: 10px;
     box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
-
     font-family: var(--inter);
     font-size: 1em;
     font-weight: 400;
@@ -136,9 +133,7 @@ hr{
     text-align: center;
     line-height: 50px;
     color: white;
-
     cursor: pointer;
-
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -148,39 +143,34 @@ hr{
 }
 
 .listarManutencao {
-
     min-height: 300px;
     width: 100%;
-
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 30px;
-
     padding: 20px;
 }
 
 .semManutencao {
-    align-self:  center;
+    align-self: center;
     margin-top: 20%;
-
     font-family: var(--inter);
     font-weight: 400;
     text-align: center;
     text-justify: center;
     line-height: 1.5em;
     color: black;
-  }
-  
-  .botoes{
-    display: flex;
-    padding: 20px;
-    width: 100%;
-    justify-content: space-between;
-    gap: 20px;
-  }
+}
 
-  .modal {
+.botoes {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 20px;
+}
+
+.modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -190,43 +180,45 @@ hr{
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
 .modalTitulo {
     display: flex;
     justify-content: center;
-    width: 100%; 
+    width: 100%;
     text-align: center;
 }
 
 .modalFooter {
     display: flex;
-    justify-content: center; 
-    gap: 10px; 
+    justify-content: center;
+    gap: 10px;
     width: 100%;
 }
 
 .modalFooter button {
-    width: 100px; 
+    width: 100px;
 }
-  
-  .closeButton {
+
+.closeButton {
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 1.5em;
     cursor: pointer;
-  }
+}
 
-  .inputs, .bodyModal {
+.inputs,
+.bodyModal {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-  }
+}
 
-  .inputs select, .inputs input{
+.inputs select,
+.inputs input {
     margin: 0 !important;
     padding: 0px 10px !important;
     height: 40px !important;
@@ -234,16 +226,16 @@ hr{
     font-family: var(--inter);
     font-weight: 500 !important;
     box-sizing: border-box;
-  }
+}
 
-  
-  @media only screen and (max-width: 1000px) {
+
+@media only screen and (max-width: 700px) {
     .conteudo main {
         padding: 32px;
-        width: 80%;
+        width: 100%;
     }
 
-    .body{
+    .body {
         flex-direction: column;
         width: 100%;
     }
@@ -257,12 +249,14 @@ hr{
         flex-basis: 20%;
         text-align: start;
     }
+
     .nome {
         flex-grow: 1;
         flex-shrink: 1;
         word-break: break-all;
         text-align: left;
     }
+
     .datas {
         flex-grow: 0;
         flex-basis: 25%;
@@ -272,31 +266,36 @@ hr{
 
     .botoes{
         display: flex;
-        width: 50%;
+        width: 100%;
+        justify-content: center;
+        padding-right: 0px;
         font-size: 13px;
     }
 
     .botao{
-        height: 100%;
+        height: 55px;
         font-size: 1.1em;
-        line-height: 30px;
+        margin-top: 50px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 
     .filtro {
-      display: none;
-    }
-  
-    .filtroButton {
-      display: block;
+        display: none;
     }
 
-    .modalTitulo{
+    .filtroButton {
+        display: block;
+    }
+
+    .modalTitulo {
         display: flex;
         justify-content: center;
         text-align: center;
     }
 
-    .inputs, .bodyModal {
+    .inputs,
+    .bodyModal {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -304,13 +303,17 @@ hr{
         text-align: center;
     }
 
-    .bodyModal .filtrar{
+    .bodyModal .filtrar {
         margin-top: 10%;
         width: 80%;
         justify-content: space-between;
     }
 
-    .inputs select, input[type="date"], input[type="number"], input[type="text"], .filtrarPor{
+    .inputs select,
+    input[type="date"],
+    input[type="number"],
+    input[type="text"],
+    .filtrarPor {
         margin: 0 !important;
         padding: 0px 10px !important;
         border-radius: 10px !important;
@@ -320,4 +323,52 @@ hr{
         font-weight: 500 !important;
         box-sizing: border-box;
     }
-  }
+}
+
+.botaoPaginacao {
+    padding: 10px 20px;
+    background-color: var(--corPrimaria);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.botaoPaginacao:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.botaoPaginacao:not(:disabled) {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: var(--corPrimaria);
+    border: 2px solid var(--corPrimaria);
+    border-radius: 10px;
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
+    font-family: var(--inter);
+    font-size: 1em;
+    font-weight: 400;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.paginacao span {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.botaoPaginacao:hover:not(:disabled) {
+    background-color: white;
+    color: var(--corPrimaria);
+}

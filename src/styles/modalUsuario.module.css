@@ -78,3 +78,8 @@
 .botoes button:hover {
     background-color: #d9d9d9;
 }
+
+.error {
+    color: red;
+    font-size: 17.6px;
+}
