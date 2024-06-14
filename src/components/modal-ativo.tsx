@@ -18,6 +18,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [disponivel, setDisponivel] = useState(true);
     const [ocupado, setOcupado] = useState(false);
     const [emManutencao, setEmManutencao] = useState(false);
+    const [expirado, setExpirado] = useState(false); // Estado para controlar o status "Expirado"
 
     const [nome, setNome] = useState(props.ativo.nome || '');
     const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
@@ -150,8 +151,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-
-        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
+        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : expirado ? 4 : null)); // Atualizando o statusId
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
 
@@ -165,7 +165,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             usuario: usuarioSelecionado,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
-            status: { id: statusId },
+            status: { id: statusId }, // Atualizando o statusId
             codigoNotaFiscal: codigoNotaFiscal
         };
 
@@ -319,6 +319,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDisponivel(true);
         setOcupado(false);
         setEmManutencao(false);
+        setExpirado(false); // Resetar o estado "Expirado"
         setUsuarioSelecionado(null);
     };
 
@@ -326,6 +327,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setOcupado(true);
         setDisponivel(false);
         setEmManutencao(false);
+        setExpirado(false); // Resetar o estado "Expirado"
     };
 
     useEffect(() => {
@@ -334,16 +336,25 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setDisponivel(true);
                 setOcupado(false);
                 setEmManutencao(false);
+                setExpirado(false); // Resetar o estado "Expirado"
                 break;
             case 2:
                 setEmManutencao(true);
                 setDisponivel(false);
                 setOcupado(false);
+                setExpirado(false); // Resetar o estado "Expirado"
                 break;
             case 3:
                 setDisponivel(false);
                 setOcupado(true);
                 setEmManutencao(false);
+                setExpirado(false); // Resetar o estado "Expirado"
+                break;
+            case 4: // Adicionando caso para o status "Expirado"
+                setDisponivel(false);
+                setOcupado(false);
+                setEmManutencao(false);
+                setExpirado(true); 
                 break;
             default:
                 break;
@@ -407,7 +418,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                         </div>
                     </> : !isEditing ? <div className={styles.informacoes}>
                         <div>
-                            <strong>Status: </strong> {props.ativo.status.nome_status}
+                            <strong>Status: </strong> 
+                            {expirado ? 'Expirado' : props.ativo.status.nome_status} {/* Renderizando o status "Expirado" */}
                         </div>
                     </div> : ''
                     }
@@ -566,7 +578,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <button className={styles.editar} onClick={saveChanges}>SALVAR ALTERAÇÕES</button>
                             ) : (
-                                <button className={styles.editar} onClick={toggleEditing}>EDITAR ATIVO</button>
+                                <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
                             )}
                         </div> : ''
                     }
