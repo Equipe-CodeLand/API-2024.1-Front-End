@@ -38,6 +38,12 @@ export default function AlteracaoSenhaPage() {
                 limparCampos();
                 return true;
             } else {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'E-mail de verificação enviado! Consulte seu e-mail para continuar a alteração da senha!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
                 await enviarEmailVerificacao();
                 console.log(response)
                 return false;
