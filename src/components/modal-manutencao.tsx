@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Select from 'react-select';
 import ButtonMain from './botao';
 import styles from '../styles/modal.module.css'
+
 import { FaRegEdit } from 'react-icons/fa';
 import { IModalManutencao } from '../interfaces/modal';
 import Swal from 'sweetalert2';
@@ -24,6 +25,7 @@ export default function ModalManutencao(props: IModalManutencao) {
   const { get, put, deletar } = useAxios();
   const { getCargo } = useAuth();
 
+
   const [errors, setErrors] = useState({
     responsavel: '',
     localizacao: '',
@@ -42,8 +44,10 @@ export default function ModalManutencao(props: IModalManutencao) {
         setAtivos(ativosTransformados);
       })
       .catch(error => {
+
         console.error('Erro ao buscar ativos:', error)
       })
+
   }, []);
 
   const handleSearch = (selectedOption: any) => {
@@ -70,7 +74,7 @@ export default function ModalManutencao(props: IModalManutencao) {
       });
       return;
     }
-  
+
     const dadosAtualizados = {
       data_inicio: formattedDataInicio,
       data_final: formattedDataFinal,
@@ -87,6 +91,10 @@ export default function ModalManutencao(props: IModalManutencao) {
           icon: 'success',
           confirmButtonText: 'OK!'
         });
+
+        console.log('Dados atualizados com sucesso:', response.data);
+        console.log(dadosAtualizados);
+
         props.handleClose();
         props.buscarManutencao();
       })
@@ -119,7 +127,11 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi deletada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-      });
+
+        });
+        console.log('Manutenção excluída com sucesso:', response.data);
+        console.log(props.manutencao.id);
+
         props.handleClose();
         props.buscarManutencao();
       })
@@ -159,80 +171,75 @@ export default function ModalManutencao(props: IModalManutencao) {
               </div>
             </div>
 
-            <div className="conteudo-modal">
-              {isEditing ? (
-                <>
-                  <div className='p-icon'>
-                    <p>Ativo:</p>
-                    <Select
-                      options={ativos}
-                      value={ativoSelecionado}
-                      onChange={handleSearch}
-                      placeholder="Pesquisar ativo"
-                      styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
-                    />
-                  </div>
-                  {ativoSelecionado && (
-                    <div className='p-icon'>
-                      <p>ID do ativo:</p>
-                      <input type="text" value={ativoSelecionado.id} readOnly />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className='p-icon'>
-                  <p>ID do ativo: {props.manutencao.ativos_id}</p>
-                </div>
-              )}
-
-              <div className='p-icon'>
-                <p>Responsável:
-                  {isEditing ? (
-                    <input type="text" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
-                  ) : (
-                    props.manutencao.responsavel
-                  )}
-                  {errors.responsavel && <span className={styles.error}>{errors.responsavel}</span>}
-                </p>
-              </div>
-
-              <div className='p-icon'>
-                <p>Localização:
-                  {isEditing ? (
-                    <input type="text" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
-                  ) : (
-                    props.manutencao.localizacao
-                  )}
-                  {errors.localizacao && <span className={styles.error}>{errors.localizacao}</span>}
-                </p>
-              </div>
-
-              <div className='p-icon'>
-                <p>Data de início:
-                  {isEditing ? (
-                    <input type="text" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
-                  ) : (
-                    dataInicio
-                  )}
-                  {errors.dataInicio && <span className={styles.error}>{errors.dataInicio}</span>}
-                </p>
-              </div>
-
-              <div className='p-icon'>
-                <p>Data final:
-                  {isEditing ? (
-                    <input type="text" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
-                  ) : (
-                    dataFinal
-                  )}
-                  {errors.dataFinal && <span className={styles.error}>{errors.dataFinal}</span>}
-                </p>
-              </div>
+          <div className="conteudo-modal">
+            <div className='p-icon'>
+              <p><strong>Ativo: </strong>
+                {isEditing ? (
+                  <Select
+                    options={ativos}
+                    value={ativoSelecionado}
+                    onChange={handleSearch}
+                    placeholder="Pesquisar ativo"
+                    styles={{ control: (provided) => ({ ...provided, borderRadius: '30px'}) }}
+                  />
+                ) : (
+                  ativoSelecionado ? ativoSelecionado.label : props.manutencao.nome
+                )}
+              </p>
+            </div>
+            <div className='p-icon'>
+              <p><strong>ID do ativo: </strong>
+                {isEditing ? (
+                  <input type="text" value={ativoSelecionado ? ativoSelecionado.id : ''} readOnly />
+                ) : (
+                  props.manutencao.ativos_id
+                )}
+              </p>
+            </div>
+            <div className='p-icon'>
+              <p><strong>Responsável: </strong>
+                {isEditing ? (
+                  <input type="text" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
+                ) : (
+                  props.manutencao.responsavel
+                )}
+                {errors.responsavel && <span className='error'>{errors.responsavel}</span>}
+              </p>
+            </div>
+            <div className='p-icon'>
+              <p><strong>Localização: </strong>
+                {isEditing ? (
+                  <input type="text" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
+                ) : (
+                  props.manutencao.localizacao
+                )}
+                {errors.localizacao && <span className='error'>{errors.localizacao}</span>}
+              </p>
+            </div>
+            <div className='p-icon'>
+              <p><strong>Data de início: </strong> 
+                {isEditing ? (
+                  <input type="text" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
+                ) : (
+                  dataInicio
+                )}
+                {errors.dataInicio && <span className='error'>{errors.dataInicio}</span>}
+              </p>
+            </div>
+            <div className='p-icon'>
+              <p><strong>Data final: </strong> 
+                {isEditing ? (
+                  <input type="text" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
+                ) : (
+                  dataFinal
+                )}
+                {errors.dataFinal && <span className='error'>{errors.dataFinal}</span>}
+              </p>
             </div>
           </div>
-        </Modal.Body>
-
-        <Modal.Footer>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
           {getCargo() === "Administrador" ?
             <div className={styles.botoes}>
                 <button className={styles.excluir} onClick={handleDelete}>EXCLUIR ATIVO</button>

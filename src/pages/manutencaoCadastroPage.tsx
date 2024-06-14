@@ -18,6 +18,8 @@ export default function ManutencaoCadastroPage() {
     const [data_final, setData_final] = useState('');
     const [localizacao, setLocalizacao] = useState('');
     const [dataError, setDataError] = useState('');
+    const [descricao, setDescricao] = useState('');
+
     const { get, post } = useAxios()
 
     useEffect(() => {
@@ -83,7 +85,7 @@ export default function ManutencaoCadastroPage() {
         if (!ativoSelecionado || !responsavel || !data_inicio || !data_final || !localizacao) {
             Swal.fire({
                 title: 'Erro ao cadastrar a manutenção!',
-                text: `Por favor, preencha todos os campos do formulário!`,
+                text: `Por favor, preencha os campos obrigatórios do formulário!`,
                 icon: 'warning',
                 confirmButtonText: 'OK!'
             })
@@ -96,6 +98,7 @@ export default function ManutencaoCadastroPage() {
             data_inicio: formattedDataInicio,
             data_final: formattedDataFinal,
             localizacao,
+            descricao
         })
             .then(() => {
                 Swal.fire({
@@ -103,15 +106,16 @@ export default function ManutencaoCadastroPage() {
                     text: `A Manutenção foi cadastrada com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
-                })
+                }).then(() => {
+                    window.location.href = '/manutencao';
+                });
 
                 setAtivos([]);
                 setResponsavel('');
                 setData_inicio('');
                 setData_final('');
                 setLocalizacao('');
-
-                window.location.href = '/manutencao';
+                setDescricao('');
             })
             .catch(() => {
                 Swal.fire({
@@ -121,13 +125,14 @@ export default function ManutencaoCadastroPage() {
                     confirmButtonText: 'OK!'
                 }).then(() => {
                     window.location.href = '/manutencao';
-                  });
-            })
+                });
+            });
     };
 
     return (
         <>
             <Navbar local='manutencaoPage' />
+            <main>
             <div className={styles['form-container']}>
                 <br />
                 <h1>Cadastro de Manutenções</h1>
@@ -141,31 +146,52 @@ export default function ManutencaoCadastroPage() {
                         <>
                             <label>
                                 <span className='input_required'>ID do Ativo:</span> 
+                                <br />
                                 <input type="text" name="ID do Ativo" placeholder="ID do Ativo" value={ativoSelecionado ? ativoSelecionado.id : ''} readOnly />
                             </label>
                             <label>
+                                Descrição:
+                                <br />
+                                <textarea name="Descrição" placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} rows={1} 
+                                />
+                            </label>
+                            <div className={styles['date-fields']}>
+                            <label>
                                 <span className='input_required'>Responsável:</span>
+                                <br />
                                 <input type="text" name="Responsável" placeholder="Responsável" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
                             </label>
                             <label>
+                                <span className="input_required">Localização:</span>
+                                <br />
+                                <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
+                            </label>
+                            </div>
+                            <div className={styles['date-fields']}>
+                            <label className={styles['date-field']}>
                                 <span className='input_required'>Data de Início:</span>
                                 <input type="date" name="Data de Início" value={data_inicio} onChange={e => setData_inicio(e.target.value)} />
                             </label>
-                            <label>
+                            <label className={styles['date-field']}>
                                 <span className="input_required">Data Final:</span>
                                 <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
                             </label>
+
                             <label>
                                 <span className="input_required">Localização:</span>
                                 <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
                             </label>
                             {dataError && <p style={{ color: 'red' }}>{dataError}</p>}
+
+                            </div>
+
                             <input type="submit" value="Cadastrar Manutenção" />
                             <br />
                         </>
                     )}
                 </form>
             </div>
+            </main>
             <Footer />
         </>
     );

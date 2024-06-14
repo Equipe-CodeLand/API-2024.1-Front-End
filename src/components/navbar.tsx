@@ -40,7 +40,7 @@ export default function Navbar(props: Props) {
                             { getCargo() === "Administrador" && (
                                 <>
                                     <li><Link className={(props.local === "manutencao") ? styles.mark : ""} to="/manutencao">Manutenções</Link></li> 
-                                    <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuarios</Link></li>
+                                    <li><Link className={(props.local === "usuarios") ? styles.mark : ""} to="/usuarios">Usuários</Link></li>
                                 </>
                             )}
                             <div className={styles.separacao}></div>

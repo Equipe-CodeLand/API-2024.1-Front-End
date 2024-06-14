@@ -567,7 +567,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <button className={styles.editar} onClick={saveChanges}>SALVAR ALTERAÇÕES</button>
                             ) : (
-                                <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
+                                <button className={styles.editar} onClick={toggleEditing}>EDITAR ATIVO</button>
                             )}
                         </div> : ''
                     }

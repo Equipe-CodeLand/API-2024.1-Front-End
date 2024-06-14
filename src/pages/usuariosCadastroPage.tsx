@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
-import styles from '../styles/formularioUsuario.module.css';
+import styles from '../styles/formulario.module.css';
 
 const UsuariosCadastroPage: React.FC = () => {
   const [nome, setNome] = useState('');
@@ -81,43 +81,47 @@ const UsuariosCadastroPage: React.FC = () => {
   return (
     <div>
       <Navbar local="usuarios" />
+      <main>
       <div className={styles['form-container']}>
+        <br />
         <h1>Cadastro de Usuário</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>
             <span className='input_required'>Nome:</span>
-            <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
+            <br />
+            <input placeholder= "Nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
-          <br />
           <label>
             <span className="input_required">CPF:</span>
-            <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+            <br />
+            <input placeholder= "CPF" type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
           </label>
-          <br />
           <label>
-            <span className="input_required">Email:</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <span className="input_required">E-mail:</span>
+            <br />
+            <input placeholder= "E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
-          <br />
           <label>
             <span className='input_required'>Cargo:</span>
-            <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
-              <option value="">Selecione o cargo</option>
+            <br />
+            <select value={cargo} onChange={(e) => setCargo(e.target.value)} >
+              <option value="">Selecionar cargo</option>
               {cargos.map((cargo, index) => (
                 <option key={index} value={cargo.value.id}>{cargo.label}</option>
               ))}
             </select>
           </label>
-          <br />
           <label>
             <span className='input_required'>Senha:</span>
-            <input className={styles.senha} type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
+            <br />
+            <input placeholder= "Senha" className={styles.senha} type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
           </label>
-          <br />
-          <button type="submit" className={styles['submit-button']}>Cadastrar Usuário</button>
+          <input type="submit" value="Cadastrar Usuário" />
           {error && <p className={styles.error}>{error}</p>}
+          <br />
         </form>
       </div>
+      </main>
       <Footer />
     </div>
   );

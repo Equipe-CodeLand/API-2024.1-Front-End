@@ -10,28 +10,37 @@
 
 .titulo {
     text-align: left;
-    font-weight: 700;
-    font-size: 1.5em;
-
+    font-weight: 400;
+    font-size: 1em;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 30px;
+    align-items: center;
+}
 
+.titulo .icone-edicao {
+    width: auto;
+    height: 50px;
+    margin-left: 10px;
+}
+
+.campos { 
     margin-bottom: 30px;
 }
 
 .informacoes {
     margin-bottom: 15px;
-    font-size: 1.1em;
+    font-size: 1em;
     display: flex;
 }
 
 .informacoes strong {
     margin-right: 5px;
 }
-
+/* 
 .informacoes div {
     padding-right: 20px;
-}
+} */
 
 .informacoes button {
     padding: 0;
@@ -39,7 +48,7 @@
 }
 
 .ativos {
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 .ativos ul {
@@ -65,9 +74,8 @@
     font-weight: 700;
     padding: 5px 20px;
     border-radius: 10px;
-    border: 2px solid #202020;
-    background-color: transparent;
     transition: all 0.3s;
+    border: none; /* Remove a borda */
 }
 .botoes .salvar {
     background-color: var(--corPrimaria);
@@ -83,3 +91,18 @@
     color: red;
     font-size: 17.6px;
 }
+
+.informacoesEdicao {
+    flex-direction: column;
+}
+
+.botoes .btn-inativar {
+    background-color: #DB5050 !important;
+    /* color: white !important; */
+}
+
+.botoes .btn-salvar {
+    background-color: var(--corPrimaria) !important;
+    /* color: white !important; */
+}
+
