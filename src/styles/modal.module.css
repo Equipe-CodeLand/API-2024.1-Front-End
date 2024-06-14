@@ -87,9 +87,10 @@ p {
 .titulo {
   font-size: 1.5em;
   display: flex;
+  align-items: center;
   margin-bottom: 0;
   width: auto;
-  justify-content: left;
+  /* justify-content: left; */
 }
 
 .ativo_id {
@@ -116,19 +117,28 @@ p {
 .p-icon, .i-icon {
   font-size: 1em;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   /* width: 100%; */
 }
 
-.i-icon {
+/* .i-icon {
   margin-left: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin-right: 5%;
   margin: 5%;
+} */
+
+.i-icon {
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 5%;
+  width: 100%; /* Adiciona esta linha para garantir que o container ocupe todo o espaço disponível */
 }
 
 .p-icon {
@@ -139,7 +149,6 @@ p {
 
 .select-container {
   width: 100%;
-
 }
 
 .error {

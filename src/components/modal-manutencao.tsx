@@ -25,7 +25,6 @@ export default function ModalManutencao(props: IModalManutencao) {
   const { get, put, deletar } = useAxios();
   const { getCargo } = useAuth();
 
-
   const [errors, setErrors] = useState({
     responsavel: '',
     localizacao: '',
@@ -44,10 +43,8 @@ export default function ModalManutencao(props: IModalManutencao) {
         setAtivos(ativosTransformados);
       })
       .catch(error => {
-
         console.error('Erro ao buscar ativos:', error)
       })
-
   }, []);
 
   const handleSearch = (selectedOption: any) => {
@@ -64,7 +61,6 @@ export default function ModalManutencao(props: IModalManutencao) {
     const formattedDataInicio = formatDateForBackend(dataInicio);
     const formattedDataFinal = formatDateForBackend(dataFinal);
 
-    // Verificando se a data final é menor que a data de início
     if (new Date(formattedDataFinal) < new Date(formattedDataInicio)) {
       Swal.fire({
         title: 'Erro',
@@ -127,7 +123,6 @@ export default function ModalManutencao(props: IModalManutencao) {
           text: `A manutenção foi deletada com sucesso!`,
           icon: 'success',
           confirmButtonText: 'OK!'
-
         });
         console.log('Manutenção excluída com sucesso:', response.data);
         console.log(props.manutencao.id);
@@ -157,7 +152,7 @@ export default function ModalManutencao(props: IModalManutencao) {
               <h3 className='titulo'>
                 {ativoSelecionado ? ativoSelecionado.label : props.manutencao.nome}
               </h3>
-              <div className='p-icon'>
+              <div className='i-icon' style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
                 <ButtonMain
                   icon={<FaRegEdit style={{ fontSize: 30 }} />}
                   onClick={() => {
@@ -170,6 +165,7 @@ export default function ModalManutencao(props: IModalManutencao) {
                 />
               </div>
             </div>
+
 
           <div className="conteudo-modal">
             <div className='p-icon'>
