@@ -23,8 +23,8 @@ export default function AtivosPage() {
     const [filtro, setFiltro] = useState("");
     const [idInput, setIdInput] = useState("");
     const [nomeInput, setNomeInput] = useState("");
-    const [mostrarExpirados, setMostrarExpirados] = useState(true);
-    const [mostrarNaoExpirados, setMostrarNaoExpirados] = useState(true);
+    const [mostrarExpirados, setMostrarExpirados] = useState(false);
+    const [mostrarNaoExpirados, setMostrarNaoExpirados] = useState(false);
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
@@ -140,8 +140,8 @@ export default function AtivosPage() {
         setStatusOcupado(false);
         setFilteredData(data); 
         setCurrentPage(1); 
-        setMostrarExpirados(true);
-        setMostrarNaoExpirados(true);
+        setMostrarExpirados(false);
+        setMostrarNaoExpirados(false);
     };
 
     const filtrar = () => {
@@ -164,7 +164,7 @@ export default function AtivosPage() {
         }
 
         const hoje = new Date();
-        if (mostrarExpirados === false) {
+        if (mostrarExpirados === true) {
             let ativos: AtivoType[] = [];
             filtered.forEach((ativo) => {
                 if (ativo.dataExpiracao != null) {
@@ -179,7 +179,7 @@ export default function AtivosPage() {
             filtered = ativos
         }        
 
-        if (mostrarNaoExpirados === false) {
+        if (mostrarNaoExpirados === true) {
             let ativos: AtivoType[] = [];
             filtered.forEach((ativo) => {
                 if (ativo.dataExpiracao != null) {

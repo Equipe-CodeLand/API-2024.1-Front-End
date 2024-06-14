@@ -42,7 +42,6 @@ export default function CadastroAtivos() {
                     label: usuario.nome,
                 }));
                 setUsuario(usuarios);
-                console.log(usuarios)
             })
             .catch(error => console.error('Erro ao buscar usuários:', error));
     }, []);
@@ -54,7 +53,6 @@ export default function CadastroAtivos() {
     const handleUsuarioSearch = (selectedOption: UsuarioType, _: any) => {
         if (selectedOption) {
             setUsuarioSelecionado(selectedOption);
-            console.log(usuarioSelecionado)
         } else {
             setUsuarioSelecionado(null);
         }
@@ -77,7 +75,6 @@ export default function CadastroAtivos() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         
-        // Validação das datas
         if (new Date(dataExpiracao) < new Date(dataAquisicao)) {
             setDataError('A data de expiração não pode ser antes da data de aquisição.');
             return;

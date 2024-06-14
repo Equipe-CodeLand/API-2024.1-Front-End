@@ -25,8 +25,6 @@ export default function Notificacao(props: notificacaoProps) {
 
     useEffect(() => {
         const notificacao = localStorage.getItem(`notificacao_${key}`)
-        console.log(notificacao)
-        console.log(show)
         if (notificacao === null) {
             setShow(true)
             const listaJsonRecuperada = localStorage.getItem("notificacoes");

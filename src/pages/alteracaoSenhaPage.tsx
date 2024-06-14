@@ -45,7 +45,6 @@ export default function AlteracaoSenhaPage() {
                     confirmButtonText: 'OK'
                 });
                 await enviarEmailVerificacao();
-                console.log(response)
                 return false;
             }
         } catch (error) {

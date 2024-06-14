@@ -18,7 +18,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [disponivel, setDisponivel] = useState(true);
     const [ocupado, setOcupado] = useState(false);
     const [emManutencao, setEmManutencao] = useState(false);
-    const [expirado, setExpirado] = useState(false); // Estado para controlar o status "Expirado"
+    const [expirado, setExpirado] = useState(false);
 
     const [nome, setNome] = useState(props.ativo.nome || '');
     const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
@@ -151,7 +151,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : expirado ? 4 : null)); // Atualizando o statusId
+        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : expirado ? 4 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
 
@@ -165,7 +165,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             usuario: usuarioSelecionado,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
-            status: { id: statusId }, // Atualizando o statusId
+            status: { id: statusId }, 
             codigoNotaFiscal: codigoNotaFiscal
         };
 
@@ -319,7 +319,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDisponivel(true);
         setOcupado(false);
         setEmManutencao(false);
-        setExpirado(false); // Resetar o estado "Expirado"
+        setExpirado(false);
         setUsuarioSelecionado(null);
     };
 
@@ -327,7 +327,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setOcupado(true);
         setDisponivel(false);
         setEmManutencao(false);
-        setExpirado(false); // Resetar o estado "Expirado"
+        setExpirado(false);
     };
 
     useEffect(() => {
@@ -336,21 +336,21 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setDisponivel(true);
                 setOcupado(false);
                 setEmManutencao(false);
-                setExpirado(false); // Resetar o estado "Expirado"
+                setExpirado(false);
                 break;
             case 2:
                 setEmManutencao(true);
                 setDisponivel(false);
                 setOcupado(false);
-                setExpirado(false); // Resetar o estado "Expirado"
+                setExpirado(false);
                 break;
             case 3:
                 setDisponivel(false);
                 setOcupado(true);
                 setEmManutencao(false);
-                setExpirado(false); // Resetar o estado "Expirado"
+                setExpirado(false);
                 break;
-            case 4: // Adicionando caso para o status "Expirado"
+            case 4:
                 setDisponivel(false);
                 setOcupado(false);
                 setEmManutencao(false);
@@ -409,7 +409,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <div className={styles.status}>
                             <ul>
                                 <li>
-                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
+                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível
                                 </li>
                                 <li>
                                     <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
@@ -419,7 +419,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                     </> : !isEditing ? <div className={styles.informacoes}>
                         <div>
                             <strong>Status: </strong> 
-                            {expirado ? 'Expirado' : props.ativo.status.nome_status} {/* Renderizando o status "Expirado" */}
+                            {expirado ? 'Expirado' : props.ativo.status.nome_status}
                         </div>
                     </div> : ''
                     }

@@ -1,5 +1,5 @@
 .modal {
-    padding: 30px 40px !important;
+    padding: 30px 40px;
     min-height: 60vh;
     max-height: auto;
 }
@@ -75,16 +75,12 @@
     padding: 5px 20px;
     border-radius: 10px;
     transition: all 0.3s;
-    border: none; /* Remove a borda */
+    border: none;
 }
 .botoes .salvar {
     background-color: var(--corPrimaria);
     border: none;
     margin-left: auto;
-}
-
-.botoes button:hover {
-    background-color: #d9d9d9;
 }
 
 .error {
@@ -97,12 +93,14 @@
 }
 
 .botoes .btn-inativar {
-    background-color: #DB5050 !important;
-    /* color: white !important; */
+    background-color: #DB5050;
+}
+
+.botoes .btn-ativar {
+    background-color: var(--corPrimaria);
 }
 
 .botoes .btn-salvar {
-    background-color: var(--corPrimaria) !important;
-    /* color: white !important; */
+    background-color: var(--corPrimaria);
 }
 

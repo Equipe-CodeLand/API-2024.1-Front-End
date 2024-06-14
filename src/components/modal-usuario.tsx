@@ -5,7 +5,7 @@ import { IModalUsuario } from "../interfaces/modalUsuario";
 import { useAxios } from "../hooks/useAxios";
 import Swal from 'sweetalert2';
 import Select from 'react-select';
-import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
+import { FaRegEdit } from 'react-icons/fa';
 import { useAuth } from "../hooks/useAuth";
 
 export default function ModalUsuario(props: IModalUsuario) {
@@ -50,9 +50,9 @@ export default function ModalUsuario(props: IModalUsuario) {
 
     const handleChangeCargo = (selectedOption: any) => {
         if (selectedOption) {
-            setCargo(selectedOption.value); // Corrigido para armazenar apenas o valor do cargo
+            setCargo(selectedOption.value); 
         } else {
-            setCargo(''); // Limpar o cargo se nada for selecionado
+            setCargo('');
         }
     };
 
@@ -103,7 +103,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                         logout()
                     } else {
                         props.handleClose();
-                        props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
+                        props.buscarUsuarios();
                     }
                 });
             })
@@ -145,7 +145,7 @@ export default function ModalUsuario(props: IModalUsuario) {
                         {errors.email && <span className={styles.error}>{errors.email}</span>}
                     </div>
                     <div className={styles.informacoes}>
-                        {(isEditing && usuario?.cpf !== cpfAntigo) && ( // Renderizar o dropdown apenas se estiver editando
+                        {(isEditing && usuario?.cpf !== cpfAntigo) && (
                             <label>
                                 <strong>Cargo: </strong>
                                 <Select
@@ -153,14 +153,14 @@ export default function ModalUsuario(props: IModalUsuario) {
                                         { value: 'Funcionário', label: 'Funcionário' },
                                         { value: 'Administrador', label: 'Administrador' }
                                     ]}
-                                    value={{ value: cargo, label: cargo }} // Definir valor e rótulo do dropdown
+                                    value={{ value: cargo, label: cargo }}
                                     onChange={handleChangeCargo}
                                     placeholder="Selecione um cargo"
                                     styles={{ control: (provided) => ({ ...provided, borderRadius: '30px' })}}
                                 />
                             </label>
                         )}
-                        {(!isEditing || usuario?.cpf === cpfAntigo) && ( // Se não estiver editando, mostrar apenas o cargo
+                        {(!isEditing || usuario?.cpf === cpfAntigo) && (
                             <div>
                                 <strong>Cargo: </strong>
                                 {cargo}
@@ -188,7 +188,6 @@ export default function ModalUsuario(props: IModalUsuario) {
                             props.usuario.estaAtivo ? <button className={`${styles['btn-inativar']}`} onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
                                 <button className={`${styles['btn-ativar']}`} onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
                         }
-                        {/* Botão de salvar e fechar */}
                         {isEditing && (
                             <button className={`${styles['btn-salvar']}`} onClick={handleSave}>SALVAR ALTERAÇÕES</button>
                         )}

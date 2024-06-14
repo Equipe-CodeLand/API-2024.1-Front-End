@@ -22,9 +22,6 @@ export default function Navbar(props: Props) {
 
     const toggleMode = () => {
         setMode(!active);
-        if (active) {
-            console.log(props.local)
-        }
     }
 
     const handleLogout = () => {
