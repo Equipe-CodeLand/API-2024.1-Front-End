@@ -7,7 +7,6 @@ import Footer from '../components/footer';
 import { useAxios } from '../hooks/useAxios';
 
 
-// Define o tipo para os ativos
 type AtivoType = { value: number, id: number, label: string } | null;
 
 export default function ManutencaoCadastroPage() {
@@ -23,18 +22,14 @@ export default function ManutencaoCadastroPage() {
     const { get, post } = useAxios()
 
     useEffect(() => {
-        // Buscar ativos do servidor quando o componente é montado
         get("/listar/ativos")
             .then(response => {
-                console.log('Resposta do servidor:', response.data); // Log da resposta do servidor
-                // Transformar os dados recebidos para o formato { value, label }
                 const ativosTransformados = response.data.map((ativo: any) => ({
                     value: ativo,
                     id: ativo.id,
                     label: ativo.nome,
                 }));
                 setAtivos(ativosTransformados);
-                console.log('Ativos transformados:', ativosTransformados);  // Log dos ativos após a transformação
             })
             .catch(error => {
                 console.error('Erro ao buscar ativos:', error)
@@ -50,10 +45,9 @@ export default function ManutencaoCadastroPage() {
         }
     }
 
-    // formatando a data para enviar para o back-end
     const formatDateForBackend = (dateString: string) => {
         const parts = dateString.split('-');
-        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Formato "yyyy-MM-dd"
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
     };
 
     useEffect(() => {
@@ -70,11 +64,9 @@ export default function ManutencaoCadastroPage() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
-        // Convertendo as datas para o formato desejado (dd/MM/yyyy) para envio
         const formattedDataInicio = formatDateForBackend(data_inicio);
         const formattedDataFinal = formatDateForBackend(data_final);
 
-        // Validação das datas
         if (new Date(data_final) < new Date(data_inicio)) {
             setDataError('A data de expiração não pode ser antes da data de aquisição.');
             return;
@@ -176,14 +168,8 @@ export default function ManutencaoCadastroPage() {
                                 <span className="input_required">Data Final:</span>
                                 <input type="date" name="Data Final" value={data_final} onChange={e => setData_final(e.target.value)} />
                             </label>
-
-                            <label>
-                                <span className="input_required">Localização:</span>
-                                <input type="text" name="Localização" placeholder="Localização" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
-                            </label>
-                            {dataError && <p style={{ color: 'red' }}>{dataError}</p>}
-
                             </div>
+                            {dataError && <p style={{ color: 'red' }}>{dataError}</p>}
 
                             <input type="submit" value="Cadastrar Manutenção" />
                             <br />

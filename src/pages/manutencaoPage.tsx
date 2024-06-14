@@ -11,6 +11,7 @@ import { notificacaoProps } from "../types/notificacaoProps.type";
 import stylesNotificacao from "../styles/notificacao.module.css";
 import Notificacao from "../components/notificacao";
 import { useAuth } from "../hooks/useAuth";
+import { log } from "console";
 
 export default function ManutencaoPage() {
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
@@ -101,7 +102,6 @@ export default function ManutencaoPage() {
           }
           break
         case 0:
-          console.log("sem notificacao")
           break
         default:
           break
@@ -145,6 +145,7 @@ export default function ManutencaoPage() {
       const manutencoesData = response.data.map((manutencao: any) => ({
         id: manutencao.id,
         nome: manutencao.ativos.nome,
+        descricao: manutencao.descricao,
         dataInicio: manutencao.data_inicio,
         dataFinal: manutencao.data_final,
         ativos_id: manutencao.ativos.id,
@@ -209,11 +210,11 @@ export default function ManutencaoPage() {
         dataInicio: manutencao.data_inicio ? `${manutencao.data_inicio[0]}-${manutencao.data_inicio[1]}-${manutencao.data_inicio[2]}` : "",
         dataFinal: manutencao.data_final ? `${manutencao.data_final[0]}-${manutencao.data_final[1]}-${manutencao.data_final[2]}` : "",
         ativos_id: manutencao.ativos.id,
+        descricao: manutencao.descricao,
         localizacao: manutencao.localizacao,
         responsavel: manutencao.responsavel,
       }));
 
-      console.log(manutencoesFiltradas);
       setManutencoes(manutencoesFiltradas);
       setLoading(false);
       setFilteredData(manutencoesFiltradas);
@@ -331,6 +332,7 @@ export default function ManutencaoPage() {
                       <ManutencaoComponent
                         id={manutencao.id}
                         nome={manutencao.nome}
+                        descricao={manutencao.descricao}
                         dataInicio={manutencao.dataInicio}
                         dataFinal={manutencao.dataFinal}
                         localizacao={manutencao.localizacao}

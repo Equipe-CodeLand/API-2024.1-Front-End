@@ -20,6 +20,7 @@ export default function ModalManutencao(props: IModalManutencao) {
   const [dataFinal, setDataFinal] = useState(new Date(props.manutencao.dataFinal).toLocaleDateString('pt-BR'));
   const [localizacao, setLocalizacao] = useState(props.manutencao.localizacao);
   const [responsavel, setResponsavel] = useState(props.manutencao.responsavel);
+  const [descricao, setDescricao] = useState(props.manutencao.descricao);
   const [ativos, setAtivos] = useState<AtivoType[]>([]);
   const [ativoSelecionado, setAtivoSelecionado] = useState<AtivoType | null>(null);
   const { get, put, deletar } = useAxios();
@@ -29,6 +30,7 @@ export default function ModalManutencao(props: IModalManutencao) {
     responsavel: '',
     localizacao: '',
     dataInicio: '',
+    descricao: '',
     dataFinal: ''
   });
 
@@ -76,6 +78,7 @@ export default function ModalManutencao(props: IModalManutencao) {
       data_final: formattedDataFinal,
       localizacao: localizacao,
       responsavel: responsavel,
+      descricao: descricao,
       ativos_id: ativoSelecionado ? ativoSelecionado.id : null,
     };
 
@@ -87,9 +90,6 @@ export default function ModalManutencao(props: IModalManutencao) {
           icon: 'success',
           confirmButtonText: 'OK!'
         });
-
-        console.log('Dados atualizados com sucesso:', response.data);
-        console.log(dadosAtualizados);
 
         props.handleClose();
         props.buscarManutencao();
@@ -124,9 +124,6 @@ export default function ModalManutencao(props: IModalManutencao) {
           icon: 'success',
           confirmButtonText: 'OK!'
         });
-        console.log('Manutenção excluída com sucesso:', response.data);
-        console.log(props.manutencao.id);
-
         props.handleClose();
         props.buscarManutencao();
       })
@@ -167,83 +164,93 @@ export default function ModalManutencao(props: IModalManutencao) {
             </div>
 
 
-          <div className="conteudo-modal">
-            <div className='p-icon'>
-              <p><strong>Ativo: </strong>
-                {isEditing ? (
-                  <Select
-                    options={ativos}
-                    value={ativoSelecionado}
-                    onChange={handleSearch}
-                    placeholder="Pesquisar ativo"
-                    styles={{ control: (provided) => ({ ...provided, borderRadius: '30px'}) }}
-                  />
-                ) : (
-                  ativoSelecionado ? ativoSelecionado.label : props.manutencao.nome
-                )}
-              </p>
-            </div>
-            <div className='p-icon'>
-              <p><strong>ID do ativo: </strong>
-                {isEditing ? (
-                  <input type="text" value={ativoSelecionado ? ativoSelecionado.id : ''} readOnly />
-                ) : (
-                  props.manutencao.ativos_id
-                )}
-              </p>
-            </div>
-            <div className='p-icon'>
-              <p><strong>Responsável: </strong>
-                {isEditing ? (
-                  <input type="text" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
-                ) : (
-                  props.manutencao.responsavel
-                )}
-                {errors.responsavel && <span className='error'>{errors.responsavel}</span>}
-              </p>
-            </div>
-            <div className='p-icon'>
-              <p><strong>Localização: </strong>
-                {isEditing ? (
-                  <input type="text" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
-                ) : (
-                  props.manutencao.localizacao
-                )}
-                {errors.localizacao && <span className='error'>{errors.localizacao}</span>}
-              </p>
-            </div>
-            <div className='p-icon'>
-              <p><strong>Data de início: </strong> 
-                {isEditing ? (
-                  <input type="text" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
-                ) : (
-                  dataInicio
-                )}
-                {errors.dataInicio && <span className='error'>{errors.dataInicio}</span>}
-              </p>
-            </div>
-            <div className='p-icon'>
-              <p><strong>Data final: </strong> 
-                {isEditing ? (
-                  <input type="text" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
-                ) : (
-                  dataFinal
-                )}
-                {errors.dataFinal && <span className='error'>{errors.dataFinal}</span>}
-              </p>
+            <div className="conteudo-modal">
+              <div className='p-icon'>
+                <p><strong>Ativo: </strong>
+                  {isEditing ? (
+                    <Select
+                      options={ativos}
+                      value={ativoSelecionado}
+                      onChange={handleSearch}
+                      placeholder="Pesquisar ativo"
+                      styles={{ control: (provided) => ({ ...provided, borderRadius: '30px' }) }}
+                    />
+                  ) : (
+                    ativoSelecionado ? ativoSelecionado.label : props.manutencao.nome
+                  )}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>ID do ativo: </strong>
+                  {isEditing ? (
+                    <input type="text" value={ativoSelecionado ? ativoSelecionado.id : ''} readOnly />
+                  ) : (
+                    props.manutencao.ativos_id
+                  )}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>Descrição: </strong>
+                  {isEditing ? (
+                    <input type="text" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
+                  ) : (
+                    props.manutencao.descricao ? props.manutencao.descricao : 'Descrição não especificada'
+                  )}
+                  {errors.descricao && <span className='error'>{errors.descricao}</span>}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>Responsável: </strong>
+                  {isEditing ? (
+                    <input type="text" value={responsavel} onChange={e => setResponsavel(e.target.value)} />
+                  ) : (
+                    props.manutencao.responsavel
+                  )}
+                  {errors.responsavel && <span className='error'>{errors.responsavel}</span>}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>Localização: </strong>
+                  {isEditing ? (
+                    <input type="text" value={localizacao} onChange={e => setLocalizacao(e.target.value)} />
+                  ) : (
+                    props.manutencao.localizacao
+                  )}
+                  {errors.localizacao && <span className='error'>{errors.localizacao}</span>}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>Data de início: </strong>
+                  {isEditing ? (
+                    <input type="text" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
+                  ) : (
+                    dataInicio
+                  )}
+                  {errors.dataInicio && <span className='error'>{errors.dataInicio}</span>}
+                </p>
+              </div>
+              <div className='p-icon'>
+                <p><strong>Data final: </strong>
+                  {isEditing ? (
+                    <input type="text" value={dataFinal} onChange={e => setDataFinal(e.target.value)} />
+                  ) : (
+                    dataFinal
+                  )}
+                  {errors.dataFinal && <span className='error'>{errors.dataFinal}</span>}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
+        </Modal.Body>
+        <Modal.Footer>
           {getCargo() === "Administrador" ?
             <div className={styles.botoes}>
-                <button className={styles.excluir} onClick={handleDelete}>EXCLUIR ATIVO</button>
-                  {isEditing ? (
-                    <button className={styles.editar} onClick={handleUpdate}>SALVAR ALTERAÇÕES</button>
-                  ) : (
-                    <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
-                  )}
+              <button className={styles.excluir} onClick={handleDelete}>EXCLUIR ATIVO</button>
+              {isEditing ? (
+                <button className={styles.editar} onClick={handleUpdate}>SALVAR ALTERAÇÕES</button>
+              ) : (
+                <button className={styles.editar} onClick={toggleEditing}>EDITAR</button>
+              )}
             </div> : ''
           }
         </Modal.Footer>
