@@ -70,6 +70,15 @@
     padding: 0px 5px 20px 5px;
 }
 
+.responsavelSelect {
+    width: 100%; /* Ajuste conforme necessário */
+    max-width: 300px; /* Defina um tamanho máximo desejado */
+    padding: 5px; /* Ajuste de padding para um layout mais compacto */
+    font-size: 1em; /* Ajuste do tamanho da fonte para manter a legibilidade */
+    border-radius: 5px; /* Adicione bordas arredondadas se necessário */
+  }
+  
+
 .status ul {
     list-style-type: none;  
     padding: 0;

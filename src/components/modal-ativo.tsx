@@ -520,7 +520,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             )}
                         </div>
                     </div>
-                    <div className={styles.informacoes}>
+                    <div className={styles.responsavelSelect}>
                         {ocupado && (
                             <>
                                 {isEditing ? (
@@ -545,14 +545,16 @@ export default function ModalAtivo(props: IModalAtivo) {
                         )}
                     </div>
 
-
+                    <br></br>
                     <hr />
+                    <br></br>
                     <div className={styles.manutencoes}>
                         <strong>Manutenções futuras: </strong>
                         {render}
                     </div>
-
+                    <br></br>
                     <hr />
+                    <br></br>
                     <div className={styles.historico}>
                         <strong>Histórico: </strong>
                         {historico.length > 0 ? (
