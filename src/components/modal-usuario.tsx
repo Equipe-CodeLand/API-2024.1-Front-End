@@ -5,9 +5,11 @@ import { IModalUsuario } from "../interfaces/modalUsuario";
 import { useAxios } from "../hooks/useAxios";
 import Swal from 'sweetalert2';
 import Select from 'react-select';
-import { FaRegEdit } from 'react-icons/fa'; // Ícone de edição
+import { FaRegEdit } from 'react-icons/fa';
+import { useAuth } from "../hooks/useAuth";
 
 export default function ModalUsuario(props: IModalUsuario) {
+    const { usuario, logout } = useAuth(); 
     const [nome, setNome] = useState(props.usuario.nome);
     const [cpf, setCpf] = useState(props.usuario.cpf);
     const [email, setEmail] = useState(props.usuario.email);
@@ -15,6 +17,24 @@ export default function ModalUsuario(props: IModalUsuario) {
     const [ativos, setAtivos] = useState(props.usuario.ativos);
     const [isEditing, setIsEditing] = useState(false);
     const { put, deletar } = useAxios();
+    const cpfAntigo = props.usuario.cpf;
+
+    const [errors, setErrors] = useState({
+        nome: '',
+        cpf: '',
+        email: ''
+    });
+
+    const validateFields = () => {
+        const newErrors: any = {};
+        if (!nome) newErrors.nome = "Preencha o campo obrigatório acima";
+        if (!cpf) newErrors.cpf = "Preencha o campo obrigatório acima";
+        if (!email) newErrors.email = "Preencha o campo obrigatório acima";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
 
     const handleChangeNome = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNome(event.target.value);
@@ -30,9 +50,9 @@ export default function ModalUsuario(props: IModalUsuario) {
 
     const handleChangeCargo = (selectedOption: any) => {
         if (selectedOption) {
-            setCargo(selectedOption.value); // Corrigido para armazenar apenas o valor do cargo
+            setCargo(selectedOption.value); 
         } else {
-            setCargo(''); // Limpar o cargo se nada for selecionado
+            setCargo('');
         }
     };
 
@@ -54,6 +74,7 @@ export default function ModalUsuario(props: IModalUsuario) {
     }
 
     const handleSave = () => {
+        if (!validateFields()) return;
 
         let cargoUsuario;
 
@@ -71,20 +92,28 @@ export default function ModalUsuario(props: IModalUsuario) {
         };
 
         put(`/usuario/atualizar/usuario/${props.usuario.id}`, usuarioAtualizado)
-            .then(response => {
+            .then(() => {
                 Swal.fire({
                     title: 'Usuário Atualizado!',
                     text: `O usuário foi atualizado com sucesso!`,
                     icon: 'success',
                     confirmButtonText: 'OK!'
+                }).then(() => {
+                    if (cpfAntigo === usuario?.cpf && cpf !== cpfAntigo) {
+                        logout()
+                    } else {
+                        props.handleClose();
+                        props.buscarUsuarios();
+                    }
                 });
-                console.log('Dados atualizados com sucesso:', response.data);
-                console.log(usuarioAtualizado);
-                props.handleClose();
-                props.buscarUsuarios(); // Se necessário buscar os usuários novamente após a atualização
             })
             .catch(error => {
-                console.error('Erro ao atualizar os dados:', error);
+                Swal.fire({
+                    title: 'Erro!',
+                    text: `${error.response.data}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
             });
     };
 
@@ -97,24 +126,26 @@ export default function ModalUsuario(props: IModalUsuario) {
                     </div>
                 </Modal.Header>
                 <Modal.Body className={styles.modal}>
-                    {/* Campos editáveis */}
                     <div className={styles.titulo}>
                         <h3>{isEditing ? <input type="text" value={nome} onChange={handleChangeNome} /> : nome}</h3>
-                        <FaRegEdit onClick={() => setIsEditing(!isEditing)} />
+                        {errors.nome && <span className={styles.error}>{errors.nome}</span>}
+                        <FaRegEdit className="icone-edicao" onClick={() => setIsEditing(!isEditing)} style={{ width: 'auto', height: '30px', marginLeft: '10px' }} />
                     </div>
                     <div className={styles.informacoes}><strong>Status: </strong>{
                         props.usuario.estaAtivo ? "Ativo" : "Inativo"
                     }</div>
-                    <div className={styles.informacoes}>
-                        <strong>CPF: </strong>
+                    <div className={isEditing ? styles.informacoesEdicao : styles.informacoes}>
+                        <strong>CPF: </strong> 
                         {isEditing ? <input type="text" value={cpf} onChange={handleChangeCpf} /> : cpf}
+                        {errors.cpf && <span className={styles.error}>{errors.cpf}</span>}
                     </div>
-                    <div className={styles.informacoes}>
+                    <div className={isEditing ? styles.informacoesEdicao : styles.informacoes}>
                         <strong>Email: </strong>
                         {isEditing ? <input type="text" value={email} onChange={handleChangeEmail} /> : email}
+                        {errors.email && <span className={styles.error}>{errors.email}</span>}
                     </div>
                     <div className={styles.informacoes}>
-                        {isEditing && ( // Renderizar o dropdown apenas se estiver editando
+                        {(isEditing && usuario?.cpf !== cpfAntigo) && (
                             <label>
                                 <strong>Cargo: </strong>
                                 <Select
@@ -122,14 +153,14 @@ export default function ModalUsuario(props: IModalUsuario) {
                                         { value: 'Funcionário', label: 'Funcionário' },
                                         { value: 'Administrador', label: 'Administrador' }
                                     ]}
-                                    value={{ value: cargo, label: cargo }} // Definir valor e rótulo do dropdown
+                                    value={{ value: cargo, label: cargo }}
                                     onChange={handleChangeCargo}
                                     placeholder="Selecione um cargo"
-                                    styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
+                                    styles={{ control: (provided) => ({ ...provided, borderRadius: '30px' })}}
                                 />
                             </label>
                         )}
-                        {!isEditing && ( // Se não estiver editando, mostrar apenas o cargo
+                        {(!isEditing || usuario?.cpf === cpfAntigo) && (
                             <div>
                                 <strong>Cargo: </strong>
                                 {cargo}
@@ -154,12 +185,11 @@ export default function ModalUsuario(props: IModalUsuario) {
                 <Modal.Footer>
                     <div className={styles.botoes}>
                         {
-                            props.usuario.estaAtivo ? <button onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
-                                <button onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
+                            props.usuario.estaAtivo ? <button className={`${styles['btn-inativar']}`} onClick={() => mudarStatusUsuário('inativar')}>INATIVAR USUÁRIO</button> :
+                                <button className={`${styles['btn-ativar']}`} onClick={() => mudarStatusUsuário('ativar')}>ATIVAR USUÁRIO</button>
                         }
-                        {/* Botão de salvar e fechar */}
                         {isEditing && (
-                            <button onClick={handleSave}>SALVAR</button>
+                            <button className={`${styles['btn-salvar']}`} onClick={handleSave}>SALVAR ALTERAÇÕES</button>
                         )}
                     </div>
                 </Modal.Footer>

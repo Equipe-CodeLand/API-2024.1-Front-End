@@ -9,4 +9,5 @@ export interface IBotao {
     marginTop?: string;
     bg?: string;
     color?: string;
+    style?: React.CSSProperties;
 }

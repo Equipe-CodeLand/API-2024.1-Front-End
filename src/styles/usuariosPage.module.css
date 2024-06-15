@@ -3,13 +3,11 @@
     height: max-content;
 }
 
-/* Filtros */
-
 .filtro {
     padding: 60px 20px;
     background-color: var(--corSecundaria);
     width: 300px;
-    height: calc(100vh - 64px);
+    height: 100% !important;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -29,18 +27,17 @@
     padding: 20px 0px;
 }
 
-.inputs>input,
-select {
+.inputs > input, select {
     margin: 0 auto !important;
     padding: 0px 10px !important;
-    border-radius: 10px !important;
+    border-radius: 20px;
     height: 40px !important;
     width: 180px !important;
     font-family: var(--inter);
     font-weight: 500 !important;
 }
 
-.inputs>select {
+.inputs > select {
     color: #757575;
 }
 
@@ -48,9 +45,14 @@ select {
     color: red;
 }
 
+
 .filtrar {
     display: flex;
     justify-content: space-between;
+}
+
+.filtrarPor {
+    color: #757575;
 }
 
 .filtrar button {
@@ -71,12 +73,64 @@ select {
     color: var(--corPrimaria);
 }
 
-.modal .inputs {
-    height: auto;
+.cargoCheck {
+    padding: 10px 5px;
 }
 
-.modal .filtrar {
-    width: 100%;
+.cargoCheck ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1.1em;
+}
+
+.cargoCheck ul li {
+    display: flex;
+    align-items: center;
+}
+
+.cargoCheck ul li input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+hr{
+    margin: 0px !important;
+}
+
+.status {
+    padding: 10px 5px;
+    margin-top: 5%;
+}
+
+.status h4, .cargoCheck h4{
+    margin-top: 0px !important;
+    margin-bottom: 10%;
+}
+
+.status ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1.1em;
+}
+
+.status ul li {
+    display: flex;
+    align-items: center;
+}
+
+.status ul li input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
 }
 
 /* -------------------- */
@@ -98,13 +152,12 @@ select {
 
 .botoes {
     display: flex;
-    justify-content: space-between;
-    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 20px;
 }
 
 .adicionarUsuario {
-    /* border: 1px solid purple; */
-
     padding: 20px;
 
     width: 100%;
@@ -119,13 +172,10 @@ select {
 
 .botao {
     background-color: var(--corPrimaria);
-
     width: 200px;
-
     border: 2px solid var(--corPrimaria);
     border-radius: 10px;
     box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
-
     font-family: var(--inter);
     font-size: 1em;
     font-weight: 400;
@@ -133,9 +183,7 @@ select {
     text-align: center;
     line-height: 50px;
     color: white;
-
     cursor: pointer;
-
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -170,9 +218,58 @@ select {
     color: black;
 }
 
-@media screen and (max-width: 800px) {
+.botaoPaginacao {
+    padding: 10px 20px;
+    background-color: var(--corPrimaria);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.botaoPaginacao:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.botaoPaginacao:not(:disabled) {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: var(--corPrimaria);
+    border: 2px solid var(--corPrimaria);
+    border-radius: 10px;
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
+    font-family: var(--inter);
+    font-size: 1em;
+    font-weight: 400;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.paginacao span {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.botaoPaginacao:hover:not(:disabled) {
+    background-color: white;
+    color: var(--corPrimaria);
+}
+
+@media screen and (max-width: 700px) {
     .conteudo main {
         padding: 32px;
+        width: 100%;
     }
 
     .filtro {
@@ -187,10 +284,20 @@ select {
         justify-content: flex-end;
     }
 
-    .botoes {
+    .botoes{
         display: flex;
-        justify-content: space-between;
+        width: 100%;
+        justify-content: center;
+        padding-right: 0px;
         font-size: 13px;
+    }
+
+    .botao{
+        height: 55px;
+        font-size: 1.1em;
+        margin-top: 50px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 
     .botoes div {
@@ -200,5 +307,68 @@ select {
 
     .botoes div .botao {
         margin: auto;
+    }
+
+    .filtrarPor{
+        margin: 0px !important;
+        width: 100% !important;
+    }
+
+    .filtrarPor select{
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 10px 5px;
+        margin: 10px 10px;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+    }
+
+    hr{
+        margin: 0px !important;
+    }
+
+    .cargoCheck {
+        padding: 10px 5px;
+        justify-content: start !important;
+        align-items: start !important;
+        margin: 0px 15px;
+    }
+
+    .cargoCheck h4{
+        margin-top: 0px !important;
+        margin-bottom: 5%;
+    }
+
+    .cargoCheck ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 1.1em;
+    }
+
+    .cargoCheck ul li {
+        display: flex;
+        align-items: center;
+    }
+
+    .cargoCheck ul li input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
+
+    .inputs select, input[type="date"], input[type="number"], input[type="text"], .filtrarPor{
+        height: 40px !important;
+        width: 100% !important;
+        font-family: var(--inter);
+        font-weight: 500 !important;
+        box-sizing: border-box;
     }
 }

@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import styles from "../styles/ativosPage.module.css"
-import { IAtivo } from "../interfaces/ativo";
+import stylesNotificacao from "../styles/notificacao.module.css"
 import { useAxios } from "../hooks/useAxios";
 import { useAuth } from "../hooks/useAuth";
 import { AtivoType } from "../types/ativo.type";
 import Ativo from "../components/ativo";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, ToastContainer } from "react-bootstrap";
+import Notificacao from "../components/notificacao";
+import { notificacaoProps } from "../types/notificacaoProps.type";
 
 export default function AtivosPage() {
     const [data, setData] = useState<Array<AtivoType>>([]);
@@ -21,20 +23,84 @@ export default function AtivosPage() {
     const [filtro, setFiltro] = useState("");
     const [idInput, setIdInput] = useState("");
     const [nomeInput, setNomeInput] = useState("");
+    const [mostrarExpirados, setMostrarExpirados] = useState(false);
+    const [mostrarNaoExpirados, setMostrarNaoExpirados] = useState(false);
     const [statusDisponivel, setStatusDisponivel] = useState(false);
     const [statusEmManutencao, setStatusEmManutencao] = useState(false);
     const [statusOcupado, setStatusOcupado] = useState(false);
+    const [statusExpirado, setStatusExpirado] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5; 
     const isFuncionario = getCargo() === "Funcionário";
+    const [notificaoMostrada, setNotificacaoMostrada] = useState<boolean>(false)
+    const [notificacoes, setNotificacoes] = useState<notificacaoProps[]>([])
+
+    const verificarExpiracao = (ativo: AtivoType): number => {
+        if (ativo.dataExpiracao === null) return 1
+
+        let ativoDia = new Date(ativo.dataExpiracao).getDate()
+        let ativoMes = new Date(ativo.dataExpiracao).getMonth() + 1
+        let ativoAno = new Date(ativo.dataExpiracao).getFullYear()
+        let ativoTotal = ativoDia + "/" + ativoMes + "/" + ativoAno
+        let dataAtualDia = new Date().getDate()
+        let dataAtualMes = new Date().getMonth() + 1
+        let dataAtualAno = new Date().getFullYear()
+        let dataAtualTotal = dataAtualDia + "/" + dataAtualMes + "/" + dataAtualAno
+        if (ativoTotal === dataAtualTotal) return 2
+
+        let data15diasAtras = new Date(new Date().setDate(new Date().getDate() + 15))
+        if (new Date(ativo.dataExpiracao) <= data15diasAtras && new Date(ativo.dataExpiracao) >= new Date()) return 3
+
+        return 0
+    }
+
+    const mostrarNotificacoes = () => {
+        const listaDeNotificacoes: notificacaoProps[] = []
+        filteredData.forEach(ativo => {
+            let notificacao: notificacaoProps | undefined = undefined
+            switch (verificarExpiracao(ativo)) {
+                case 1: // data expiração esta nulo
+                    break
+                case 2: // data de expiração menor que a data atual
+                    notificacao = {
+                        titulo: `Ativo Expirado - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} está expirado!`,
+                        repetirNotificacao: false
+                    }
+                    break
+                case 3: // data de expiração menor que 15 dias
+                    let diasFaltantesParaExpirar = Math.ceil((new Date(ativo.dataExpiracao).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                    notificacao = {
+                        titulo: `Ativo Expirando - #${ativo.id}`,
+                        texto: `O ativo ${ativo.nome} vai expirar em ${diasFaltantesParaExpirar} dias!`,
+                        repetirNotificacao: true
+                    }
+                    break
+                case 0:
+                    break
+                default:
+                    break
+            }
+            if (notificacao !== undefined) listaDeNotificacoes.push(notificacao)
+        })
+        setNotificacoes(listaDeNotificacoes)
+    }
+
+    useEffect(() => {
+        if (filteredData.length > 0 && !notificaoMostrada) {
+            mostrarNotificacoes()
+            setNotificacaoMostrada(true)
+        }
+    })
 
     const ativos = async () => {
         const rota = getCargo() === "Funcionário" ? `/listar/ativos/${getSub()}` : "/listar/ativos";
         try {
             const response = await get(rota);
-            console.log('API response:', response.data); // Adicionado log para debug
             setData(response.data);
-            setFilteredData(response.data); // Atualiza filteredData com os dados recebidos
+            setFilteredData(response.data); 
             setLoading(false);
         } catch (error) {
             setError(error);
@@ -46,8 +112,8 @@ export default function AtivosPage() {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 700);
         };
-
         window.addEventListener("resize", handleResize);
+
         ativos();
         chamarManutencoes();
 
@@ -72,7 +138,10 @@ export default function AtivosPage() {
         setStatusDisponivel(false);
         setStatusEmManutencao(false);
         setStatusOcupado(false);
-        setFilteredData(data); // Reseta filteredData com todos os dados
+        setFilteredData(data); 
+        setCurrentPage(1); 
+        setMostrarExpirados(false);
+        setMostrarNaoExpirados(false);
     };
 
     const filtrar = () => {
@@ -88,15 +157,49 @@ export default function AtivosPage() {
         if (statusDisponivel) statusFilters.push(1);
         if (statusEmManutencao) statusFilters.push(2);
         if (statusOcupado) statusFilters.push(3);
+        if (statusExpirado) statusFilters.push(4);
 
         if (statusFilters.length > 0) {
             filtered = filtered.filter((ativo) => statusFilters.includes(ativo.status.id));
         }
 
-        console.log('Filtered data:', filtered); // Adicionado log para debug
+        const hoje = new Date();
+        if (mostrarExpirados === true) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data > hoje){
+                        ativos.push(ativo);
+                    }
+                } else {
+                    ativos.push(ativo);
+                }
+            });
+            filtered = ativos
+        }        
+
+        if (mostrarNaoExpirados === true) {
+            let ativos: AtivoType[] = [];
+            filtered.forEach((ativo) => {
+                if (ativo.dataExpiracao != null) {
+                    let data = new Date(ativo.dataExpiracao)
+                    if (data < hoje){
+                        ativos.push(ativo);
+                    }
+                }
+            });
+            filtered = ativos
+        } 
+
         setFilteredData(filtered);
         setIsModalOpen(false);
+        setCurrentPage(1);
     };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
     const render = loading ? (
         <div className={styles.listarAtivo}>
@@ -111,9 +214,13 @@ export default function AtivosPage() {
                 :(
             </span>
         </div>
-    ) : filteredData.length > 0 ? (
-        <div className={styles.listarAtivo}>
-            {filteredData.map((ativo) => (
+    ) : isMobile ? (
+        filteredData.map((ativo) => {
+            let expirado = false
+            if (ativo.dataExpiracao !== null && new Date(ativo.dataExpiracao) <= new Date()) {
+                expirado = true
+            }
+            return (
                 <Ativo
                     key={ativo.id}
                     id={ativo.id}
@@ -132,8 +239,40 @@ export default function AtivosPage() {
                     buscarAtivos={ativos}
                     codigo_nota_fiscal={ativo.codigo_nota_fiscal}
                     isEditable={!isFuncionario}
+                    expirado={expirado}
                 />
-            ))}
+            )
+        })
+    ) : currentItems.length > 0 ? (
+        <div className={styles.listarAtivo}>
+            {currentItems.map((ativo) => {
+                let expirado = false
+                if (ativo.dataExpiracao !== null && new Date(ativo.dataExpiracao) <= new Date()) {
+                    expirado = true
+                }
+                return (
+                    <Ativo
+                        key={ativo.id}
+                        id={ativo.id}
+                        nome={ativo.nome}
+                        notaFiscal={ativo.notaFiscal}
+                        descricao={ativo.descricao}
+                        marca={ativo.marca}
+                        modelo={ativo.modelo}
+                        preco_aquisicao={ativo.preco_aquisicao.toFixed(2)}
+                        usuario={ativo.usuario}
+                        setor={ativo.setor}
+                        status={ativo.status}
+                        dataAquisicao={ativo.dataAquisicao}
+                        dataExpiracao={ativo.dataExpiracao}
+                        manutencoes={manutencoes.filter((manutencao) => manutencao.ativos.id === ativo.id)}
+                        buscarAtivos={ativos}
+                        codigo_nota_fiscal={ativo.codigo_nota_fiscal}
+                        isEditable={!isFuncionario}
+                        expirado={expirado}
+                    />
+                )
+            })}
         </div>
     ) : (
         <div className={styles.listarAtivo}>
@@ -143,6 +282,9 @@ export default function AtivosPage() {
             </span>
         </div>
     );
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
     return (
         <div>
             <Navbar local="ativos" />
@@ -166,7 +308,7 @@ export default function AtivosPage() {
                                 id="filtrarPor"
                                 className={styles.filtrarPor}
                                 onChange={(e) => setFiltro(e.target.value)}
-                            >
+                                >
                                 <option value="">Filtrar por</option>
                                 <option value="ID">ID</option>
                                 <option value="Nome">Nome</option>
@@ -217,6 +359,27 @@ export default function AtivosPage() {
                                     </li>
                                 </ul>
                             </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div className={styles.filtrar}>
                             <button onClick={limparFiltros}>Limpar</button>
@@ -238,6 +401,25 @@ export default function AtivosPage() {
                         <div className={styles.listarAtivo}>
                             {render}
                         </div>
+                        {!isMobile && filteredData.length > itemsPerPage && (
+                            <div className={styles.paginacao}>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                >
+                                    &lt; Anterior
+                                </button>
+                                <span>{`Página ${currentPage} de ${totalPages}`}</span>
+                                <button
+                                    className={styles.botaoPaginacao}
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    Próxima &gt;
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
             </div>
@@ -303,6 +485,27 @@ export default function AtivosPage() {
                                     </li>
                                 </ul>
                             </div>
+                            <div className={styles.status}>
+                                <h4>Mostrar ativos:</h4>
+                                <ul>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarExpirados}
+                                            onChange={(e) => setMostrarExpirados(!mostrarExpirados)}
+                                        />
+                                        Expirados
+                                    </li>
+                                    <li>
+                                        <input
+                                            type="checkbox"
+                                            checked={mostrarNaoExpirados}
+                                            onChange={(e) => setMostrarNaoExpirados(!mostrarNaoExpirados)}
+                                        />
+                                        Não expirados
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div className={styles.filtrar}>
                             <Button className={styles.botaoModal} onClick={limparFiltros}>
@@ -315,6 +518,17 @@ export default function AtivosPage() {
                     </div>
                 </Modal.Body>
             </Modal>
+            <ToastContainer className={stylesNotificacao.notificacoes}>
+                {notificacoes.map((notificacao, index) => {
+                    return <Notificacao
+                        id={index.toString()}
+                        key={index}
+                        titulo={notificacao.titulo}
+                        texto={notificacao.texto}
+                        repetirNotificacao={notificacao.repetirNotificacao}
+                    />
+                })}
+            </ToastContainer>
         </div>
     );
 }

@@ -18,10 +18,11 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [disponivel, setDisponivel] = useState(true);
     const [ocupado, setOcupado] = useState(false);
     const [emManutencao, setEmManutencao] = useState(false);
+    const [expirado, setExpirado] = useState(false);
 
     const [nome, setNome] = useState(props.ativo.nome || '');
     const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
-    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.codigo_nota_fiscal|| '');
+    const [codigoNotaFiscal, setCodigoNotaFiscal] = useState(props.ativo.codigo_nota_fiscal || '');
     const [descricao, setDescricao] = useState(props.ativo.descricao || '');
     const [modelo, setModelo] = useState(props.ativo.modelo || '');
     const [marca, setMarca] = useState(props.ativo.marca || '');
@@ -32,25 +33,41 @@ export default function ModalAtivo(props: IModalAtivo) {
     const [dataExpiracaoEdit, setDataExpiracaoEdit] = useState('');
     const [dataExpiracao, setDataExpiracao] = useState(new Date(props.ativo.dataExpiracao || '').toLocaleDateString('pt-BR'));
     const [showAddFileButton, setShowAddFileButton] = useState(true);
-
     const { get, post, put, deletar } = useAxios();
     const { getCargo } = useAuth();
-
     const [arquivoBlob, setArquivoBlob] = useState<Blob | null>(null);
 
+    const [errors, setErrors] = useState({
+        nome: '',
+        preco_aquisicao: '',
+        dataAquisicao: '',
+        usuarioSelecionado: ''
+    });
+
+    const validateFields = () => {
+        const newErrors: any = {};
+        if (!nome) newErrors.nome = "Preencha o campo obrigatório acima";
+        if (!preco_aquisicao) newErrors.preco_aquisicao = "Preencha o campo obrigatório acima";
+        if (!dataAquisicao) newErrors.dataAquisicao = "Preencha o campo obrigatório acima";
+        if (ocupado && !usuarioSelecionado) newErrors.usuarioSelecionado = "Preencha o campo obrigatório acima";
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    
     useEffect(() => {
         buscarArquivos();
     }, []);
 
+
     const buscarArquivos = async () => {
         let buscador = new BuscadorArquivos();
         try {
-            if(props.ativo.notaFiscal != null){
+            if (props.ativo.notaFiscal != null) {
                 const arquivo = await buscador.buscar();
                 setArquivoBlob(arquivo);
                 setNotaFiscal(arquivo);
             }
-            console.log(arquivoBlob);
         } catch (error) {
             console.error('Erro ao buscar arquivos:', error);
         }
@@ -61,7 +78,7 @@ export default function ModalAtivo(props: IModalAtivo) {
     );
 
     useEffect(() => {
-        get('/usuario/listar')
+        get('/usuario/listar/ativados')
             .then(response => {
                 const usuarios = response.data.map((usuario: any) => ({
                     value: usuario,
@@ -107,12 +124,14 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDataExpiracaoEdit(props.ativo.dataExpiracao ? new Date(props.ativo.dataExpiracao).toLocaleDateString('pt-BR') : '');
     };
 
+    
     const handlePrecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setPreco_aquisicao(inputValue);
     };
 
     const saveChanges = () => {
+        if (!validateFields()) return;
 
         if (ocupado && !usuarioSelecionado) {
             Swal.fire({
@@ -123,16 +142,16 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-        if (!nome || !preco_aquisicao || !dataAquisicao) {
+        if (new Date(dataExpiracaoEdit.split('/').reverse().join('-')) < new Date(dataAquisicao.split('/').reverse().join('-'))) {
             Swal.fire({
                 icon: 'error',
-                title: 'Campos obrigatórios',
-                html: 'Por favor, preencha todos os campos obrigatórios:<br>(Nome, Preço de Aquisição e Data de Aquisição)',
+                title: 'Erro de data',
+                text: 'A data de expiração não pode ser anterior à data de aquisição.',
             });
             return;
         }
 
-        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : null));
+        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : expirado ? 4 : null));
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
 
@@ -146,7 +165,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             usuario: usuarioSelecionado,
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
-            status: { id: statusId },
+            status: { id: statusId }, 
             codigoNotaFiscal: codigoNotaFiscal
         };
 
@@ -202,6 +221,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                 props.buscarAtivos();
             });
     };
+
 
     const formatDateForBackend = (dateString: string) => {
         if (dateString !== "") {
@@ -299,6 +319,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setDisponivel(true);
         setOcupado(false);
         setEmManutencao(false);
+        setExpirado(false);
         setUsuarioSelecionado(null);
     };
 
@@ -306,6 +327,7 @@ export default function ModalAtivo(props: IModalAtivo) {
         setOcupado(true);
         setDisponivel(false);
         setEmManutencao(false);
+        setExpirado(false);
     };
 
     useEffect(() => {
@@ -314,16 +336,25 @@ export default function ModalAtivo(props: IModalAtivo) {
                 setDisponivel(true);
                 setOcupado(false);
                 setEmManutencao(false);
+                setExpirado(false);
                 break;
             case 2:
                 setEmManutencao(true);
                 setDisponivel(false);
                 setOcupado(false);
+                setExpirado(false);
                 break;
             case 3:
                 setDisponivel(false);
                 setOcupado(true);
                 setEmManutencao(false);
+                setExpirado(false);
+                break;
+            case 4:
+                setDisponivel(false);
+                setOcupado(false);
+                setEmManutencao(false);
+                setExpirado(true); 
                 break;
             default:
                 break;
@@ -366,6 +397,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             ) : (
                                 nome
                             )}
+                            {errors.nome && <span className={styles.error}>{errors.nome}</span>}
                         </h3>
                         {getCargo() === "Administrador" ?
                             <ButtonMain
@@ -377,7 +409,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                         <div className={styles.status}>
                             <ul>
                                 <li>
-                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível {/* Corrigido: Disponível */}
+                                    <input type="checkbox" checked={disponivel} onChange={handleDisponivel} /> Disponível
                                 </li>
                                 <li>
                                     <input type="checkbox" checked={ocupado} onChange={handleOcupado} /> Ocupado
@@ -386,7 +418,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                         </div>
                     </> : !isEditing ? <div className={styles.informacoes}>
                         <div>
-                            <strong>Status: </strong> {props.ativo.status.nome_status}
+                            <strong>Status: </strong> 
+                            {expirado ? 'Expirado' : props.ativo.status.nome_status}
                         </div>
                     </div> : ''
                     }
@@ -397,7 +430,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             <div>
                                 {!isEditing ? (<p>Nenhuma nota fiscal cadastrada</p>) : ('')}
                                 {isEditing && (
-                                    <input type="file" onChange={handleFileChange} />
+                                    <input type="file" onChange={handleFileChange} required accept="application/pdf, application/xml" />
                                 )}
                             </div>
                         ) : (
@@ -410,7 +443,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                     {props.ativo.notaFiscal?.nome}
                                 </a>
                                 {isEditing && (
-                                    <button onClick={excluirNotaFiscal}><TbTrash size={25} /></button>                                
+                                    <button onClick={excluirNotaFiscal}><TbTrash size={25} /></button>
                                 )}
                                 {isEditing && !props.ativo.notaFiscal && (
                                     <input type="file" onChange={handleFileChange} />
@@ -424,7 +457,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={codigoNotaFiscal} onChange={(e) => setCodigoNotaFiscal(e.target.value)} />
                             ) : (
-                                props.ativo.codigo_nota_fiscal
+                                props.ativo.codigo_nota_fiscal ? props.ativo.codigo_nota_fiscal : 'Código não especificado'
                             )}
                         </div>
                     </div>
@@ -434,7 +467,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                             ) : (
-                                props.ativo.descricao
+                                props.ativo.descricao ? props.ativo.descricao : 'Descrição não especificada'
                             )}
                         </div>
                     </div>
@@ -444,7 +477,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} />
                             ) : (
-                                props.ativo.modelo
+                                props.ativo.modelo ? props.ativo.modelo : 'Modelo não especificado'
                             )}
                         </div>
                     </div>
@@ -454,7 +487,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} />
                             ) : (
-                                props.ativo.marca
+                                props.ativo.marca ? props.ativo.marca : 'Marca não especificada'
                             )}
                         </div>
                     </div>
@@ -464,6 +497,8 @@ export default function ModalAtivo(props: IModalAtivo) {
                             {isEditing ? (
                                 <input type="number" className={styles.preco} value={preco_aquisicao} onChange={(e) => handlePrecoChange(e)} />
                             ) : props.ativo.preco_aquisicao}
+                            {errors.preco_aquisicao && <span className={styles.error}>{errors.preco_aquisicao}</span>}
+
                         </div>
                     </div>
                     <div className={styles.informacoes}>
@@ -473,6 +508,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             ) : (
                                 new Date(props.ativo.dataAquisicao).toLocaleDateString()
                             )}
+                            {errors.dataAquisicao && <span className={styles.error}>{errors.dataAquisicao}</span>}
                         </div>
                     </div>
                     <div className={styles.informacoes}>
@@ -484,7 +520,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                             )}
                         </div>
                     </div>
-                    <div className={styles.informacoes}>
+                    <div className={styles.responsavelSelect}>
                         {ocupado && (
                             <>
                                 {isEditing ? (
@@ -497,6 +533,7 @@ export default function ModalAtivo(props: IModalAtivo) {
                                             placeholder="Pesquisar Usuário"
                                             styles={{ control: (provided) => ({ ...provided, borderRadius: '20px' }) }}
                                         />
+                                        {errors.usuarioSelecionado && <span className={styles.error}>{errors.usuarioSelecionado}</span>}
                                     </label>
                                 ) : (
                                     <div>
@@ -508,14 +545,16 @@ export default function ModalAtivo(props: IModalAtivo) {
                         )}
                     </div>
 
-
+                    <br></br>
                     <hr />
+                    <br></br>
                     <div className={styles.manutencoes}>
                         <strong>Manutenções futuras: </strong>
                         {render}
                     </div>
-
+                    <br></br>
                     <hr />
+                    <br></br>
                     <div className={styles.historico}>
                         <strong>Histórico: </strong>
                         {historico.length > 0 ? (
