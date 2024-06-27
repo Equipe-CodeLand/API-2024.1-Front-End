@@ -245,7 +245,7 @@ export default function ModalManutencao(props: IModalManutencao) {
         <Modal.Footer>
           {getCargo() === "Administrador" ?
             <div className={styles.botoes}>
-              <button className={styles.excluir} onClick={handleDelete}>EXCLUIR ATIVO</button>
+              <button className={styles.excluir} onClick={handleDelete}>EXCLUIR MANUTENÇÂO</button>
               {isEditing ? (
                 <button className={styles.editar} onClick={handleUpdate}>SALVAR ALTERAÇÕES</button>
               ) : (

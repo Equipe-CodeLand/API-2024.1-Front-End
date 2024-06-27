@@ -360,7 +360,7 @@ export default function AtivosPage() {
                                 </ul>
                             </div>
                             <div className={styles.status}>
-                                <h4>Mostrar ativos:</h4>
+                                <h4>Ocultar ativos:</h4>
                                 <ul>
                                     <li>
                                         <input
@@ -486,7 +486,7 @@ export default function AtivosPage() {
                                 </ul>
                             </div>
                             <div className={styles.status}>
-                                <h4>Mostrar ativos:</h4>
+                                <h4>Ocultar ativos:</h4>
                                 <ul>
                                     <li>
                                         <input
