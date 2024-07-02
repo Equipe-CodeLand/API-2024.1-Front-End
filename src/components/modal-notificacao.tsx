@@ -13,10 +13,14 @@ export default function ModalNotificacao(props: IModalNotificacao) {
     }
 
     useEffect(() => {
-        const listaJsonRecuperada = localStorage.getItem("notificacoes");
-        const listaRecuperada = JSON.parse(listaJsonRecuperada || "[]");
-        setNotificacoes(listaRecuperada)
-    })
+        const fetchNotificacao = async () => {
+            const listaJsonRecuperada = localStorage.getItem("notificacoes");
+            const listaRecuperada = JSON.parse(listaJsonRecuperada || "[]");
+            setNotificacoes(listaRecuperada)
+        };
+
+        fetchNotificacao();        
+    }, [])
 
     return (
         <Modal show={show} onHide={props.handleClose}>

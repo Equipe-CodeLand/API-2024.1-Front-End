@@ -163,7 +163,7 @@ export default function DashboardRelatorios() {
                     {dados?.ativosExpirando && dados?.ativosExpirando.length > 0 ? (
                         <div className={styles.containerAtivos}>
                             {dados.ativosExpirando.map((ativo) => (
-                                <div className={styles.containerDadosTexto}>
+                                <div className={styles.containerDadosTexto} key={ativo.id}>
                                     <p> <strong>{ativo.id}</strong> - <strong>{ativo.nome}</strong> - {new Date(ativo.dataExpiracao).getDate()}/{new Date(ativo.dataExpiracao).getMonth() + 1}/{new Date(ativo.dataExpiracao).getFullYear()}</p>
                                 </div>
                             ))}
