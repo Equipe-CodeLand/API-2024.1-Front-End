@@ -151,7 +151,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             return;
         }
 
-        const statusId = disponivel ? 1 : (ocupado ? 3 : (emManutencao ? 2 : expirado ? 4 : null));
+        const statusId = ocupado ? 3 : (emManutencao ? 2 : 1);
         const formattedDataAquisicao = formatDateForBackend(dataAquisicao);
         const formattedDataExpiracao = formatDateForBackend(dataExpiracaoEdit);
 
@@ -166,7 +166,7 @@ export default function ModalAtivo(props: IModalAtivo) {
             dataAquisicao: formattedDataAquisicao,
             dataExpiracao: formattedDataExpiracao,
             status: { id: statusId }, 
-            codigoNotaFiscal: codigoNotaFiscal
+            codigo_nota_fiscal: codigoNotaFiscal
         };
 
         put(`/atualizar/ativos/${props.ativo.id}`, ativosDto)
